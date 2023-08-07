@@ -1,0 +1,13 @@
+.app {
+    display: flex;
+    flex-direction: column;
+}
+.container {
+    margin-top: 10px;
+    padding: 10px;
+}
+.interview-button {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 20px 0;
+}
