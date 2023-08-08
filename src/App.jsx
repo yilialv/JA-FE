@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { APPID, APPKEY, DEV_PID, URI, MENU } from './constant';
+import { useEffect, useState } from 'react';
+import { APPID, APPKEY, DEV_PID, URI, MENU, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from './constant';
 import { Button, Input, Menu } from 'antd';
 import './App.css';
 
@@ -19,12 +19,48 @@ const { TextArea } = Input;
 
 const App = () => {
   const [current, setCurrent] = useState('interview');
-  const [request, setRequest] = useState(null); // 从百度拿回来的数据
-  const [response, setResponse] = useState(null); // 从后端拿回来的数据
+  const [request, setRequest] = useState(''); // 从百度拿回来的数据
+  const [nextRequest, setNextRequest] = useState(''); // 从百度拿回来的新数据
+  const [reply, setReply] = useState(''); // 从后端拿回来的数据
+  const [lastReply, setLastReply] = useState(''); // 从后端拿回来的新数据
+
+  // 可优化
+  useEffect(() => {
+    setRequest(request + nextRequest);
+    setReply(reply + lastReply);
+  }, [nextRequest, lastReply])
+
+  // 后端接口测试代码
+  // useEffect(() => {
+  //   let req = {
+  //     last_reply: '',
+  //     conversations: [
+  //       '做一下自我介绍',
+  //       '介绍一下数据库引擎',
+  //       '了解数据库索引吗？'
+  //     ]
+  //   }
+
+  //   fetch(SERVER_URL, {
+  //     method: 'POST', // or 'PUT'
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify(req),
+  //   })
+  //   .then(resp => resp.json())
+  //   .then(resp => {
+  //     console.log('Answer:', resp.reply);
+  //   })
+  //   .catch((error) => {
+  //     console.error('Error:', error);
+  //   });
+  // }, [])
 
   const recorder = new RecorderManager('/src/recorder_manager');
   const frameSize = 16000 * 2 / 1000 * 160; // 定义每帧大小
   const uri = URI + '?sn=' + crypto.randomUUID();
+  const conversations = [];
 
   let ws = null;
 
@@ -46,7 +82,7 @@ const App = () => {
     };
     let body = JSON.stringify(req);
     ws.send(body);
-    console.log('send START frame with params:' + body);
+    console.log('发送开始帧:' + body);
   };
 
   /**
@@ -59,36 +95,37 @@ const App = () => {
     };
     let body = JSON.stringify(req);
     ws.send(body);
-    console.log('send FINISH frame');
-  };
-
-  recorder.onStart = () => {
-    // console.log("recorder.onStart")
-  }
-
-  recorder.onStop = function () {
-    sendFinish();
-    console.log('thread terminating');
-  };
-
-  // 接收音频数据帧
-  recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-    console.log("onFrameRecorded")
-    if (ws.readyState === ws.OPEN) {
-      ws.send(new Int8Array(frameBuffer));
-      if (isLastFrame) {
-        console.log("is last frame")
-      }
-    }
+    console.log('发送结束帧');
   };
 
   // 开始录音
   const startRecording = () => {
     connectWebSocket();
+
     recorder.start({
       sampleRate: 16000,
       frameSize: frameSize,
     });
+
+    recorder.onStart = () => {
+      // console.log("recorder.onStart")
+    }
+
+    recorder.onStop = function () {
+      sendFinish();
+      console.log('录音结束');
+    };
+
+    // 接收音频数据帧
+    recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+      // console.log("onFrameRecorded");
+      if (ws.readyState === ws.OPEN) {
+        ws.send(new Int8Array(frameBuffer));
+        if (isLastFrame) {
+          console.log("接收最后一个音频帧")
+        }
+      }
+    };
   }
 
   // 停止录音
@@ -99,18 +136,28 @@ const App = () => {
   // 建立连接
   const connectWebSocket = () => {
     ws = new WebSocket(uri);
+
     ws.onopen = () => {
       sendStartParams(ws);
-      console.log('WebSocket start.')
+      console.log('WebSocket开始连接')
     };
   
     ws.onmessage = (message) => {
-      setRequest(message);
-      console.log(message);
+      try {
+        let res = JSON.parse(message.data);
+        if (res.type === 'MID_TEXT' || res.type === 'FIN_TEXT') {
+          setNextRequest(res.result);
+        }
+        handleMessage(res);
+      } catch (err) {
+        console.log('解析语音转文字结果报错，错误为：', err);
+      }
+      
+      console.log(JSON.parse(message.data));
     };
   
     ws.onclose = () => {
-      console.log('WebSocket is closed now.');
+      console.log('WebSocket关闭连接');
     };
   
     ws.onerror = (error) => {
@@ -119,11 +166,49 @@ const App = () => {
     };
   };
 
+  const handleMessage = async (res) => {
+    if (res.type !== "FIN_TEXT") {
+      return;
+    }
+    // 文字不能太短
+    if (res.result.length < MIN_WORDS) {
+      return;
+    }
+    conversations.push(res.result);
+
+    // 只保留最近20条对话
+    while (conversations.length > MAX_CONVERSATION_COUNT) {
+      conversations.shift();
+    }
+
+    // 要发送的数据
+    let req = {
+      last_reply: lastReply,
+      conversations: conversations
+    };
+
+    fetch(SERVER_URL, {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(req),
+    })
+    .then(resp => resp.json())
+    .then(resp => {
+      console.log('Answer:', resp.reply);
+      if (!resp.reply.startsWith('No')) {
+        setLastReply(resp.reply);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+  };
+
   const onClick = (e) => {
     setCurrent(e.key);
   };
-
-  // todo 从后端拿数据
 
   return (
     <div className='app'>
@@ -132,8 +217,7 @@ const App = () => {
         <TextArea 
           bordered={true}
           showCount={true}
-          // value={request}
-          value='好好学习，天天向上'
+          value={request}
           autoSize={{ minRows: 11, maxRows: 11 }} />
         <div className='interview-button'>
           <Button type='primary' onClick={startRecording}>开始面试</Button>
@@ -142,8 +226,7 @@ const App = () => {
         <TextArea 
           bordered={true}
           showCount={true}
-          // value={response}
-          value='good good study'
+          value={reply}
           autoSize={{ minRows: 11, maxRows: 11 }} />
       </div>
     </div>
