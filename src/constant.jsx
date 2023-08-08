@@ -1,14 +1,14 @@
 import { ContainerOutlined, DesktopOutlined, RobotOutlined } from '@ant-design/icons';
 
-export const APPID = 36915985;
-export const APPKEY = 'O5vbXSd4OyLGYMaKbGVGtVip';
+export const APPID = 123;
+export const APPKEY = '123';
 export const DEV_PID = 80004;
 export const URI = 'ws://vop.baidu.com/realtime_asr';
 
 export const MIN_WORDS = 8; // 最短发送文字长度
 export const MAX_CONVERSATION_COUNT = 20; // 保留最大对话数量
 
-export const SERVER_URL = 'http://43.139.233.231:9527/interview/help';
+export const SERVER_URL = '123';
 
 export const MENU = [
     {
