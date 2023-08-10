@@ -1,7 +1,7 @@
 import { Row, Card } from "antd";
 import './App.css';
 
-const InterViewDetail = () => {
+const InterViewRecord = () => {
     return (
         <Row>
             <Card title="面试记录 2023-08-02" className="container">
@@ -29,4 +29,4 @@ const InterViewDetail = () => {
     );
 };
 
-export default InterViewDetail;
+export default InterViewRecord;

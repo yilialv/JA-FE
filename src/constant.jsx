@@ -1,6 +1,6 @@
 import { ContainerOutlined, DesktopOutlined, FileSearchOutlined, RobotOutlined } from '@ant-design/icons';
 import Interview from './pages/Interview/App';
-import InterViewDetail from './pages/InterviewDetail/App';
+import InterviewRecord from './pages/InterviewRecord/App';
 
 export const APPID = 36915985;
 export const APPKEY = 'O5vbXSd4OyLGYMaKbGVGtVip';
@@ -25,7 +25,7 @@ export const MENU = [
     },
     {
         label: '面试记录',
-        key: 'interviewDetail',
+        key: 'interviewRecord',
         icon: <FileSearchOutlined />,
     },
     {
@@ -37,5 +37,5 @@ export const MENU = [
 
 export const page = {
     'interview': <Interview />,
-    'interviewDetail': <InterViewDetail />
+    'interviewRecord': <InterviewRecord />
 };
