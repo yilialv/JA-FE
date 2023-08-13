@@ -12,6 +12,8 @@
   "dependencies": {
     "@ant-design/icons": "^5.2.5",
     "antd": "^5.8.2",
+    "mobx": "^6.10.0",
+    "mobx-react": "^9.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

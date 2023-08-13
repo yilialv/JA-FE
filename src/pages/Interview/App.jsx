@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Input, Row, Col } from 'antd';
+import { Button, Input, Row} from 'antd';
+import { observer } from 'mobx-react';
+import store from '../../store'
 import './App.css';
 
 const { TextArea } = Input;
@@ -17,49 +18,10 @@ const { TextArea } = Input;
 库的报错 on_error()
 */
 
-const Interview = () => {
-  const [request, setRequest] = useState('问题：'); // 从百度拿回来的数据
-  const [nextRequest, setNextRequest] = useState(''); // 从百度拿回来的新数据
-  const [reply, setReply] = useState('答案：'); // 从后端拿回来的数据
-  const [lastReply, setLastReply] = useState(''); // 从后端拿回来的新数据
-
-  // 可优化
-  useEffect(() => {
-    setRequest(`${request}${nextRequest}\n`);
-    setReply(`${reply}${lastReply}`);
-  }, [nextRequest, lastReply])
-
-  // 后端接口测试代码
-  // useEffect(() => {
-  //   let req = {
-  //     last_reply: '',
-  //     conversations: [
-  //       '做一下自我介绍',
-  //       '介绍一下数据库引擎',
-  //       '了解数据库索引吗？'
-  //     ]
-  //   }
-
-  //   fetch(SERVER_URL, {
-  //     method: 'POST', // or 'PUT'
-  //     headers: {
-  //       'Content-Type': 'application/json',
-  //     },
-  //     body: JSON.stringify(req),
-  //   })
-  //   .then(resp => resp.json())
-  //   .then(resp => {
-  //     console.log('Answer:', resp.reply);
-  //   })
-  //   .catch((error) => {
-  //     console.error('Error:', error);
-  //   });
-  // }, [])
-
+const Interview = observer(() => {
   const recorder = new RecorderManager('/src/recorder_manager');
   const frameSize = 16000 * 2 / 1000 * 160; // 定义每帧大小
   const uri = URI + '?sn=' + crypto.randomUUID();
-  const conversations = [];
 
   let ws = null;
 
@@ -144,7 +106,8 @@ const Interview = () => {
       try {
         let res = JSON.parse(message.data);
         if (res.type === 'MID_TEXT' || res.type === 'FIN_TEXT') {
-          setNextRequest(res.result);
+          store.setNextRequest(res.result);
+          store.setRequest();
         }
         handleMessage(res);
       } catch (err) {
@@ -172,18 +135,20 @@ const Interview = () => {
     if (res.result.length < MIN_WORDS) {
       return;
     }
-    conversations.push(res.result);
+    store.addToConversation(res.result);
 
     // 只保留最近20条对话
-    while (conversations.length > MAX_CONVERSATION_COUNT) {
-      conversations.shift();
+    while (store.conversations.length > MAX_CONVERSATION_COUNT) {
+      store.removeFromConversation();
     }
 
     // 要发送的数据
     let req = {
-      last_reply: lastReply,
-      conversations: conversations
+      last_reply: store.lastReply,
+      conversations: store.conversations
     };
+
+    console.log(req)
 
     fetch(SERVER_URL, {
       method: 'POST', // or 'PUT'
@@ -196,7 +161,8 @@ const Interview = () => {
     .then(resp => {
       console.log('Answer:', resp.reply);
       if (!resp.reply.startsWith('No')) {
-        setLastReply(resp.reply);
+        store.setLastReply(resp.reply);
+        store.setReply();
       }
     })
     .catch((error) => {
@@ -207,21 +173,21 @@ const Interview = () => {
   return (
     <div className='app'>
       {/* <Row className='title'>问题</Row> */}
-      <Row className='container'>
-        <TextArea 
-          id='q_box'
-          bordered={true}
-          showCount={true}
-          value={request}
-          autoSize={{ minRows: 10, maxRows: 10 }} />
-      </Row>
       {/* <Row className='title'>答案</Row> */}
       <Row className='container'>
         <TextArea 
           bordered={true}
           showCount={true}
-          value={reply}
-          autoSize={{ minRows: 14, maxRows: 14 }} />
+          value={store.reply}
+          autoSize={{ minRows: 18, maxRows: 18 }} />
+      </Row>
+      <Row className='container'>
+        <TextArea 
+          id='q_box'
+          bordered={true}
+          showCount={true}
+          value={store.request}
+          autoSize={{ minRows: 4, maxRows: 4 }} />
       </Row>
       <Row className='btn'>
         <Button type='primary' onClick={startRecording}>开始面试</Button>
@@ -229,6 +195,6 @@ const Interview = () => {
       </Row>
     </div>
   );
-};
+});
 
 export default Interview;
