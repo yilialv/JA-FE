@@ -148,8 +148,6 @@ const Interview = observer(() => {
       conversations: store.conversations
     };
 
-    console.log(req)
-
     fetch(SERVER_URL, {
       method: 'POST', // or 'PUT'
       headers: {
@@ -172,8 +170,7 @@ const Interview = observer(() => {
 
   return (
     <div className='app'>
-      {/* <Row className='title'>问题</Row> */}
-      {/* <Row className='title'>答案</Row> */}
+      <Row className='title'>答案</Row>
       <Row className='container'>
         <TextArea 
           bordered={true}
@@ -181,6 +178,7 @@ const Interview = observer(() => {
           value={store.reply}
           autoSize={{ minRows: 18, maxRows: 18 }} />
       </Row>
+      <Row className='title'>问题</Row>
       <Row className='container'>
         <TextArea 
           id='q_box'
