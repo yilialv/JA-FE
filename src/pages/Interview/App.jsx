@@ -24,6 +24,7 @@ const Interview = observer(() => {
   const uri = URI + '?sn=' + crypto.randomUUID();
 
   let ws = null;
+  let wsServer = null;
 
   /**
    * 发送开始帧
@@ -97,6 +98,8 @@ const Interview = observer(() => {
   // 建立连接
   const connectWebSocket = () => {
     ws = new WebSocket(uri);
+    wsServer = new WebSocket(SERVER_URL);
+
     ws.onopen = () => {
       sendStartParams(ws);
       console.log('WebSocket开始连接')
@@ -106,8 +109,10 @@ const Interview = observer(() => {
       try {
         let res = JSON.parse(message.data);
         if (res.type === 'MID_TEXT' || res.type === 'FIN_TEXT') {
-          store.setNextRequest(res.result);
-          store.setRequest();
+          if (res.err_no === 0) {
+            store.setNextRequest(res.result);
+            store.setRequest();
+          }
         }
         handleMessage(res);
       } catch (err) {
@@ -123,6 +128,42 @@ const Interview = observer(() => {
   
     ws.onerror = (error) => {
       recorder.stop();
+      console.log('error:', error);
+    };
+
+    wsServer.onopen = () => {
+      console.log('Server WebSocket打开连接');
+      const req = {
+        "conversations":[
+            "请做一下自我介绍。",
+            "面试官您好，我叫翰墨。",
+            "呃，非常荣幸加入本公司。",
+            "简单介绍一下mysql"
+        ],
+        "last_reply":"111"
+      }
+      wsServer.send(req);
+    };
+
+    wsServer.onmessage = (message) => {
+      console.log('message:', message)
+      try {
+        let result = JSON.parse(message);
+        console.log('Answer:', result.reply);
+        if (!result.reply.startsWith('No')) {
+          store.setLastReply(result.reply);
+          store.setReply();
+        }
+      } catch (error) {
+        console.log('后端返回解析出错!')
+      }
+    };
+
+    wsServer.onclose = () => {
+      console.log('Server WebSocket关闭连接');
+    };
+
+    wsServer.onerror = (error) => {
       console.log('error:', error);
     };
   };
@@ -148,24 +189,27 @@ const Interview = observer(() => {
       conversations: store.conversations
     };
 
-    fetch(SERVER_URL, {
-      method: 'POST', // or 'PUT'
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(req),
-    })
-    .then(resp => resp.json())
-    .then(resp => {
-      console.log('Answer:', resp.reply);
-      if (!resp.reply.startsWith('No')) {
-        store.setLastReply(resp.reply);
-        store.setReply();
-      }
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
+    console.log(req)
+    wsServer.send(req);
+
+    // fetch(SERVER_URL, {
+    //   method: 'POST', // or 'PUT'
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify(req),
+    // })
+    // .then(resp => resp.json())
+    // .then(resp => {
+    //   console.log('Answer:', resp.reply);
+    //   if (!resp.reply.startsWith('No')) {
+    //     store.setLastReply(resp.reply);
+    //     store.setReply();
+    //   }
+    // })
+    // .catch((error) => {
+    //   console.error('Error:', error);
+    // });
   };
 
   return (
