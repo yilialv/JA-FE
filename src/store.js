@@ -5,6 +5,7 @@ class Store {
     nextRequest = ''; // 从百度拿回来的新数据
     reply = ''; // 从后端拿回来的数据
     lastReply = ''; // 从后端拿回来的新数据
+    id = '';
     conversations = [];
 
     constructor() {
@@ -20,11 +21,16 @@ class Store {
     }
 
     setLastReply(val) {
-        this.lastReply = val;
+        this.lastReply = this.lastReply + val;
     }
 
     setReply() {
-        this.reply = `回答：${this.lastReply}\n\n${this.reply}`;
+        this.reply = `\n\n=============================快乐分隔符😊============================\n${this.lastReply}${this.reply}`;
+        this.lastReply = '';
+    }
+
+    setId(val) {
+        this.id = val;
     }
 
     addToConversation(val) {

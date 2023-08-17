@@ -1,6 +1,7 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
 import { Button, Input, Row} from 'antd';
 import { observer } from 'mobx-react';
+import { useRef } from 'react';
 import store from '../../store'
 import './App.css';
 
@@ -23,8 +24,8 @@ const Interview = observer(() => {
   const frameSize = 16000 * 2 / 1000 * 160; // 定义每帧大小
   const uri = URI + '?sn=' + crypto.randomUUID();
 
-  let ws = null;
-  let wsServer = null;
+  const ws = useRef(null); // 和百度的连接
+  const wsServer = useRef(null); // 和后端的连接
 
   /**
    * 发送开始帧
@@ -43,7 +44,7 @@ const Interview = observer(() => {
       }
     };
     let body = JSON.stringify(req);
-    ws.send(body);
+    ws.current.send(body);
     console.log('发送开始帧:' + body);
   };
 
@@ -56,7 +57,7 @@ const Interview = observer(() => {
       'type': 'FINISH'
     };
     let body = JSON.stringify(req);
-    ws.send(body);
+    ws.current.send(body);
     console.log('发送结束帧');
   };
 
@@ -81,8 +82,8 @@ const Interview = observer(() => {
     // 接收音频数据帧
     recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
       // console.log("onFrameRecorded");
-      if (ws.readyState === ws.OPEN) {
-        ws.send(new Int8Array(frameBuffer));
+      if (ws.current.readyState === ws.current.OPEN) {
+        ws.current.send(new Int8Array(frameBuffer));
         if (isLastFrame) {
           console.log("接收最后一个音频帧")
         }
@@ -93,19 +94,21 @@ const Interview = observer(() => {
   // 停止录音
   const stopRecording = () => {
     recorder.stop();
+    ws.current?.close();
+    wsServer.current?.close();
   }
 
   // 建立连接
   const connectWebSocket = () => {
-    ws = new WebSocket(uri);
-    wsServer = new WebSocket(SERVER_URL);
+    ws.current = new WebSocket(uri);
+    wsServer.current = new WebSocket(SERVER_URL);
 
-    ws.onopen = () => {
-      sendStartParams(ws);
+    ws.current.onopen = () => {
+      sendStartParams();
       console.log('WebSocket开始连接')
     };
   
-    ws.onmessage = (message) => {
+    ws.current.onmessage = (message) => {
       try {
         let res = JSON.parse(message.data);
         if (res.type === 'MID_TEXT' || res.type === 'FIN_TEXT') {
@@ -122,48 +125,46 @@ const Interview = observer(() => {
       console.log(JSON.parse(message.data));
     };
   
-    ws.onclose = () => {
+    ws.current.onclose = () => {
       console.log('WebSocket关闭连接');
     };
   
-    ws.onerror = (error) => {
+    ws.current.onerror = (error) => {
       recorder.stop();
       console.log('error:', error);
     };
 
-    wsServer.onopen = () => {
+    wsServer.current.onopen = () => {
       console.log('Server WebSocket打开连接');
-      const req = {
-        "conversations":[
-            "请做一下自我介绍。",
-            "面试官您好，我叫翰墨。",
-            "呃，非常荣幸加入本公司。",
-            "简单介绍一下mysql"
-        ],
-        "last_reply":"111"
-      }
-      wsServer.send(req);
     };
 
-    wsServer.onmessage = (message) => {
-      console.log('message:', message)
+    wsServer.current.onmessage = (message) => {
       try {
-        let result = JSON.parse(message);
-        console.log('Answer:', result.reply);
-        if (!result.reply.startsWith('No')) {
-          store.setLastReply(result.reply);
-          store.setReply();
+        let result = JSON.parse(message.data);
+        // console.log('message:', result)
+        if (!result.delta.startsWith('No')) {
+          // 第一次拿到数据
+          if (!store.id) {
+            store.setId(result.id);
+            store.setLastReply(result.delta);
+          } else {
+            if(result.id !== store.id) {
+              store.setReply();
+              store.setId(result.id);
+            }
+            store.setLastReply(result.delta);
+          }
         }
       } catch (error) {
         console.log('后端返回解析出错!')
       }
     };
 
-    wsServer.onclose = () => {
+    wsServer.current.onclose = () => {
       console.log('Server WebSocket关闭连接');
     };
 
-    wsServer.onerror = (error) => {
+    wsServer.current.onerror = (error) => {
       console.log('error:', error);
     };
   };
@@ -189,8 +190,7 @@ const Interview = observer(() => {
       conversations: store.conversations
     };
 
-    console.log(req)
-    wsServer.send(req);
+    wsServer.current.send(JSON.stringify(req));
 
     // fetch(SERVER_URL, {
     //   method: 'POST', // or 'PUT'
@@ -219,7 +219,7 @@ const Interview = observer(() => {
         <TextArea 
           bordered={true}
           showCount={true}
-          value={store.reply}
+          value={store.lastReply + store.reply}
           autoSize={{ minRows: 18, maxRows: 18 }} />
       </Row>
       <Row className='title'>问题</Row>
