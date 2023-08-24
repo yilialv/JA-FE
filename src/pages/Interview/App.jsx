@@ -20,7 +20,7 @@ const { TextArea } = Input;
 */
 
 const Interview = observer(() => {
-  const recorder = new RecorderManager('/src/recorder_manager');
+  const recorder = new RecorderManager('/recorder_manager');
   const frameSize = 16000 * 2 / 1000 * 160; // 定义每帧大小
   const uri = URI + '?sn=' + crypto.randomUUID();
 

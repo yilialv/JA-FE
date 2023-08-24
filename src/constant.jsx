@@ -2,15 +2,15 @@ import { ContainerOutlined, DesktopOutlined, FileSearchOutlined, RobotOutlined }
 import Interview from './pages/Interview/App';
 import InterviewRecord from './pages/InterviewRecord/App';
 
-export const APPID = 123;
-export const APPKEY = '123';
+export const APPID = 35920038;
+export const APPKEY = '23hUglH6YVRu1cTZpOZ8IWu1';
 export const DEV_PID = 80003;
-export const URI = 'ws://vop.baidu.com/realtime_asr';
+export const URI = 'wss://vop.baidu.com/realtime_asr';
 
 export const MIN_WORDS = 8; // 最短发送文字长度
 export const MAX_CONVERSATION_COUNT = 20; // 保留最大对话数量
 
-export const SERVER_URL = '123'; // 后端路由
+export const SERVER_URL = 'wss://job581.cn/interview/stream'; // 后端路由
 
 export const MENU = [
     {
