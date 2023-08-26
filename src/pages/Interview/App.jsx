@@ -214,22 +214,23 @@ const Interview = observer(() => {
 
   return (
     <div className='app'>
-      <Row className='title'>答案</Row>
+      {/* <Row className='title'>答案</Row> */}
       <Row className='container'>
         <TextArea 
           bordered={true}
           showCount={true}
+          placeholder='答案显示在这里哦～'
           value={store.lastReply + store.reply}
-          autoSize={{ minRows: 18, maxRows: 18 }} />
+          autoSize={{ minRows: 16, maxRows: 16 }} />
       </Row>
-      <Row className='title'>问题</Row>
+      {/* <Row className='title'>问题</Row> */}
       <Row className='container'>
         <TextArea 
-          id='q_box'
           bordered={true}
           showCount={true}
+          placeholder='问题显示在这里'
           value={store.request}
-          autoSize={{ minRows: 4, maxRows: 4 }} />
+          autoSize={{ minRows: 3, maxRows: 3 }} />
       </Row>
       <Row className='btn'>
         <Button type='primary' onClick={startRecording}>开始面试</Button>
