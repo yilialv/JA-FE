@@ -1,5 +1,4 @@
 import { Row, Card } from "antd";
-import './App.css';
 
 const InterViewRecord = () => {
     return (

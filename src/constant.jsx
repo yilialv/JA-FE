@@ -34,8 +34,3 @@ export const MENU = [
     //     icon: <RobotOutlined />,
     // }
 ];
-
-export const page = {
-    'interview': <Interview />,
-    'interviewRecord': <InterviewRecord />
-};
