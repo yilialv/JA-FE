@@ -1,11 +1,11 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Input, Row} from 'antd';
+import { Button, Input, Row, Layout} from 'antd';
 import { observer } from 'mobx-react';
 import { useRef } from 'react';
 import store from '../../store'
-import './App.css';
 
 const { TextArea } = Input;
+const { Content } = Layout;
 
 /*
 1. 连接 ws_app.run_forever()
@@ -213,29 +213,30 @@ const Interview = observer(() => {
   };
 
   return (
-    <div className='app'>
-      <Row className='title'>答案</Row>
+    <Content className='app'>
+      {/* <Row className='title'>答案</Row> */}
       <Row className='container'>
         <TextArea 
           bordered={true}
           showCount={true}
+          placeholder='答案显示在这里'
           value={store.lastReply + store.reply}
-          autoSize={{ minRows: 18, maxRows: 18 }} />
+          autoSize={{ minRows: 25, maxRows: 25 }} />
       </Row>
-      <Row className='title'>问题</Row>
+      {/* <Row className='title'>问题</Row> */}
       <Row className='container'>
         <TextArea 
-          id='q_box'
           bordered={true}
           showCount={true}
+          placeholder='问题显示在这里'
           value={store.request}
-          autoSize={{ minRows: 4, maxRows: 4 }} />
+          autoSize={{ minRows: 3, maxRows: 3 }} />
       </Row>
       <Row className='btn'>
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
       </Row>
-    </div>
+    </Content>
   );
 });
 

@@ -2,8 +2,8 @@ import { ContainerOutlined, DesktopOutlined, FileSearchOutlined, RobotOutlined }
 import Interview from './pages/Interview/App';
 import InterviewRecord from './pages/InterviewRecord/App';
 
-export const APPID = 35920038;
-export const APPKEY = '23hUglH6YVRu1cTZpOZ8IWu1';
+export const APPID = 36915985;
+export const APPKEY = 'O5vbXSd4OyLGYMaKbGVGtVip';
 export const DEV_PID = 80003;
 export const URI = 'wss://vop.baidu.com/realtime_asr';
 
@@ -13,11 +13,11 @@ export const MAX_CONVERSATION_COUNT = 20; // 保留最大对话数量
 export const SERVER_URL = 'wss://job581.cn/interview/stream'; // 后端路由
 
 export const MENU = [
-    {
-        label: '简历评估',
-        key: 'resume',
-        icon: <ContainerOutlined />,
-    },
+    // {
+    //     label: '简历评估',
+    //     key: 'resume',
+    //     icon: <ContainerOutlined />,
+    // },
     {
         label: '模拟面试',
         key: 'interview',
@@ -28,14 +28,9 @@ export const MENU = [
         key: 'interviewRecord',
         icon: <FileSearchOutlined />,
     },
-    {
-        label: '知识问答',
-        key: 'answer',
-        icon: <RobotOutlined />,
-    }
+    // {
+    //     label: '知识问答',
+    //     key: 'answer',
+    //     icon: <RobotOutlined />,
+    // }
 ];
-
-export const page = {
-    'interview': <Interview />,
-    'interviewRecord': <InterviewRecord />
-};
