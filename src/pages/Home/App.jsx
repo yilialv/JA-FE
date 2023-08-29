@@ -1,5 +1,7 @@
 import { Button, Layout, Statistic, Card } from 'antd';
 import { Link } from 'react-router-dom';
+import SlideInOnMount from '../../components/SlideInOnMount';
+import ElasticEffect from '../../components/ElasticEffect';
 import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg'
 import souhuUrl from '../../imgs/souhu.jpg'
@@ -12,7 +14,11 @@ const Home = () => {
     return (
         <Content className='content'>
             <img src={logo1Url} className='logo' />
-            <div className='title'>AI面试小助手，助力收割大厂offer</div>
+            <ElasticEffect>
+                <SlideInOnMount>
+                    <div className='title'>AI面试小助手，助力收割大厂offer</div>
+                </SlideInOnMount>
+            </ElasticEffect>
             <div className='statistics'>
                 <div className='text'>为你彻底解决背八股文的烦恼！</div>
             </div>

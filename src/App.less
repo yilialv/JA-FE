@@ -30,29 +30,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    .gap {
-        margin-top: 50px;
-    }
-    .login-text {
-        font-size: 18px;
-    }
-    .emphasize {
-        font-weight: 600;
-        color: red;
-    }
-    .login-send {
-        display: flex;
-    }
-    .login-img {
-        width: 250px;
-        height: 250px;
-        margin: 20px 0;
-    }
-    .login-input {
-        width: 200px;
-        height: 40px;
-        margin-bottom: 20px;
-    }
     .logo {
         width: 100px;
         height: 100px;
@@ -98,6 +75,37 @@
         }
     }
 }
+
+// login
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .gap {
+        margin-top: 50px;
+    }
+    .login-text {
+        font-size: 18px;
+    }
+    .emphasize {
+        font-weight: 600;
+        color: red;
+    }
+    .login-send {
+        display: flex;
+    }
+    .login-img {
+        width: 200px;
+        height: 200px;
+        margin: 20px 0;
+    }
+    .login-input {
+        width: 200px;
+        height: 40px;
+        margin-bottom: 20px;
+    }
+}
+
 .footer {
     background-color: white;
     font-size: 14px;
@@ -122,3 +130,22 @@
         margin-top: 50px;
     }
 }
+
+// 滑动进入动画
+.slide-enter {
+    transform: translateY(100%);
+}
+.slide-enter-active {
+    transform: translateY(0);
+    transition: transform 500ms ease-out;
+}
+
+// hover弹性动画
+.elastic-effect {
+    display: inline-block;
+    transition: transform 0.3s ease-in-out;
+}
+.elastic-effect.hovered {
+    transform: scale(1.1);
+}
+  

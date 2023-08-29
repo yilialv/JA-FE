@@ -2,11 +2,22 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, Layout, Button } from 'antd';
 import { useState } from 'react';
+import Login from '../pages/Login/App';
 
 const { Header } = Layout;
 
 const NavigationMenu = () => {
   const [current, setCurrent] = useState('home');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const showModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+};
+
   const menuItems = [
     {
       key: 'resume',
@@ -34,7 +45,7 @@ const NavigationMenu = () => {
         justifyContent: 'space-between'
       }}
     >
-      <div className='page-title'>JobGPT</div>
+      <Link to="/"><div className='page-title'>JobGPT</div></Link>
       <div className='page-menu'>
         <Menu
           theme="dark"
@@ -49,7 +60,8 @@ const NavigationMenu = () => {
             <Link to="/interview">面试助手</Link>
           </Menu.Item>
         </Menu>
-        <Link to="/login"><Button className='login-btn'>登陆</Button></Link>
+        <Button className='login-btn' onClick={showModal}>登陆</Button>
+        <Login open={isModalOpen} onCancel={handleCancel} />
       </div>
     </Header>
   );

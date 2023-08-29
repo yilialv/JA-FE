@@ -1,6 +1,4 @@
 import { ContainerOutlined, DesktopOutlined, FileSearchOutlined, RobotOutlined } from '@ant-design/icons';
-import Interview from './pages/Interview/App';
-import InterviewRecord from './pages/InterviewRecord/App';
 
 export const APPID = 36915985;
 export const APPKEY = 'O5vbXSd4OyLGYMaKbGVGtVip';
