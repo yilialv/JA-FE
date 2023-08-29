@@ -21,7 +21,7 @@
     display: flex;
     align-items: center;
     .login-btn {
-        margin-left: 30px;
+        margin-left: 20px;
     }
 }
 .content {
@@ -39,6 +39,7 @@
         font-size: 2.75rem;
         font-weight: 800;
         margin-top: 20px;
+        text-align: center;
     }
     .statistics {
         display: flex;
@@ -51,7 +52,7 @@
         }
     }
     .btn {
-        width: 600px;
+        width: 300px;
         height: 40px;
         line-height: 30px;
         background-color: #001529;
@@ -107,22 +108,19 @@
 }
 
 .footer {
-    background-color: white;
     font-size: 14px;
     .info {
         display: flex;
-        justify-content: space-between;
-        margin: 20px 0;
-        .detail {
+        justify-content: space-around;
+        flex-wrap: wrap;
+        .desc {
             width: 200px;
-        }
-        .connect {
             display: flex;
-            .desc {
-                width: 200px;
-                .links {
-                    margin-bottom: 10px;
-                }
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            .links {
+                margin-bottom: 10px;
             }
         }
     }

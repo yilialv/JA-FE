@@ -1,4 +1,4 @@
-import { Layout, Input, Button, Modal } from 'antd';
+import { Input, Button, Modal } from 'antd';
 import loginUrl from '../../imgs/login.jpg'
 
 const Login = (props) => {

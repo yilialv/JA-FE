@@ -27,7 +27,7 @@ const Home = () => {
                 <Statistic value={123456} valueStyle={{color: '#3f8600'}} />
                 <div className='text'>人拿到心仪offer！</div>
             </div>
-            <Link to="/interview"><Button type='primary' className='btn'>开启面试小助手</Button></Link>
+            <Link to="/interview"><Button type='primary'  className='btn'>开启面试小助手</Button></Link>
             <div className='records'>
                 <Card
                 hoverable
