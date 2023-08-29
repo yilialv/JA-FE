@@ -1,24 +1,18 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CSSTransition } from 'react-transition-group';
 
-class SlideInOnMount extends Component {
-  constructor(props) {
-    super(props);
-    this.nodeRef = React.createRef();
-  }
+const SlideInOnMount = ({ children }) => {
+  const [inProp, setInProp] = useState(false);
 
-  render() {
-    return (
-      <CSSTransition
-        nodeRef={this.nodeRef}
-        in={true}
-        timeout={500}
-        classNames="slide"
-      >
-        <div ref={this.nodeRef}>{this.props.children}</div>
-      </CSSTransition>
-    );
-  }
-}
+  useEffect(() => {
+    setInProp(true);
+  });
+
+  return (
+    <CSSTransition in={inProp} timeout={500} classNames="slide">
+      {children}
+    </CSSTransition>
+  );
+};
 
 export default SlideInOnMount;
