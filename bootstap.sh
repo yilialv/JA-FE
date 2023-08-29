@@ -2,6 +2,12 @@
 
 cd /root/JA-FE
 
+#更新仓库
+git checkout main
+git reset --hard HEAD
+git pull
+#安装包
+npm install
 #删除原产物
 rm -rf dist
 #生成新产物
