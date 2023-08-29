@@ -1,5 +1,5 @@
 import { Layout, Input, Button } from 'antd';
-import logoUrl from '../../imgs/logo.jpg'
+import loginUrl from '../../imgs/login.jpg'
 
 const { Content } = Layout;
 
@@ -12,7 +12,7 @@ const Login = () => {
                 <div className='login-text emphasize'>验证码</div>
                 <div className='login-text'>”三个字获取验证码</div>
             </div>
-            <img src={logoUrl} className='login-img'></img>
+            <img src={loginUrl} className='login-img'></img>
             <Input placeholder="请输入验证码登陆(6位)" className='login-input' />
             <Button type='primary' className='login-input'>登陆</Button>
         </Content>
