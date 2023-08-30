@@ -10,6 +10,10 @@ export const MAX_CONVERSATION_COUNT = 20; // 保留最大对话数量
 
 export const SERVER_URL = 'wss://job581.cn/interview/stream'; // 后端路由
 
+export const BASE_URL = 'https://job581.cn'
+
+export const EXPIRES = 15; // jwt-token过期时间
+
 export const MENU = [
     // {
     //     label: '简历评估',

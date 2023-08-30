@@ -1,4 +1,6 @@
 import { makeAutoObservable } from "mobx";
+import { getCookie, setCookie } from "./utils";
+import { EXPIRES } from "./constant";
 
 class Store {
     request = ''; // 从百度拿回来的数据
@@ -7,6 +9,14 @@ class Store {
     lastReply = ''; // 从后端拿回来的新数据
     id = '';
     conversations = [];
+
+    currentMenu = 'home';
+
+    jwtToken = '';
+    nickName = '';
+    isLogin = false;
+
+    isLoginModalOpen = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -39,6 +49,21 @@ class Store {
 
     removeFromConversation() {
         this.conversations.shift();
+    }
+
+    setJwtToken(token) {
+        this.jwtToken = token;
+        setCookie("jwtToken", this.jwtToken, EXPIRES);
+        console.log("JWT Token set!");
+    }
+    
+    getJwtToken() {
+        this.jwtToken = getCookie("jwtToken");
+        if (this.jwtToken) {
+            this.isLogin = true;
+        } else {
+            this.isLogin = false;
+        }
     }
 }
 

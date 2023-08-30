@@ -1,0 +1,60 @@
+@border-style: 1px solid #ccc;
+@dialog-height: 600px;
+@dialog-margin: 20px 0;
+@dialog-box-shadow: 0 5px 10px rgba(145, 158, 171, 0.319);
+@dialog-border-radius: 15px;
+
+.interview-detail {
+    display: flex;
+    justify-content: center;
+    min-height: 900;
+    background-color: white;
+    .container {
+        width: 500px;
+        height: @dialog-height;
+        margin: @dialog-margin;
+        border: @border-style;
+        box-shadow: @dialog-box-shadow;
+        border-top-left-radius: @dialog-border-radius;
+        border-bottom-left-radius: @dialog-border-radius;
+        .title {
+            height: 10%;
+            border-bottom: @border-style;
+            font-size: 14px;
+            padding: 15px;
+        }
+        .answer-block {
+            height: 75%;
+            border-bottom: @border-style;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            .answer {
+                display: flex;
+                .text {
+                    width: 90%;
+                    margin-left: 10px;
+                    background-color: rgb(244, 246, 248);
+                    border-radius: 20px;
+                    padding: 15px;
+                    word-wrap: break-word;
+                }
+            }
+        }
+        .question {
+            height: 15%;
+            padding: 15px;
+        }
+    }
+    .sider {
+        width: 100px;
+        height: @dialog-height;
+        margin: @dialog-margin;
+        border-top: @border-style;
+        border-bottom: @border-style;
+        border-right: @border-style;
+        box-shadow: @dialog-box-shadow;
+        border-top-right-radius: @dialog-border-radius;
+        border-bottom-right-radius: @dialog-border-radius;
+    }
+}

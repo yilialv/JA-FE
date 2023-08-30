@@ -6,11 +6,17 @@ import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg'
 import souhuUrl from '../../imgs/souhu.jpg'
 import zuiyouUrl from '../../imgs/zuiyou.jpg'
+import { observer } from 'mobx-react';
+import store from '../../store';
 
 const { Content } = Layout;
 const { Meta } = Card;
 
 const Home = () => {
+    const openLogin = () => {
+        store.isLoginModalOpen = true;
+    };
+
     return (
         <Content className='content'>
             <img src={logo1Url} className='logo' />
@@ -27,7 +33,11 @@ const Home = () => {
                 <Statistic value={123456} valueStyle={{color: '#3f8600'}} />
                 <div className='text'>人拿到心仪offer！</div>
             </div>
-            <Link to="/interview"><Button type='primary'  className='btn'>开启面试小助手</Button></Link>
+            {
+                store.isLogin ?
+                <Link to="/interview"><Button type='primary' className='btn'>开启面试小助手</Button></Link> :
+                <Link to="/"><Button type='primary' className='btn' onClick={openLogin}>开启面试小助手</Button></Link>
+            }
             <div className='records'>
                 <Card
                 hoverable
@@ -160,4 +170,4 @@ const Home = () => {
     );
 };
 
-export default Home;
+export default observer(Home);

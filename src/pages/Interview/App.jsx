@@ -1,8 +1,10 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Input, Row, Layout} from 'antd';
+import { Button, Input, Row, Layout, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useRef } from 'react';
 import store from '../../store'
+import './App.less'
 
 const { TextArea } = Input;
 const { Content } = Layout;
@@ -213,8 +215,7 @@ const Interview = observer(() => {
   };
 
   return (
-    <Content className='app'>
-      {/* <Row className='title'>答案</Row> */}
+    <Content className='interview-detail'>
       <Row className='container'>
         <TextArea 
           bordered={true}
@@ -223,7 +224,6 @@ const Interview = observer(() => {
           value={store.lastReply + store.reply}
           autoSize={{ minRows: 25, maxRows: 25 }} />
       </Row>
-      {/* <Row className='title'>问题</Row> */}
       <Row className='container'>
         <TextArea 
           bordered={true}
@@ -236,6 +236,19 @@ const Interview = observer(() => {
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
       </Row>
+      {/* <div className='container'>
+        <div className='title'>字节面试</div>
+        <div className='answer-block'>
+          <div className='answer'>
+            <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+            <div className='text'>{ store.lastReply  }</div>
+          </div>
+        </div>
+        <div className='question'>{ store.request }</div>
+      </div>
+      <div className='sider'>
+
+      </div> */}
     </Content>
   );
 });
