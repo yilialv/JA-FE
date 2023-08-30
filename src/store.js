@@ -51,14 +51,17 @@ class Store {
         this.conversations.shift();
     }
 
-    setJwtToken(token) {
+    setJwtToken(token, nickName) {
         this.jwtToken = token;
+        this.nickName = nickName;
         setCookie("jwtToken", this.jwtToken, EXPIRES);
-        console.log("JWT Token set!");
+        setCookie("nickName", this.nickName, EXPIRES);
+        console.log("cookie set!");
     }
     
     getJwtToken() {
         this.jwtToken = getCookie("jwtToken");
+        this.nickName = getCookie("nickName");
         if (this.jwtToken) {
             this.isLogin = true;
         } else {

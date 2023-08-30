@@ -17,12 +17,12 @@ const Login = () => {
             if (status === 200) {
                 message.info('登陆成功');
                 const { jwt_token, nick_name } = res.data;
-                store.setJwtToken(jwt_token);
+                store.setJwtToken(jwt_token, nick_name);
                 store.nickName = nick_name;
                 store.isLogin = true;
             }
         }).catch((err) => {
-            console.log(err)
+            console.log(err);
             message.error('登陆失败，别灰心，再试一次吧～')
         }).finally(() => {
             handleCancel();
