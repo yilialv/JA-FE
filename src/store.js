@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { getCookie, setCookie } from "./utils";
+import { getCookie, setCookie, deleteCookie } from "./utils";
 import { EXPIRES } from "./constant";
 
 class Store {
@@ -67,6 +67,12 @@ class Store {
         } else {
             this.isLogin = false;
         }
+    }
+
+    deleteJwtToken() {
+        deleteCookie("jwtToken");
+        deleteCookie("nickName");
+        this.isLogin = false;
     }
 }
 

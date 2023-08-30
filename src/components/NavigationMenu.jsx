@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Layout, Button, Avatar } from 'antd';
+import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
 import { useState } from 'react';
 import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
@@ -29,6 +29,20 @@ const NavigationMenu = () => {
   //     label: '模拟面试'
   //   }
   // ];
+
+  const items = [
+    {
+      label: '个人中心',
+      key: 'personal'
+    },
+    {
+      type: 'divider'
+    },
+    {
+      label: (<div onClick={()=>store.deleteJwtToken()}>退出</div>),
+      key: 'logout'
+    }
+  ]
 
   return (
     <Header
@@ -64,7 +78,14 @@ const NavigationMenu = () => {
         </Menu>
         {
           store.isLogin ? 
-          <Avatar style={{ backgroundColor: '#fde3cf', color: '#f56a00' }}>{ store.nickName }</Avatar> :
+          <Dropdown menu={{items}} placement='bottom'>
+            <Avatar 
+              style={{ backgroundColor: '#fde3cf', color: '#f56a00' }} 
+              className='login-btn'
+            >
+                { store.nickName }
+            </Avatar>
+          </Dropdown> :
           <>
             <Button className='login-btn' onClick={showModal}>登陆</Button>
             <Login />

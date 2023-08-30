@@ -71,26 +71,6 @@ const Interview = observer(() => {
       sampleRate: 16000,
       frameSize: frameSize,
     });
-
-    recorder.onStart = () => {
-      // console.log("recorder.onStart")
-    }
-
-    recorder.onStop = function () {
-      sendFinish();
-      console.log('录音结束');
-    };
-
-    // 接收音频数据帧
-    recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-      // console.log("onFrameRecorded");
-      if (ws.current.readyState === ws.current.OPEN) {
-        ws.current.send(new Int8Array(frameBuffer));
-        if (isLastFrame) {
-          console.log("接收最后一个音频帧")
-        }
-      }
-    };
   }
 
   // 停止录音
@@ -100,10 +80,30 @@ const Interview = observer(() => {
     wsServer.current?.close();
   }
 
+  recorder.onStart = () => {
+    // console.log("recorder.onStart")
+  }
+
+  recorder.onStop = function () {
+    sendFinish();
+    console.log('录音结束');
+  };
+
+  // 接收音频数据帧
+  recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+    // console.log("onFrameRecorded");
+    if (ws.current.readyState === ws.current.OPEN) {
+      ws.current.send(new Int8Array(frameBuffer));
+      if (isLastFrame) {
+        console.log("接收最后一个音频帧")
+      }
+    }
+  };
+
   // 建立连接
   const connectWebSocket = () => {
     ws.current = new WebSocket(uri);
-    wsServer.current = new WebSocket(SERVER_URL);
+    wsServer.current = new WebSocket(SERVER_URL + `?jwt-token=${store.jwtToken}`);
 
     ws.current.onopen = () => {
       sendStartParams();
@@ -216,7 +216,7 @@ const Interview = observer(() => {
 
   return (
     <Content className='interview-detail'>
-      <Row className='container'>
+      {/* <Row className='container'>
         <TextArea 
           bordered={true}
           showCount={true}
@@ -231,12 +231,12 @@ const Interview = observer(() => {
           placeholder='问题显示在这里'
           value={store.request}
           autoSize={{ minRows: 3, maxRows: 3 }} />
-      </Row>
+      </Row> */}
       <Row className='btn'>
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
       </Row>
-      {/* <div className='container'>
+      <div className='container'>
         <div className='title'>字节面试</div>
         <div className='answer-block'>
           <div className='answer'>
@@ -248,7 +248,7 @@ const Interview = observer(() => {
       </div>
       <div className='sider'>
 
-      </div> */}
+      </div>
     </Content>
   );
 });

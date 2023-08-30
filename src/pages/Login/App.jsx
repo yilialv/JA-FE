@@ -12,7 +12,6 @@ const Login = () => {
 
     const handleSubmit = (param) => {
         axios.post(`${BASE_URL}/api/wx/login`, param).then((res) => {
-            console.log(res);
             const { status } = res;
             if (status === 200) {
                 message.info('登陆成功');
