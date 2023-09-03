@@ -123,8 +123,6 @@ const Interview = observer(() => {
       } catch (err) {
         console.log('解析语音转文字结果报错，错误为：', err);
       }
-      
-      console.log(JSON.parse(message.data));
     };
   
     ws.current.onclose = () => {
@@ -142,20 +140,19 @@ const Interview = observer(() => {
 
     wsServer.current.onmessage = (message) => {
       try {
-        console.log(message.data)
-        let result = JSON.parse(message.data);
-        // console.log('message:', result)
-        if (!result.delta.startsWith('No')) {
+        const result = JSON.parse(message.data);
+        const { data, id } = result;
+        if (!data.startsWith('No')) {
           // 第一次拿到数据
           if (!store.id) {
-            store.setId(result.id);
-            store.setLastReply(result.delta);
+            store.setId(id);
+            store.setLastReply(data);
           } else {
-            if(result.id !== store.id) {
+            if(id !== store.id) {
               store.setReply();
-              store.setId(result.id);
+              store.setId(id);
             }
-            store.setLastReply(result.delta);
+            store.setLastReply(data);
           }
         }
       } catch (error) {
@@ -215,6 +212,15 @@ const Interview = observer(() => {
     // });
   };
 
+  const renderReply = () => {
+    store.reply.map((item) => {
+      return (<div className='answer'>
+        <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+        <div className='text'>{ item }</div>
+      </div>)
+    });
+  };
+
   return (
     <Content className='interview-detail'>
       {/* <Row className='container'>
@@ -240,15 +246,15 @@ const Interview = observer(() => {
       <div className='container'>
         <div className='title'>字节面试</div>
         <div className='answer-block'>
+          { renderReply }
           <div className='answer'>
             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-            <div className='text'>{ store.lastReply  }</div>
+            <div className='text'>{ store.lastReply }</div>
           </div>
         </div>
         <div className='question'>{ store.request }</div>
       </div>
       <div className='sider'>
-
       </div>
     </Content>
   );

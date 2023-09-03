@@ -5,7 +5,7 @@ import { EXPIRES } from "./constant";
 class Store {
     request = ''; // 从百度拿回来的数据
     nextRequest = ''; // 从百度拿回来的新数据
-    reply = ''; // 从后端拿回来的数据
+    reply = []; // 从后端拿回来的数据
     lastReply = ''; // 从后端拿回来的新数据
     id = '';
     conversations = [];
@@ -36,7 +36,7 @@ class Store {
     }
 
     setReply() {
-        this.reply = `\n\n=============================快乐分隔符😊============================\n${this.lastReply}${this.reply}`;
+        this.reply.push(this.lastReply)
         this.lastReply = '';
     }
 
