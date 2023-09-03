@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Menu, Layout, Button, Avatar, Dropdown, ConfigProvider } from 'antd';
 import { useState } from 'react';
 import Login from '../pages/Login/App';
+import Assistant from '../pages/InterviewAssistant/App';
 import { observer } from 'mobx-react';
 import store from '../store';
 import { BgColorsOutlined, } from '@ant-design/icons';
@@ -15,6 +16,9 @@ const NavigationMenu = () => {
       store.isLoginModalOpen = true;
     };
   };
+  const showAssistantModal = () => {
+    store.isAssistantModalOpen = true;
+  }
 
   const menuItems = [
     {
@@ -31,11 +35,6 @@ const NavigationMenu = () => {
       key: 'jobAssistant',
       label: '面试助手',
       link: '/jobAssistant'
-    },
-    {
-      key: 'interview',
-      label: '模拟面试',
-      link: '/interview'
     }
   ];
 
@@ -86,6 +85,10 @@ const NavigationMenu = () => {
         // items={menuItems}
         >
           {menuItems_component}
+          {<Menu.Item key='interview'>
+            <Link onClick={showAssistantModal}>模拟面试</Link>
+            <Assistant />
+          </Menu.Item>}
         </Menu>
         {
           store.isLogin ?
