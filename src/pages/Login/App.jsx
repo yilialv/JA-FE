@@ -1,31 +1,16 @@
 import { Input, Button, Modal, Form, message } from 'antd';
 import loginUrl from '../../imgs/login.jpg'
-import axios from 'axios';
-import { BASE_URL } from '../../constant';
 import { observer } from 'mobx-react';
 import store from '../../store';
+import { login } from '../../router';
 
 const Login = () => {
     const handleCancel = () => {
         store.isLoginModalOpen = false;
     };
 
-    const handleSubmit = (param) => {
-        axios.post(`${BASE_URL}/api/wx/login`, param).then((res) => {
-            const { status } = res;
-            if (status === 200) {
-                message.info('登陆成功');
-                const { jwt_token, nick_name } = res.data;
-                store.setJwtToken(jwt_token, nick_name);
-                store.nickName = nick_name;
-                store.isLogin = true;
-            }
-        }).catch((err) => {
-            console.log(err);
-            message.error('登陆失败，别灰心，再试一次吧～')
-        }).finally(() => {
-            handleCancel();
-        });
+    const handleSubmit = (params) => {
+        login(params);
     }
 
     return (

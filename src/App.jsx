@@ -8,10 +8,11 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { useEffect } from 'react';
 import store from './store';
 import { observer } from 'mobx-react';
+import { getHomeData } from './router';
 
 const App = () => {
   useEffect(() => {
-    store.getJwtToken();
+    getHomeData();
   }, []);
 
   return (
@@ -20,11 +21,11 @@ const App = () => {
         <NavigationMenu />
         <Routes>
           <Route exact path="/" element={<Home />} />
-          {
+          {/* {
             store.isLogin ? 
             <Route path="/interview" element={<Interview />} /> : 
             <Route path="/interview" element={<Navigate to="/" />}/>
-          }
+          } */}
           <Route path="/interview" element={<Interview />} />
         </Routes>
         <FooterInfo />

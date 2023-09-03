@@ -103,7 +103,7 @@ const Interview = observer(() => {
   // 建立连接
   const connectWebSocket = () => {
     ws.current = new WebSocket(uri);
-    wsServer.current = new WebSocket(SERVER_URL + `?jwt-token=${store.jwtToken}`);
+    wsServer.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {
       sendStartParams();
@@ -142,6 +142,7 @@ const Interview = observer(() => {
 
     wsServer.current.onmessage = (message) => {
       try {
+        console.log(message.data)
         let result = JSON.parse(message.data);
         // console.log('message:', result)
         if (!result.delta.startsWith('No')) {

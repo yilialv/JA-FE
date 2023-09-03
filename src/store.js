@@ -52,16 +52,31 @@ class Store {
         this.conversations.shift();
     }
 
-    setJwtToken(token, nickName) {
-        this.jwtToken = token;
+    setHomeInfo(params) {
+        const { nickName } = params;
+        if (nickName) {
+            this.isLogin = true;
+        } else {
+            this.isLogin = false;
+        }
         this.nickName = nickName;
-        setCookie("jwtToken", this.jwtToken, EXPIRES);
-        setCookie("nickName", this.nickName, EXPIRES);
-        console.log("cookie set!");
+    }
+
+    setUserInfo(token, nickName) {
+        // this.jwtToken = token;
+        this.nickName = nickName;
+        this.isLogin = true;
+        // setCookie("jwtToken", this.jwtToken, EXPIRES);
+        // setCookie("nickName", this.nickName, EXPIRES);
+        // console.log("cookie set!");
+    }
+
+    logout() {
+
     }
     
     getJwtToken() {
-        this.jwtToken = getCookie("jwtToken");
+        // this.jwtToken = getCookie("jwtToken");
         this.nickName = getCookie("nickName");
         if (this.jwtToken) {
             this.isLogin = true;

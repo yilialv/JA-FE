@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Menu, Layout, Button, Avatar, Dropdown, ConfigProvider } from 'antd';
+import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
 import { useState } from 'react';
 import Login from '../pages/Login/App';
 import Assistant from '../pages/InterviewAssistant/App';
 import { observer } from 'mobx-react';
 import store from '../store';
-import { BgColorsOutlined, } from '@ant-design/icons';
+import { logout } from '../router';
 
 const { Header } = Layout;
 
@@ -55,7 +55,7 @@ const NavigationMenu = () => {
       type: 'divider'
     },
     {
-      label: (<div onClick={() => store.deleteJwtToken()}>退出</div>),
+      label: (<div onClick={() => logout()}>退出</div>),
       key: 'logout'
     }
   ]
