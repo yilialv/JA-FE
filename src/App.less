@@ -1,140 +1,218 @@
+//全局
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+//
 .page-title {
-    color: white;
+    color: rgb(0, 0, 0);
+    font-weight: 700;
     font-size: 20px;
 }
+
 .btn {
     display: flex;
     justify-content: space-evenly;
 }
+
 .page-menu {
+    font-weight: 600;
     display: flex;
     align-items: center;
+
     .login-btn {
         margin-left: 20px;
+        // border-color: #3F9D13;
+        // color: #3F9D13;
+        font-weight: 600;
     }
+
 }
+
 .content {
     min-height: 900;
     background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
+
     .logo {
         width: 100px;
         height: 100px;
         margin-top: 100px;
     }
+
     .title {
         font-size: 2.75rem;
         font-weight: 800;
         margin-top: 20px;
         text-align: center;
     }
+
     .statistics {
         display: flex;
         align-items: center;
         margin-top: 20px;
+
         .text {
             font-size: 0.875rem;
-            font-weight: 600;
+            font-weight: 500;
             padding: 5px 10px 0 10px;
         }
     }
-    .btn {
-        width: 300px;
-        height: 40px;
-        line-height: 30px;
-        background-color: #001529;
-        margin: 50px 0;
-    }
-    .records {
+
+    .btn-container {
         display: flex;
-        flex-wrap: wrap;
-        padding: 0 50px;
-        .interview {
-            width: 240px;
-            margin: 10px;
-            .interview-info {
-                display: flex;
-                justify-content: space-between;
-                margin: 10px 0;
-                .info {
-                    font-size: 14px;
+        .btn {
+            width: 200px;
+            height: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 40px;
+            margin: 50px 20px 50px 20px;
+        }
+    }
+
+    .records-container {
+
+        .records {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+
+            .interview {
+                width: 240px;
+                margin: 20px;
+
+                .interview-info {
+                    display: flex;
+                    justify-content: space-between;
+                    margin: 10px 0;
+
+                    .info {
+                        font-size: 14px;
+                    }
+                }
+
+                .interview-footer {
+                    margin-top: 20px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    .interview-footer-user{
+                        display: flex;
+                        align-items: center;
+                    }
                 }
             }
         }
-    }
-}
 
-// login
-.login {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    .gap {
-        margin-top: 50px;
-    }
-    .login-text {
-        font-size: 18px;
-    }
-    .emphasize {
-        font-weight: 600;
-        color: red;
-    }
-    .login-send {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-    .login-img {
-        width: 200px;
-        height: 200px;
-        margin: 20px 0;
-    }
-    .login-input {
-        width: 200px;
-        height: 40px;
-        margin-bottom: 20px;
-    }
-}
+        @media screen and (max-width: 1230px) {
+            .records {
+                grid-template-columns: 1fr 1fr 1fr;
+            }
+        }
 
-.footer {
-    font-size: 14px;
-    .info {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-        .desc {
-            width: 200px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-top: 20px;
-            .links {
-                margin-bottom: 10px;
+        @media screen and (max-width: 860px) {
+            .records {
+                grid-template-columns: 1fr 1fr;
             }
         }
     }
-    .created {
-        margin-top: 50px;
+
+
+
+    // login
+    .login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .gap {
+            margin-top: 50px;
+        }
+
+        .login-text {
+            font-size: 18px;
+        }
+
+        .emphasize {
+            font-weight: 600;
+            color: red;
+        }
+
+        .login-send {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .login-img {
+            width: 200px;
+            height: 200px;
+            margin: 20px 0;
+        }
+
+        .login-input {
+            width: 200px;
+            height: 40px;
+            margin-bottom: 20px;
+        }
+    }
+
+    .footer {
+        font-size: 14px;
+
+        .info {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+
+            .desc {
+                width: 200px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 20px;
+
+                .links {
+                    margin-bottom: 10px;
+                }
+            }
+        }
+
+        .created {
+            margin-top: 50px;
+        }
+    }
+
+    // 滑动进入动画
+    .slide-enter {
+        transform: translateY(100%);
+    }
+
+    .slide-enter-active {
+        transform: translateY(0);
+        transition: transform 500ms ease-out;
+    }
+
+    // hover弹性动画
+    .elastic-effect {
+        display: inline-block;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .elastic-effect.hovered {
+        transform: scale(1.1);
     }
 }
-
-// 滑动进入动画
-.slide-enter {
-    transform: translateY(100%);
-}
-.slide-enter-active {
-    transform: translateY(0);
-    transition: transform 500ms ease-out;
-}
-
-// hover弹性动画
-.elastic-effect {
-    display: inline-block;
-    transition: transform 0.3s ease-in-out;
-}
-.elastic-effect.hovered {
-    transform: scale(1.1);
-}
-  
