@@ -1,4 +1,4 @@
-import { Input, Button, Modal, Form, message } from 'antd';
+import { Input, Button, Modal, Form } from 'antd';
 import loginUrl from '../../imgs/login.jpg'
 import { observer } from 'mobx-react';
 import store from '../../store';
@@ -14,7 +14,7 @@ const Login = () => {
     }
 
     return (
-        <Modal title="登陆" open={store.isLoginModalOpen} onCancel={handleCancel} footer={null}>
+        <Modal title="登录" open={store.isLoginModalOpen} onCancel={handleCancel} footer={null}>
             <div className='login'>
                 <div className='login-text gap'>微信扫码关注公众号</div>
                 <div className='login-send'>
@@ -25,13 +25,12 @@ const Login = () => {
                 <img src={loginUrl} className='login-img'></img>
                 <Form onFinish={handleSubmit}>
                     <Form.Item name="verify_code">
-                        <Input placeholder="请输入验证码登陆(4位)" className='login-input' />
+                        <Input placeholder="请输入验证码登录(4位)" className='login-input' />
                     </Form.Item>
                     <Form.Item>
-                        <Button type='primary' htmlType="submit" className='login-input'>登陆</Button>
+                        <Button type='primary' htmlType="submit" className='login-input'>登录</Button>
                     </Form.Item>
                 </Form>
-                
             </div>
         </Modal>
     );

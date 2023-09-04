@@ -11,6 +11,11 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         colorPrimary:'#3F9D13',
         algorithm: true, // 启用算法
       },
+      components:{
+        Menu:{
+          iconSize:20
+        }
+      }
   }}
 >
   <React.StrictMode>

@@ -1,5 +1,15 @@
 //全局
 
+html {
+    font-size: 2vw;
+}
+
+@media screen and (min-width:1300px) {
+    html {
+        font-size: 26px;
+    }
+}
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -17,6 +27,7 @@
 .page-title {
     color: rgb(0, 0, 0);
     font-weight: 700;
+    margin-left: 20px;
     font-size: 20px;
 }
 
@@ -28,12 +39,19 @@
 .page-menu {
     font-weight: 600;
     display: flex;
+    flex-wrap: wrap;
+    justify-items: end;
     align-items: center;
+
+    @media screen and (max-width:585px) {
+        .page-menu-list {
+            width: 60px;
+        }
+    }
 
     .login-btn {
         margin-left: 20px;
-        // border-color: #3F9D13;
-        // color: #3F9D13;
+        margin-right: 20px;
         font-weight: 600;
     }
 
@@ -53,7 +71,7 @@
     }
 
     .title {
-        font-size: 2.75rem;
+        font-size: calc(2.75rem);
         font-weight: 800;
         margin-top: 20px;
         text-align: center;
@@ -67,12 +85,29 @@
         .text {
             font-size: 0.875rem;
             font-weight: 500;
-            padding: 5px 10px 0 10px;
+            padding: 5px 5px 0 5px;
+        }
+
+        .amount {
+            font-size: 1.2rem;
+            color: #3f8600;
+            font-weight: 600;
+        }
+
+        @media screen and (max-width:836px) {
+            .text {
+                font-size: 14.6px;
+            }
+
+            .amount {
+                font-size: 20px;
+            }
         }
     }
 
     .btn-container {
         display: flex;
+
         .btn {
             width: 200px;
             height: 50px;
@@ -81,6 +116,24 @@
             text-align: center;
             line-height: 40px;
             margin: 50px 20px 50px 20px;
+        }
+    }
+
+    @media screen and (max-width: 585px) {
+        .btn-container {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            margin-top: 20px;
+
+            .btn {
+                width: 200px;
+                height: 50px;
+                font-size: 18px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 40px;
+                margin: 10px 20px 10px 20px;
+            }
         }
     }
 
@@ -109,7 +162,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    .interview-footer-user{
+
+                    .interview-footer-user {
                         display: flex;
                         align-items: center;
                     }
@@ -128,73 +182,18 @@
                 grid-template-columns: 1fr 1fr;
             }
         }
-    }
 
-
-
-    // login
-    .login {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-
-        .gap {
-            margin-top: 50px;
-        }
-
-        .login-text {
-            font-size: 18px;
-        }
-
-        .emphasize {
-            font-weight: 600;
-            color: red;
-        }
-
-        .login-send {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .login-img {
-            width: 200px;
-            height: 200px;
-            margin: 20px 0;
-        }
-
-        .login-input {
-            width: 200px;
-            height: 40px;
-            margin-bottom: 20px;
-        }
-    }
-
-    .footer {
-        font-size: 14px;
-
-        .info {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-
-            .desc {
-                width: 200px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin-top: 20px;
-
-                .links {
-                    margin-bottom: 10px;
-                }
+        @media screen and (max-width: 585px) {
+            .records {
+                grid-template-columns: 1fr;
             }
-        }
 
-        .created {
-            margin-top: 50px;
         }
     }
+
+
+
+
 
     // 滑动进入动画
     .slide-enter {
@@ -214,5 +213,74 @@
 
     .elastic-effect.hovered {
         transform: scale(1.1);
+    }
+}
+
+// login
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .gap {
+        margin-top: 30px;
+    }
+
+    .login-text {
+        font-size: 18px;
+    }
+
+    .emphasize {
+        font-weight: 600;
+        color: red;
+    }
+
+    .login-send {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .login-img {
+        width: 200px;
+        height: 200px;
+        margin: 20px 0;
+    }
+
+    .login-input {
+        width: 200px;
+        height: 40px;
+        margin-bottom: 20px;
+    }
+}
+
+.footer {
+    font-size: 14px;
+
+    .info {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        .desc {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+
+            .title{
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+            .links {
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .created {
+        margin-top: 20px;
     }
 }

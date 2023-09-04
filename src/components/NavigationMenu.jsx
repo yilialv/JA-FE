@@ -1,9 +1,7 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserOutlined } from '@ant-design/icons';
 import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
-import { useState } from 'react';
 import Login from '../pages/Login/App';
-import Assistant from '../pages/InterviewAssistant/App';
 import { observer } from 'mobx-react';
 import store from '../store';
 import { logout } from '../router';
@@ -12,13 +10,9 @@ const { Header } = Layout;
 
 const NavigationMenu = () => {
   const showModal = () => {
-    if (!store.isLogin) {
       store.isLoginModalOpen = true;
-    };
   };
-  const showAssistantModal = () => {
-    store.isAssistantModalOpen = true;
-  }
+
 
   const menuItems = [
     {
@@ -35,16 +29,13 @@ const NavigationMenu = () => {
       key: 'jobAssistant',
       label: '面试助手',
       link: '/jobAssistant'
+    },
+    {
+      key: 'interview',
+      label: '模拟面试',
+      link: '/interview'
     }
   ];
-
-  const menuItems_component = menuItems.map(item =>
-    <Menu.Item key={item.key}>
-      <Link to={item.link}>
-        {item.label}
-      </Link>
-    </Menu.Item>
-  )
 
   const items = [
     {
@@ -60,10 +51,19 @@ const NavigationMenu = () => {
     }
   ]
 
-  return (
+  const navigate = useNavigate();
+  const NavigateTo = (item) => {
+    var link='/'+item.key;
+    if(item.key=='home'){
+      link='/';
+    }
+    navigate(link)
+  }
 
+  return (
     <Header
       style={{
+        padding: 0,
         position: 'sticky',
         width: '100%',
         top: 0,
@@ -77,29 +77,38 @@ const NavigationMenu = () => {
 
       <Link to="/"><div className='page-title'>JobGPT</div></Link>
       <div className='page-menu'>
-        <Menu
-          mode="horizontal"
-          defaultSelectedKeys={[store.currentMenu]}
-          inlineCollapsed={false}
-        // selectedKeys={[store.currentMenu]}
-        // items={menuItems}
-        >
-          {menuItems_component}
-          {<Menu.Item key='interview'>
-            <Link onClick={showAssistantModal}>模拟面试</Link>
-            <Assistant />
-          </Menu.Item>}
-        </Menu>
+        {
+          store.isLogin &&
+          <Menu
+            mode="horizontal"
+            className='page-menu-list'
+            items={menuItems}
+            style={{ minWidth: '60px', flex: 1 }}
+            defaultSelectedKeys={[store.currentMenu]}
+            onClick={NavigateTo}
+          // selectedKeys={[store.currentMenu]}
+          >
+          </Menu>
+        }
+
         {
           store.isLogin ?
-            <Dropdown menu={{ items }} placement='bottom'>
-              <Avatar
-                style={{ backgroundColor: '#fde3cf', color: '#f56a00' }}
-                className='login-btn'
+            <>
+              |
+              <Dropdown menu={{ items }}
+                placement='bottomRight'
+                overlayStyle={{ textAlign: 'center' }}
+                arrow
               >
-                {store.nickName}
-              </Avatar>
-            </Dropdown> :
+                <Avatar
+                  icon={<UserOutlined />}
+                  size='large'
+                  className='login-btn'
+                >
+                </Avatar>
+              </Dropdown>
+            </>
+            :
             <>
               <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
               <Login />
@@ -111,3 +120,4 @@ const NavigationMenu = () => {
 };
 
 export default observer(NavigationMenu);
+
