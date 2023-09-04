@@ -1,5 +1,15 @@
 //全局
 
+html {
+    font-size: 2vw;
+}
+
+@media screen and (min-width:1300px) {
+    html {
+        font-size: 26px;
+    }
+}
+
 
 
 ::-webkit-scrollbar {
@@ -42,9 +52,8 @@
     }
 
     .login-btn {
-        width: 70px;
         margin-left: 20px;
-        margin-right: 40px;
+        margin-right: 20px;
         font-weight: 600;
     }
 
@@ -64,7 +73,7 @@
     }
 
     .title {
-        font-size: 4.5vw;
+        font-size: calc(2.75rem);
         font-weight: 800;
         margin-top: 20px;
         text-align: center;
@@ -76,11 +85,29 @@
         margin-top: 20px;
 
         .text {
-            font-size: 2vw;
+            font-size: 0.875rem;
             font-weight: 500;
-            padding: 5px 10px 0 10px;
+            padding: 5px 5px 0 5px;
+        }
+
+        .amount {
+            font-size: 1.2rem;
+            color: #3f8600;
+            font-weight: 600;
+        }
+
+        @media screen and (max-width:836px) {
+            .text {
+                font-size: 14.6px;
+            }
+
+            .amount{
+                font-size: 20px;
+            }
         }
     }
+
+
 
     .btn-container {
         display: flex;

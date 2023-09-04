@@ -17,7 +17,7 @@ class Store {
     isLogin = false;
 
     isLoginModalOpen = false;
-    isAssistantModalOpen = true;
+    isAssistantModalOpen = false;
 
     constructor() {
         makeAutoObservable(this);

@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { UserOutlined } from '@ant-design/icons';
 import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
 import { useState } from 'react';
 import Login from '../pages/Login/App';
-import Assistant from '../pages/InterviewAssistant/App';
 import { observer } from 'mobx-react';
 import store from '../store';
 import { logout } from '../router';
@@ -95,14 +95,22 @@ const NavigationMenu = () => {
 
         {
           store.isLogin ?
-            <Dropdown menu={{ items }} placement='bottom'>
-              <Avatar
-                style={{ backgroundColor: '#fde3cf', color: '#f56a00' }}
-                className='login-btn'
-              >
-                {store.nickName}
-              </Avatar>
-            </Dropdown> :
+            <>
+              |
+              <Dropdown menu={{ items }} 
+                placement='bottomRight'
+                overlayStyle={{textAlign:'center'}}
+                arrow
+                >
+                <Avatar
+                  icon={<UserOutlined />}
+                  size='large'
+                  className='login-btn'
+                >
+                </Avatar>
+              </Dropdown>
+            </>
+            :
             <>
               <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
               <Login />

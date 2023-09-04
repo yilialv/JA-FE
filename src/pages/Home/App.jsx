@@ -8,21 +8,24 @@ import souhuUrl from '../../imgs/souhu.jpg'
 import zuiyouUrl from '../../imgs/zuiyou.jpg'
 import { observer } from 'mobx-react';
 import store from '../../store';
-
+import Assistant from '../InterviewAssistant/App'
 const { Content } = Layout;
 const { Meta } = Card;
 
-const showAssistantModal = () => {
-    store.isAssistantModalOpen = true;
-}
+
 
 const Home = () => {
     const openLogin = () => {
         store.isLoginModalOpen = true;
     };
 
+    const showAssistantModal = () => {
+        store.isAssistantModalOpen = true;
+    }
+
     return (
         <Content className='content'>
+            <Assistant/>
             <img src={logo1Url} className='logo' />
             <div className='title'>AI面试小助手，助力收割大厂offer</div>
             <div className='statistics'>
@@ -30,7 +33,8 @@ const Home = () => {
             </div>
             <div className='statistics'>
                 <div className='text'>已经成功帮助</div>
-                <Statistic value={123456} valueStyle={{ fontSize:'2.4vw',color: '#3f8600', fontWeight: '600' }} />
+                <div className='amount'>123456</div>
+                {/* <Statistic value={123456} valueStyle={{ fontSize:'1.2rem',color: '#3f8600', fontWeight: '600' }} /> */}
                 <div className='text'>人拿到心仪offer！</div>
             </div>
             <div className='btn-container'>
@@ -38,13 +42,13 @@ const Home = () => {
                     store.isLogin ?
                         <Link to="/interview"><Button type='default' className='btn'>模拟面试</Button></Link>
                         :
-                        <Link to="/"><Button type='default' className='btn' onClick={openLogin}>模拟面试</Button></Link>
+                        <Button type='default' className='btn' onClick={openLogin}>模拟面试</Button>
                 }
                 {
                     store.isLogin ?
-                        <Link to="/interview"><Button type='primary' className='btn' onClick={showAssistantModal}>开启面试小助手</Button></Link>
+                        <Button type='primary' className='btn' onClick={showAssistantModal}>开启面试小助手</Button>
                         :
-                        <Link to="/"><Button type='primary' className='btn' onClick={openLogin}>开启面试小助手</Button></Link>
+                        <Button type='primary' className='btn' onClick={openLogin}>开启面试小助手</Button>
                 }
             </div>
             <Divider>

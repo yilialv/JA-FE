@@ -1,4 +1,4 @@
-import { Input, Button, Modal, Form, message } from 'antd';
+import { Input, Button, Modal, Form } from 'antd';
 import loginUrl from '../../imgs/login.jpg'
 import { observer } from 'mobx-react';
 import store from '../../store';
@@ -31,7 +31,6 @@ const Login = () => {
                         <Button type='primary' htmlType="submit" className='login-input'>登录</Button>
                     </Form.Item>
                 </Form>
-                
             </div>
         </Modal>
     );
