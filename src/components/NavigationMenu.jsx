@@ -14,11 +14,8 @@ const NavigationMenu = () => {
   const showModal = () => {
     if (!store.isLogin) {
       store.isLoginModalOpen = true;
-    };
+    }
   };
-  const showAssistantModal = () => {
-    store.isAssistantModalOpen = true;
-  }
 
   const menuItems = [
     {
@@ -35,6 +32,11 @@ const NavigationMenu = () => {
       key: 'jobAssistant',
       label: '面试助手',
       link: '/jobAssistant'
+    },
+    {
+      key: 'interview',
+      label: '模拟面试',
+      link: '/interview'
     }
   ];
 
@@ -64,6 +66,7 @@ const NavigationMenu = () => {
 
     <Header
       style={{
+        padding: 0,
         position: 'sticky',
         width: '100%',
         top: 0,
@@ -77,19 +80,19 @@ const NavigationMenu = () => {
 
       <Link to="/"><div className='page-title'>JobGPT</div></Link>
       <div className='page-menu'>
-        <Menu
-          mode="horizontal"
-          defaultSelectedKeys={[store.currentMenu]}
-          inlineCollapsed={false}
-        // selectedKeys={[store.currentMenu]}
-        // items={menuItems}
-        >
-          {menuItems_component}
-          {<Menu.Item key='interview'>
-            <Link onClick={showAssistantModal}>模拟面试</Link>
-            <Assistant />
-          </Menu.Item>}
-        </Menu>
+        {
+          store.isLogin &&
+          <Menu
+            mode="horizontal"
+            className='page-menu-list'
+            style={{ minWidth: '60px', flex: 1 }}
+            defaultSelectedKeys={[store.currentMenu]}
+          // selectedKeys={[store.currentMenu]}
+          >
+            {menuItems_component}
+          </Menu>
+        }
+
         {
           store.isLogin ?
             <Dropdown menu={{ items }} placement='bottom'>

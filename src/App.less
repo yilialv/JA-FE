@@ -1,5 +1,7 @@
 //全局
 
+
+
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -17,6 +19,7 @@
 .page-title {
     color: rgb(0, 0, 0);
     font-weight: 700;
+    margin-left: 20px;
     font-size: 20px;
 }
 
@@ -28,12 +31,20 @@
 .page-menu {
     font-weight: 600;
     display: flex;
+    flex-wrap: wrap;
+    justify-items: end;
     align-items: center;
 
+    @media screen and (max-width:585px) {
+        .page-menu-list {
+            width: 60px;
+        }
+    }
+
     .login-btn {
+        width: 70px;
         margin-left: 20px;
-        // border-color: #3F9D13;
-        // color: #3F9D13;
+        margin-right: 40px;
         font-weight: 600;
     }
 
@@ -53,7 +64,7 @@
     }
 
     .title {
-        font-size: 2.75rem;
+        font-size: 4.5vw;
         font-weight: 800;
         margin-top: 20px;
         text-align: center;
@@ -65,7 +76,7 @@
         margin-top: 20px;
 
         .text {
-            font-size: 0.875rem;
+            font-size: 2vw;
             font-weight: 500;
             padding: 5px 10px 0 10px;
         }
@@ -73,6 +84,7 @@
 
     .btn-container {
         display: flex;
+
         .btn {
             width: 200px;
             height: 50px;
@@ -81,6 +93,24 @@
             text-align: center;
             line-height: 40px;
             margin: 50px 20px 50px 20px;
+        }
+    }
+
+    @media screen and (max-width: 585px) {
+        .btn-container {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            margin-top: 20px;
+
+            .btn {
+                width: 200px;
+                height: 50px;
+                font-size: 18px;
+                font-weight: 600;
+                text-align: center;
+                line-height: 40px;
+                margin: 10px 20px 10px 20px;
+            }
         }
     }
 
@@ -109,7 +139,8 @@
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
-                    .interview-footer-user{
+
+                    .interview-footer-user {
                         display: flex;
                         align-items: center;
                     }
@@ -127,6 +158,13 @@
             .records {
                 grid-template-columns: 1fr 1fr;
             }
+        }
+
+        @media screen and (max-width: 585px) {
+            .records {
+                grid-template-columns: 1fr;
+            }
+
         }
     }
 

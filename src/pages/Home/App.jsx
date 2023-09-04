@@ -1,7 +1,7 @@
 import { Button, Layout, Statistic, Card, Divider, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-import SlideInOnMount from '../../components/SlideInOnMount';
-import ElasticEffect from '../../components/ElasticEffect';
+// import SlideInOnMount from '../../components/SlideInOnMount';
+// import ElasticEffect from '../../components/ElasticEffect';
 import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg'
 import souhuUrl from '../../imgs/souhu.jpg'
@@ -12,6 +12,10 @@ import store from '../../store';
 const { Content } = Layout;
 const { Meta } = Card;
 
+const showAssistantModal = () => {
+    store.isAssistantModalOpen = true;
+}
+
 const Home = () => {
     const openLogin = () => {
         store.isLoginModalOpen = true;
@@ -20,17 +24,13 @@ const Home = () => {
     return (
         <Content className='content'>
             <img src={logo1Url} className='logo' />
-            <ElasticEffect>
-                <SlideInOnMount>
-                    <div className='title'>AI面试小助手，助力收割大厂offer</div>
-                </SlideInOnMount>
-            </ElasticEffect>
+            <div className='title'>AI面试小助手，助力收割大厂offer</div>
             <div className='statistics'>
                 <div className='text'>为你彻底解决背八股文的烦恼！</div>
             </div>
             <div className='statistics'>
                 <div className='text'>已经成功帮助</div>
-                <Statistic value={123456} valueStyle={{ color: '#3f8600', fontWeight: '600' }} />
+                <Statistic value={123456} valueStyle={{ fontSize:'2.4vw',color: '#3f8600', fontWeight: '600' }} />
                 <div className='text'>人拿到心仪offer！</div>
             </div>
             <div className='btn-container'>
@@ -42,7 +42,7 @@ const Home = () => {
                 }
                 {
                     store.isLogin ?
-                        <Link to="/interview"><Button type='primary' className='btn'>开启面试小助手</Button></Link>
+                        <Link to="/interview"><Button type='primary' className='btn' onClick={showAssistantModal}>开启面试小助手</Button></Link>
                         :
                         <Link to="/"><Button type='primary' className='btn' onClick={openLogin}>开启面试小助手</Button></Link>
                 }
