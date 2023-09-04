@@ -1,8 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
-import { useState } from 'react';
 import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
 import store from '../store';
@@ -16,6 +15,7 @@ const NavigationMenu = () => {
       store.isLoginModalOpen = true;
     }
   };
+
 
   const menuItems = [
     {
@@ -40,14 +40,6 @@ const NavigationMenu = () => {
     }
   ];
 
-  const menuItems_component = menuItems.map(item =>
-    <Menu.Item key={item.key}>
-      <Link to={item.link}>
-        {item.label}
-      </Link>
-    </Menu.Item>
-  )
-
   const items = [
     {
       label: '个人中心',
@@ -62,8 +54,16 @@ const NavigationMenu = () => {
     }
   ]
 
-  return (
+  const navigate = useNavigate();
+  const NavigateTo = (item) => {
+    var link='/'+item.key;
+    if(item.key=='home'){
+      link='/';
+    }
+    navigate(link)
+  }
 
+  return (
     <Header
       style={{
         padding: 0,
@@ -85,11 +85,12 @@ const NavigationMenu = () => {
           <Menu
             mode="horizontal"
             className='page-menu-list'
+            items={menuItems}
             style={{ minWidth: '60px', flex: 1 }}
             defaultSelectedKeys={[store.currentMenu]}
+            onClick={NavigateTo}
           // selectedKeys={[store.currentMenu]}
           >
-            {menuItems_component}
           </Menu>
         }
 
@@ -97,11 +98,11 @@ const NavigationMenu = () => {
           store.isLogin ?
             <>
               |
-              <Dropdown menu={{ items }} 
+              <Dropdown menu={{ items }}
                 placement='bottomRight'
-                overlayStyle={{textAlign:'center'}}
+                overlayStyle={{ textAlign: 'center' }}
                 arrow
-                >
+              >
                 <Avatar
                   icon={<UserOutlined />}
                   size='large'
@@ -122,3 +123,4 @@ const NavigationMenu = () => {
 };
 
 export default observer(NavigationMenu);
+
