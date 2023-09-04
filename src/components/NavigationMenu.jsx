@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
@@ -11,9 +10,7 @@ const { Header } = Layout;
 
 const NavigationMenu = () => {
   const showModal = () => {
-    if (!store.isLogin) {
       store.isLoginModalOpen = true;
-    }
   };
 
 

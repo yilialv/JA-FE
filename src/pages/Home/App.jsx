@@ -1,7 +1,5 @@
-import { Button, Layout, Statistic, Card, Divider, Avatar } from 'antd';
+import { Button, Layout, Card, Divider, Avatar } from 'antd';
 import { Link } from 'react-router-dom';
-// import SlideInOnMount from '../../components/SlideInOnMount';
-// import ElasticEffect from '../../components/ElasticEffect';
 import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg'
 import souhuUrl from '../../imgs/souhu.jpg'

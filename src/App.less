@@ -10,8 +10,6 @@ html {
     }
 }
 
-
-
 ::-webkit-scrollbar {
     width: 8px;
 }
@@ -101,13 +99,11 @@ html {
                 font-size: 14.6px;
             }
 
-            .amount{
+            .amount {
                 font-size: 20px;
             }
         }
     }
-
-
 
     .btn-container {
         display: flex;
@@ -197,69 +193,7 @@ html {
 
 
 
-    // login
-    .login {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
 
-        .gap {
-            margin-top: 50px;
-        }
-
-        .login-text {
-            font-size: 18px;
-        }
-
-        .emphasize {
-            font-weight: 600;
-            color: red;
-        }
-
-        .login-send {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-        }
-
-        .login-img {
-            width: 200px;
-            height: 200px;
-            margin: 20px 0;
-        }
-
-        .login-input {
-            width: 200px;
-            height: 40px;
-            margin-bottom: 20px;
-        }
-    }
-
-    .footer {
-        font-size: 14px;
-
-        .info {
-            display: flex;
-            justify-content: space-around;
-            flex-wrap: wrap;
-
-            .desc {
-                width: 200px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                margin-top: 20px;
-
-                .links {
-                    margin-bottom: 10px;
-                }
-            }
-        }
-
-        .created {
-            margin-top: 50px;
-        }
-    }
 
     // 滑动进入动画
     .slide-enter {
@@ -279,5 +213,74 @@ html {
 
     .elastic-effect.hovered {
         transform: scale(1.1);
+    }
+}
+
+// login
+.login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .gap {
+        margin-top: 30px;
+    }
+
+    .login-text {
+        font-size: 18px;
+    }
+
+    .emphasize {
+        font-weight: 600;
+        color: red;
+    }
+
+    .login-send {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .login-img {
+        width: 200px;
+        height: 200px;
+        margin: 20px 0;
+    }
+
+    .login-input {
+        width: 200px;
+        height: 40px;
+        margin-bottom: 20px;
+    }
+}
+
+.footer {
+    font-size: 14px;
+
+    .info {
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+
+        .desc {
+            width: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+
+            .title{
+                font-weight: 600;
+                margin-bottom: 10px;
+            }
+
+            .links {
+                margin-bottom: 5px;
+            }
+        }
+    }
+
+    .created {
+        margin-top: 20px;
     }
 }
