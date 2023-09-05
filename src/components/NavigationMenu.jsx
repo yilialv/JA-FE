@@ -10,7 +10,7 @@ const { Header } = Layout;
 
 const NavigationMenu = () => {
   const showModal = () => {
-      store.isLoginModalOpen = true;
+    store.isLoginModalOpen = true;
   };
 
 
@@ -53,11 +53,17 @@ const NavigationMenu = () => {
 
   const navigate = useNavigate();
   const NavigateTo = (item) => {
-    var link='/'+item.key;
-    if(item.key=='home'){
-      link='/';
+    console.log(item.key)
+    if (item.key == 'home') {
+      navigate('/');
+      return;
     }
-    navigate(link)
+    if(store.isLogin===false){
+      store.isLoginModalOpen = true;
+      return;
+    }
+    var link = '/' + item.key;
+    navigate(link);
   }
 
   return (
@@ -77,20 +83,15 @@ const NavigationMenu = () => {
 
       <Link to="/"><div className='page-title'>JobGPT</div></Link>
       <div className='page-menu'>
-        {
-          store.isLogin &&
-          <Menu
-            mode="horizontal"
-            className='page-menu-list'
-            items={menuItems}
-            style={{ minWidth: '60px', flex: 1 }}
-            defaultSelectedKeys={[store.currentMenu]}
-            onClick={NavigateTo}
-          // selectedKeys={[store.currentMenu]}
-          >
-          </Menu>
-        }
-
+        <Menu
+          mode="horizontal"
+          className='page-menu-list'
+          items={menuItems}
+          style={{ minWidth: '60px', flex: 1 }}
+          defaultSelectedKeys={[store.currentMenu]}
+          onClick={NavigateTo}
+        >
+        </Menu>
         {
           store.isLogin ?
             <>
