@@ -214,10 +214,12 @@ const Interview = observer(() => {
 
   const renderReply = () => {
     store.reply.map((item) => {
-      return (<div className='answer'>
-        <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-        <div className='text'>{ item }</div>
-      </div>)
+      return (
+        <div className='answer'>
+          <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+          <div className='text'>{ item }</div>
+        </div>
+      );
     });
   };
 
@@ -246,7 +248,17 @@ const Interview = observer(() => {
       <div className='container'>
         <div className='title'>字节面试</div>
         <div className='answer-block'>
-          { renderReply }
+          {/* { renderReply() } */}
+          {
+            store.reply.map((item) => {
+              return (
+                <div className='answer'>
+                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                  <div className='text'>{ item }</div>
+                </div>
+              );
+            })
+          }
           <div className='answer'>
             <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
             <div className='text'>{ store.lastReply }</div>

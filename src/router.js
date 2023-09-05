@@ -3,6 +3,8 @@ import { BASE_URL } from "./constant";
 import { message } from "antd";
 import store from "./store";
 
+axios.defaults.withCredentials = true;
+
 export function getHomeData() {
     axios.get(`${BASE_URL}/api/page/index`).then((res) => {
         const { status } = res;
