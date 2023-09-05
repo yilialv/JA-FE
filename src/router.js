@@ -47,6 +47,6 @@ export function logout() {
         console.log('err:', err);
         message.error('登出失败')
     }).finally(() => {
-        store.isLoginModalOpen = false;
+        store.isLogin = false;
     });
 }
