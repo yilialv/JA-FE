@@ -2,7 +2,7 @@ import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_
 import { Button, Input, Row, Layout, Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import store from '../../store'
 import './App.less'
 
@@ -28,6 +28,13 @@ const Interview = observer(() => {
 
   const ws = useRef(null); // 和百度的连接
   const wsServer = useRef(null); // 和后端的连接
+
+  useEffect(() => {
+    const scrollBlock = document.getElementById('scrollBlock');
+
+    // 将内容自动滚动到底部
+    scrollBlock.scrollTop = scrollBlock.scrollHeight;
+  });
 
   /**
    * 发送开始帧
@@ -212,17 +219,6 @@ const Interview = observer(() => {
     // });
   };
 
-  const renderReply = () => {
-    store.reply.map((item) => {
-      return (
-        <div className='answer'>
-          <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-          <div className='text'>{ item }</div>
-        </div>
-      );
-    });
-  };
-
   return (
     <Content className='interview-detail'>
       {/* <Row className='container'>
@@ -247,22 +243,24 @@ const Interview = observer(() => {
       </Row>
       <div className='container'>
         <div className='title'>字节面试</div>
-        <div className='answer-block'>
-          {/* { renderReply() } */}
+        <div className='answer-block' id='scrollBlock'>
           {
-            store.reply.map((item) => {
+            store.reply.map((item, key) => {
               return (
-                <div className='answer'>
+                <div className='answer' key={key}>
                   <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
                   <div className='text'>{ item }</div>
                 </div>
               );
             })
           }
-          <div className='answer'>
-            <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-            <div className='text'>{ store.lastReply }</div>
-          </div>
+          {
+            !!store.lastReply &&
+            <div className='answer'>
+              <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+              <div className='text'>{ store.lastReply }</div>
+            </div>
+          }
         </div>
         <div className='question'>{ store.request }</div>
       </div>
