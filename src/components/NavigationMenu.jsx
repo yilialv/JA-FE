@@ -54,7 +54,7 @@ const NavigationMenu = () => {
   const navigate = useNavigate();
   const NavigateTo = (item) => {
     console.log(item.key)
-    if (item.key == 'home') {
+    if (item.key === 'home') {
       navigate('/');
       return;
     }
@@ -78,6 +78,7 @@ const NavigationMenu = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
+        border:'1px solid rgba(5, 5, 5, 0.06)'
       }}
     >
 
