@@ -10,7 +10,7 @@ import store from "../../store";
 import './App.less'
 
 
-const Assistant = () => {
+const AssistantModal = () => {
     const handleCancel = () => {
         store.isAssistantModalOpen = false;
     };
@@ -134,4 +134,4 @@ const Assistant = () => {
     );
 };
 
-export default observer(Assistant);
+export default observer(AssistantModal);

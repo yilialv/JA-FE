@@ -6,7 +6,7 @@ import souhuUrl from '../../imgs/souhu.jpg'
 import zuiyouUrl from '../../imgs/zuiyou.jpg'
 import { observer } from 'mobx-react';
 import store from '../../store';
-import Assistant from '../InterviewAssistant/App'
+import AssistantModal from '../AssistantModal/App';
 const { Content } = Layout;
 const { Meta } = Card;
 
@@ -23,7 +23,7 @@ const Home = () => {
 
     return (
         <Content className='content'>
-            <Assistant/>
+            <AssistantModal/>
             <img src={logo1Url} className='logo' />
             <div className='title'>AI面试小助手，助力收割大厂offer</div>
             <div className='statistics'>
@@ -38,7 +38,7 @@ const Home = () => {
             <div className='btn-container'>
                 {
                     store.isLogin ?
-                        <Link to="/interview"><Button type='default' className='btn'>模拟面试</Button></Link>
+                        <Link to="/mockInterview"><Button type='default' className='btn'>模拟面试</Button></Link>
                         :
                         <Button type='default' className='btn' onClick={openLogin}>模拟面试</Button>
                 }
