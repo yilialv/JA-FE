@@ -23,6 +23,7 @@ module.exports = {
       "afterColon": true
     }],
     "eqeqeq": "warn",
-    "indent": ["warn", 2]
+    "indent": ["warn", 2],
+    "space-before-blocks": ["warn", "always"]
   },
 }
