@@ -30,8 +30,8 @@ const AssistantModal = () => {
         >
             <div className='basic-info'>
                 <Form onFinish={handleSubmit}>
+                    <MessageOutlined />轮数
                     <Form.Item name='round'>
-                        <MessageOutlined />轮数
                         <Radio.Group
                             options={[1, 2, 3, 4, 5]}
                             optionType='button'
@@ -40,12 +40,11 @@ const AssistantModal = () => {
                         // onChange={onChange1} value={value1}
                         />
                     </Form.Item>
+                    <BankOutlined />公司
                     <Form.Item name='company'>
-                        <BankOutlined />公司
                         <Select
                             showSearch
                             placeholder='请选择您要面试的公司'
-                            optionFilterProp='children'
                             // onChange={onChange}
                             // onSearch={onSearch}
                             // filterOption={filterOption}
@@ -77,12 +76,11 @@ const AssistantModal = () => {
                             ]}
                         />
                     </Form.Item>
+                    <ApartmentOutlined />部门
                     <Form.Item name='apartment'>
-                        <ApartmentOutlined />部门
                         <Select
                             showSearch
                             placeholder='请选择您要加入的部门'
-                            optionFilterProp='children'
                             // onChange={onChange}
                             // onSearch={onSearch}
                             // filterOption={filterOption}
@@ -98,12 +96,11 @@ const AssistantModal = () => {
                             ]}
                         />
                     </Form.Item>
+                    <EnterOutlined />岗位方向
                     <Form.Item name='position'>
-                        <EnterOutlined />岗位方向
                         <Select
                             showSearch
                             placeholder='请选择您的岗位方向'
-                            optionFilterProp='children'
                             // onChange={onChange}
                             // onSearch={onSearch}
                             // filterOption={filterOption}
