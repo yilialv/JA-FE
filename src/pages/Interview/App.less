@@ -4,19 +4,21 @@
 @dialog-box-shadow: 0 5px 10px rgba(145, 158, 171, 0.319);
 @dialog-border-radius: 15px;
 
+@screen-width: 80vw;
+@screen-height: 85vh;
+
 .interview-detail {
     display: flex;
     justify-content: center;
     min-height: 900;
     background-color: white;
     .container {
-        width: 500px;
-        height: @dialog-height;
+        width: @screen-width;
+        height: @screen-height;
         margin: @dialog-margin;
         border: @border-style;
         box-shadow: @dialog-box-shadow;
-        border-top-left-radius: @dialog-border-radius;
-        border-bottom-left-radius: @dialog-border-radius;
+        border-radius: @dialog-border-radius;
         .title {
             height: 10%;
             border-bottom: @border-style;
@@ -46,16 +48,5 @@
             height: 15%;
             padding: 15px;
         }
-    }
-    .sider {
-        width: 100px;
-        height: @dialog-height;
-        margin: @dialog-margin;
-        border-top: @border-style;
-        border-bottom: @border-style;
-        border-right: @border-style;
-        box-shadow: @dialog-box-shadow;
-        border-top-right-radius: @dialog-border-radius;
-        border-bottom-right-radius: @dialog-border-radius;
     }
 }

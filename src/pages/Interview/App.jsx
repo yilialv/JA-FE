@@ -237,10 +237,10 @@ const Interview = observer(() => {
           value={store.request}
           autoSize={{ minRows: 3, maxRows: 3 }} />
       </Row> */}
-      <Row className='btn'>
+      {/* <Row className='btn'>
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
-      </Row>
+      </Row> */}
       <div className='container'>
         <div className='title'>字节面试</div>
         <div className='answer-block' id='scrollBlock'>
@@ -263,8 +263,6 @@ const Interview = observer(() => {
           }
         </div>
         <div className='question'>{ store.request }</div>
-      </div>
-      <div className='sider'>
       </div>
     </Content>
   );
