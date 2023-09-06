@@ -22,6 +22,7 @@ module.exports = {
       "beforeColon": false,
       "afterColon": true
     }],
-    "eqeqeq": "warn"
+    "eqeqeq": "warn",
+    "indent": ["warn", 2]
   },
 }
