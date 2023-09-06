@@ -26,14 +26,14 @@ const NavigationMenu = () => {
       link: '/resume'
     },
     {
-      key: 'jobAssistant',
+      key: 'interview',
       label: '面试助手',
-      link: '/jobAssistant'
+      link: '/interview'
     },
     {
-      key: 'interview',
+      key: 'mockInterview',
       label: '模拟面试',
-      link: '/interview'
+      link: '/mockInterview'
     }
   ];
 

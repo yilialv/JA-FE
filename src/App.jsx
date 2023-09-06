@@ -1,5 +1,5 @@
 import './App.less';
-import { Layout,ConfigProvider } from 'antd';
+import { Layout } from 'antd';
 import NavigationMenu from './components/NavigationMenu';
 import Home from './pages/Home/App';
 import Interview from './pages/Interview/App';
