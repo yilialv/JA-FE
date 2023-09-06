@@ -5,6 +5,7 @@ import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
 import store from '../store';
 import { logout } from '../router';
+import AssistantModal from '../pages/AssistantModal/App';
 
 const { Header } = Layout;
 
@@ -56,6 +57,9 @@ const NavigationMenu = () => {
     console.log(item.key)
     if (item.key === 'home') {
       navigate('/');
+      return;
+    }else if(item.key === 'interview'){
+      store.isAssistantModalOpen=true;
       return;
     }
     if(store.isLogin===false){
@@ -114,6 +118,7 @@ const NavigationMenu = () => {
             <>
               <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
               <Login />
+              <AssistantModal/>
             </>
         }
       </div>

@@ -19,6 +19,12 @@ class Store {
     isLoginModalOpen = false;
     isAssistantModalOpen = false;
 
+    //表单数据
+    form_apartment='';
+    form_company='';
+    form_position='';
+    form_round='';
+
     constructor() {
         makeAutoObservable(this);
     }

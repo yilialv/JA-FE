@@ -8,16 +8,23 @@ import {
 import { observer } from "mobx-react";
 import store from "../../store";
 import './App.less'
-
+import { useNavigate } from "react-router-dom";
 
 const AssistantModal = () => {
+
     const handleCancel = () => {
         store.isAssistantModalOpen = false;
     };
+    
+    const navigate = useNavigate();
 
     const handleSubmit = (param) => {
-        console.log(param);
+        store.form_apartment = param.apartment;
+        store.form_company = param.company;
+        store.form_position = param.position;
+        store.form_round = param.round;
         store.isAssistantModalOpen = false;
+        navigate('/interview')
     };
 
     return (
@@ -37,6 +44,7 @@ const AssistantModal = () => {
                             optionType='button'
                             size='small'
                             style={{ width: "100%" }}
+                            rules={[{ required: true }]}
                         // onChange={onChange1} value={value1}
                         />
                     </Form.Item>
@@ -81,6 +89,7 @@ const AssistantModal = () => {
                         <Select
                             showSearch
                             placeholder='请选择您要加入的部门'
+                            rules={[{ required: true }]}
                             // onChange={onChange}
                             // onSearch={onSearch}
                             // filterOption={filterOption}
@@ -101,6 +110,7 @@ const AssistantModal = () => {
                         <Select
                             showSearch
                             placeholder='请选择您的岗位方向'
+                            rules={[{ required: true }]}
                             // onChange={onChange}
                             // onSearch={onSearch}
                             // filterOption={filterOption}
