@@ -53,17 +53,17 @@ const NavigationMenu = () => {
   ]
 
   const navigate = useNavigate();
+
   const NavigateTo = (item) => {
     console.log(item.key)
     if (item.key === 'home') {
       navigate('/');
       return;
+    }else if(store.isLogin===false){
+      store.isLoginModalOpen = true;
+      return;
     }else if(item.key === 'interview'){
       store.isAssistantModalOpen=true;
-      return;
-    }
-    if(store.isLogin===false){
-      store.isLoginModalOpen = true;
       return;
     }
     var link = '/' + item.key;
