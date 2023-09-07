@@ -39,8 +39,9 @@ const NavigationMenu = () => {
 
   const items = [
     {
-      label: '个人中心',
-      key: 'personal'
+      // TODO 判断是否登录
+      label: (<div onClick={() => navigate('/user')}>个人中心</div>),
+      key: 'user'
     },
     {
       type: 'divider'
