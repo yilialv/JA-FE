@@ -16,5 +16,14 @@ module.exports = {
       'warn',
       { allowConstantExport: true },
     ],
+    "space-infix-ops": ["warn", {"int32Hint": false}],
+    "space-unary-ops": ["warn", {"words": true, "nonwords": false}],
+    "key-spacing": ["warn", {
+      "beforeColon": false,
+      "afterColon": true
+    }],
+    "eqeqeq": "warn",
+    "indent": ["warn", 2],
+    "space-before-blocks": ["warn", "always"]
   },
 }

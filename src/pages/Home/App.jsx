@@ -7,6 +7,7 @@ import zuiyouUrl from '../../imgs/zuiyou.jpg'
 import { observer } from 'mobx-react';
 import store from '../../store';
 import AssistantModal from '../AssistantModal/App';
+import FooterInfo from '../../components/FooterInfo'
 const { Content } = Layout;
 const { Meta } = Card;
 
@@ -22,6 +23,7 @@ const Home = () => {
     }
 
     return (
+        <>
         <Content className='content'>
             <AssistantModal/>
             <img src={logo1Url} className='logo' />
@@ -246,6 +248,8 @@ const Home = () => {
                 </div>
             </div>
         </Content>
+        <FooterInfo />
+        </>
     );
 };
 
