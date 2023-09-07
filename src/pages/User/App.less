@@ -1,0 +1,61 @@
+@border-style: 1px solid #ccc;
+@dialog-height: 600px;
+@dialog-margin: 20px 0;
+@dialog-box-shadow: 0 5px 10px rgba(145, 158, 171, 0.319);
+@dialog-border-radius: 15px;
+
+@screen-width: 80vw;
+@screen-height: 85vh;
+
+.user-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+    .user-top {
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        margin: 2rem;
+        .left {
+            flex-grow: 1;
+            display: flex;
+            justify-content: flex-end;
+            margin-right: 1rem;
+            .ant-avatar {
+                @avatar-width: 4em;
+                height: @avatar-width;
+                width: @avatar-width;
+                font-size: 2.6em;
+                // font-size: calc(~"@{avatar-width} * 60%");
+                text-align: center;
+                line-height: @avatar-width;
+            }
+        }
+        .right {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            .username {
+                margin-top: 0.5rem;
+                font-size: 1rem;
+                font-style: normal;
+                font-weight: 700;
+            }
+            .ant-btn {
+                color: #ccc;
+                width: 2rem;
+                line-height: 16px;
+            }
+            .ant-btn:hover {
+                color: #3f8600;
+            }
+        }
+    }
+
+    .tab-container {
+        margin: 0 8vw;
+        border: @border-style;
+    }
+}
