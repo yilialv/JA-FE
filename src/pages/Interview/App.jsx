@@ -1,8 +1,8 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Input, Row, Layout, Avatar } from 'antd';
-import { UserOutlined } from '@ant-design/icons';
+import { Button, Drawer, Input, Row, Layout, Avatar, Col, Checkbox } from 'antd';
+import { UserOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import store from '../../store'
 import './App.less'
 
@@ -116,7 +116,7 @@ const Interview = observer(() => {
       sendStartParams();
       console.log('WebSocket开始连接')
     };
-  
+
     ws.current.onmessage = (message) => {
       try {
         let res = JSON.parse(message.data);
@@ -131,11 +131,11 @@ const Interview = observer(() => {
         console.log('解析语音转文字结果报错，错误为：', err);
       }
     };
-  
+
     ws.current.onclose = () => {
       console.log('WebSocket关闭连接');
     };
-  
+
     ws.current.onerror = (error) => {
       recorder.stop();
       console.log('error:', error);
@@ -155,7 +155,7 @@ const Interview = observer(() => {
             store.setId(id);
             store.setLastReply(data);
           } else {
-            if(id !== store.id) {
+            if (id !== store.id) {
               store.setReply();
               store.setId(id);
             }
@@ -219,6 +219,12 @@ const Interview = observer(() => {
     // });
   };
 
+  const [DrawerState, setDrawerState] = useState(true)
+
+  const handleDrawer = () => {
+    setDrawerState(!DrawerState);
+  }
+
   return (
     <Content className='interview-detail'>
       {/* <Row className='container'>
@@ -241,30 +247,92 @@ const Interview = observer(() => {
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
       </Row> */}
+
+
+      {/* <Row className='header'>
+        <Col>
+          <Row className='title'>后端开发 - 字节跳动 - 番茄小说</Row>
+          <Row className='subtitle'>辅助面试 二面 面试官发言 生成中</Row>
+        </Col>
+        <Col>
+          <Button type='primary' onClick={startRecording} className='interview-btn'>开始</Button>
+          <Button className={['interview-btn', 'pause']}>暂停</Button>
+          <Button danger type='primary' onClick={stopRecording} className='interview-btn'>结束</Button>
+        </Col>
+      </Row> */}
       <div className='container'>
-        <div className='title'>字节面试</div>
-        <div className='answer-block' id='scrollBlock'>
-          {
-            store.reply.map((item, key) => {
-              return (
-                <div className='answer' key={key}>
-                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-                  <div className='text'>{ item }</div>
-                </div>
-              );
-            })
-          }
-          {
-            !!store.lastReply &&
-            <div className='answer'>
-              <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-              <div className='text'>{ store.lastReply }</div>
+        <div className='container-header'>
+          <div className='header-group'>
+            <div className='title'>后端开发@字节跳动 - 番茄小说</div>
+            <div className='states'>
+              <div className='state'>辅助面试</div>
+              <div className='state'>二面</div>
+              <div className='state'>面试官发言</div>
+              <div className='state'>发言中</div>
             </div>
-          }
+          </div>
+          <div className='time'>当前时长：20分钟</div>
         </div>
-        <div className='question'>{ store.request }</div>
+        <div className='container-body'>
+          <div className={`body-left ${DrawerState ? 'body-compressed' : 'body-fill'}`}>
+            <div className='answer-block' id='scrollBlock'>
+              {
+                store.reply.map((item, key) => {
+                  return (
+                    <div className='answer' key={key}>
+                      <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                      <div className='text'>{item}</div>
+                    </div>
+                  );
+                })
+              }
+              {
+                !!store.lastReply &&
+                <div className='answer'>
+                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                  <div className='text'>{store.lastReply}</div>
+                </div>
+              }
+            </div>
+            <div className='question'>{store.request}</div>
+            <div className='drawer-button' onClick={handleDrawer}>
+              {
+                DrawerState ? <RightOutlined /> : <LeftOutlined />
+              }
+            </div>
+          </div>
+          <div className={`drawer ${DrawerState ? 'drawer-opening' : 'drawer-closed'}`}>
+            <div className='drawer-info'>
+              <Avatar
+                icon={<UserOutlined />}
+                size={96}
+                className='drawer-avatar'
+              >
+              </Avatar>
+              <div className='drawer-name'>万能小助手</div>
+              <div className='drawer-check'>
+                <Checkbox>
+                  基于个人信息辅助
+                </Checkbox>
+                <QuestionCircleOutlined />
+              </div>
+            </div>
+            <div></div>
+            <div className='drawer-buttons'>
+              <Button type='primary' onClick={startRecording}>
+                开始
+              </Button>
+              <Button className='pause'>
+                暂停
+              </Button>
+              <Button danger type='primary' onClick={stopRecording}>
+                结束
+              </Button>
+            </div>
+          </div>
+        </div>
       </div>
-    </Content>
+    </Content >
   );
 });
 

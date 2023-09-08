@@ -5,14 +5,14 @@ import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
 import store from '../store';
 import { logout } from '../router';
+import AssistantModal from '../pages/AssistantModal/App';
 
 const { Header } = Layout;
 
 const NavigationMenu = () => {
   const showModal = () => {
-      store.isLoginModalOpen = true;
+    store.isLoginModalOpen = true;
   };
-
 
   const menuItems = [
     {
@@ -53,12 +53,21 @@ const NavigationMenu = () => {
   ]
 
   const navigate = useNavigate();
+
   const NavigateTo = (item) => {
-    var link='/'+item.key;
-    if(item.key=='home'){
-      link='/';
+    const { key } = item;
+    if (key === 'home') {
+      navigate('/');
+      return;
+    } else if (!store.isLogin) {
+      store.isLoginModalOpen = true;
+      return;
+    } else if (key === 'interview') {
+      store.isAssistantModalOpen = true;
+      return;
     }
-    navigate(link)
+    const link = '/' + key;
+    navigate(link);
   }
 
   return (
@@ -73,25 +82,22 @@ const NavigationMenu = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
+        border: '1px solid rgba(5, 5, 5, 0.06)',
+        userSelect: 'none'
       }}
     >
 
       <Link to="/"><div className='page-title'>JobGPT</div></Link>
       <div className='page-menu'>
-        {
-          store.isLogin &&
-          <Menu
-            mode="horizontal"
-            className='page-menu-list'
-            items={menuItems}
-            style={{ minWidth: '60px', flex: 1 }}
-            defaultSelectedKeys={[store.currentMenu]}
-            onClick={NavigateTo}
-          // selectedKeys={[store.currentMenu]}
-          >
-          </Menu>
-        }
-
+        <Menu
+          mode="horizontal"
+          className='page-menu-list'
+          items={menuItems}
+          style={{ minWidth: '60px', flex: 1 }}
+          defaultSelectedKeys={[store.currentMenu]}
+          onClick={NavigateTo}
+        >
+        </Menu>
         {
           store.isLogin ?
             <>
@@ -113,6 +119,7 @@ const NavigationMenu = () => {
             <>
               <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
               <Login />
+              <AssistantModal />
             </>
         }
       </div>
