@@ -1,5 +1,5 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Input, Row, Layout, Avatar } from 'antd';
+import { Button, Input, Row, Layout, Avatar, Col } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useEffect, useRef } from 'react';
@@ -241,8 +241,19 @@ const Interview = observer(() => {
         <Button type='primary' onClick={startRecording}>开始面试</Button>
         <Button onClick={stopRecording}>结束面试</Button>
       </Row> */}
-      <div className='container'>
-        <div className='title'>字节面试</div>
+      <Row className='header'>
+        <Col>
+          <Row className='title'>后端开发 - 字节跳动 - 番茄小说</Row>
+          <Row className='subtitle'>辅助面试 二面 面试官发言 生成中</Row>
+        </Col>
+        <Col>
+          <Button type='primary' onClick={startRecording} className='interview-btn'>开始</Button>
+          <Button className={['interview-btn', 'pause']}>暂停</Button>
+          <Button danger type='primary' onClick={stopRecording} className='interview-btn'>结束</Button>
+        </Col>
+      </Row>
+      <Row className='container'>
+        <div className='title'>面试小助手</div>
         <div className='answer-block' id='scrollBlock'>
           {
             store.reply.map((item, key) => {
@@ -263,7 +274,7 @@ const Interview = observer(() => {
           }
         </div>
         <div className='question'>{ store.request }</div>
-      </div>
+      </Row>
     </Content>
   );
 });

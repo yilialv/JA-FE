@@ -1,17 +1,39 @@
 @border-style: 1px solid #ccc;
 @dialog-height: 600px;
-@dialog-margin: 20px 0;
+@dialog-margin: 10px 0 30px 0;
 @dialog-box-shadow: 0 5px 10px rgba(145, 158, 171, 0.319);
 @dialog-border-radius: 15px;
 
 @screen-width: 80vw;
-@screen-height: 85vh;
+@screen-height: 80vh;
 
 .interview-detail {
     display: flex;
     justify-content: center;
+    align-items: center;
+    flex-direction: column;
     min-height: 900;
     background-color: white;
+    .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: @screen-width;
+        margin-top: 10px;
+        .title {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 14px;
+        }
+        .interview-btn {
+            margin-left: 30px;
+        }
+        .pause {
+            background-color: #ccc;
+        }
+    }
     .container {
         width: @screen-width;
         height: @screen-height;
@@ -20,10 +42,12 @@
         box-shadow: @dialog-box-shadow;
         border-radius: @dialog-border-radius;
         .title {
-            height: 10%;
+            height: 30px;
+            line-height: 30px;
             border-bottom: @border-style;
             font-size: 14px;
-            padding: 15px;
+            padding: 0 15px;
+            width: @screen-width;
         }
         .answer-block {
             height: 75%;
