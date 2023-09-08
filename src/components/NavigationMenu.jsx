@@ -14,7 +14,6 @@ const NavigationMenu = () => {
     store.isLoginModalOpen = true;
   };
 
-
   const menuItems = [
     {
       key: 'home',
@@ -55,18 +54,18 @@ const NavigationMenu = () => {
   const navigate = useNavigate();
 
   const NavigateTo = (item) => {
-    console.log(item.key)
-    if (item.key === 'home') {
+    const { key } = item;
+    if (key === 'home') {
       navigate('/');
       return;
-    }else if(store.isLogin===false){
+    } else if (!store.isLogin) {
       store.isLoginModalOpen = true;
       return;
-    }else if(item.key === 'interview'){
-      store.isAssistantModalOpen=true;
+    } else if (key === 'interview') {
+      store.isAssistantModalOpen = true;
       return;
     }
-    var link = '/' + item.key;
+    const link = '/' + key;
     navigate(link);
   }
 
@@ -82,7 +81,8 @@ const NavigationMenu = () => {
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
-        border:'1px solid rgba(5, 5, 5, 0.06)'
+        border: '1px solid rgba(5, 5, 5, 0.06)',
+        userSelect: 'none'
       }}
     >
 
@@ -118,7 +118,7 @@ const NavigationMenu = () => {
             <>
               <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
               <Login />
-              <AssistantModal/>
+              <AssistantModal />
             </>
         }
       </div>
