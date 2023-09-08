@@ -1,7 +1,8 @@
 import { Avatar, Button, Menu } from "antd"
-import { UserOutlined, SettingOutlined } from "@ant-design/icons"
+import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons"
 import { Content } from "antd/es/layout/layout"
-import './App.less'
+import MineRecords from "./MineRecords"
+import "./App.less"
 
 
 const User = () => {
@@ -43,15 +44,21 @@ const User = () => {
         </div>
       </div>
       <div className="tab-container">
-        <Menu mode="horizontal"
-          className='page-menu-list'
+        <Menu
+          mode="horizontal"
+          className='user-menu-list'
           items={menuItems}
           style={{ minWidth: '60px', flex: 1 }}
           defaultSelectedKeys={[currentMenu]}
         >
           {currentMenu}
         </Menu>
+        <Button 
+          size="large"
+          className="filter-btn" 
+          icon={<FilterOutlined />}>筛选</Button>
       </div>
+      <MineRecords />
     </Content>
   )
 }
