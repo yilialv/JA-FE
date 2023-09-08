@@ -1,12 +1,18 @@
-import { Card, Meta, Avatar } from "antd"
-import aliyunUrl from '../../imgs/aliyun.jpg'
+import { Card, Avatar } from "antd"
+import aliyunUrl from '../imgs/aliyun.jpg'
+import "./components.less"
+
+const { Meta } = Card;
+
+
 
 const RecordCard = () => {
   // TODO 统一接口格式，替换静态数据
   // const {category, company, department, direction, interview_time } = item;
 
   return (
-    <Card className="record-card"
+    <Card
+      className="record-card"
       hoverable
       cover={<img alt="aliyun" src={aliyunUrl} />}
     >
