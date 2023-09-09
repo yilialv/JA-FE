@@ -1,12 +1,11 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Drawer, Input, Row, Layout, Avatar, Col, Checkbox } from 'antd';
+import { Button, Layout, Avatar,  Checkbox, message } from 'antd';
 import { UserOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
-import store from '../../store'
-import './App.less'
+import store from '../../store';
+import './App.less';
 
-const { TextArea } = Input;
 const { Content } = Layout;
 
 /*
@@ -41,7 +40,7 @@ const Interview = observer(() => {
    * @param {WebSocket} ws 
    */
   const sendStartParams = () => {
-    let req = {
+    const req = {
       'type': 'START',
       'data': {
         'appid': APPID,  // 网页上的appid
@@ -52,7 +51,7 @@ const Interview = observer(() => {
         'format': 'pcm'  // 固定参数
       }
     };
-    let body = JSON.stringify(req);
+    const body = JSON.stringify(req);
     ws.current.send(body);
     console.log('发送开始帧:' + body);
   };
@@ -62,10 +61,10 @@ const Interview = observer(() => {
    * @param {WebSocket} ws 
    */
   const sendFinish = () => {
-    let req = {
+    const req = {
       'type': 'FINISH'
     };
-    let body = JSON.stringify(req);
+    const body = JSON.stringify(req);
     ws.current.send(body);
     console.log('发送结束帧');
   };
@@ -78,18 +77,18 @@ const Interview = observer(() => {
       sampleRate: 16000,
       frameSize: frameSize,
     });
-  }
+  };
 
   // 停止录音
   const stopRecording = () => {
     recorder.stop();
     ws.current?.close();
     wsServer.current?.close();
-  }
+  };
 
   recorder.onStart = () => {
     // console.log("recorder.onStart")
-  }
+  };
 
   recorder.onStop = function () {
     sendFinish();
@@ -102,7 +101,7 @@ const Interview = observer(() => {
     if (ws.current.readyState === ws.current.OPEN) {
       ws.current.send(new Int8Array(frameBuffer));
       if (isLastFrame) {
-        console.log("接收最后一个音频帧")
+        console.log("接收最后一个音频帧");
       }
     }
   };
@@ -114,21 +113,24 @@ const Interview = observer(() => {
 
     ws.current.onopen = () => {
       sendStartParams();
-      console.log('WebSocket开始连接')
+      console.log('WebSocket开始连接');
     };
 
     ws.current.onmessage = (message) => {
       try {
-        let res = JSON.parse(message.data);
-        if (res.type === 'MID_TEXT' || res.type === 'FIN_TEXT') {
-          if (res.err_no === 0) {
-            store.setNextRequest(res.result);
+        const res = JSON.parse(message.data);
+        const { type, err_no, err_msg, result } = res;
+        if (type === 'MID_TEXT' || type === 'FIN_TEXT') {
+          if (err_no === 0) {
+            store.setNextRequest(result);
             store.setRequest();
+          } else {
+            throw Error(err_msg);
           }
         }
         handleMessage(res);
       } catch (err) {
-        console.log('解析语音转文字结果报错，错误为：', err);
+        console.error(err);
       }
     };
 
@@ -143,31 +145,55 @@ const Interview = observer(() => {
 
     wsServer.current.onopen = () => {
       console.log('Server WebSocket打开连接');
+      const req = {
+        'type': 1,
+        'data': {
+          "company": store.formCompany,
+          "direction": store.formDirection,
+          "round": store.formRound
+        }
+      };
+      const body = JSON.stringify(req);
+      wsServer.current.send(body);
+      console.log('发送开始帧:' + body);
     };
 
-    wsServer.current.onmessage = (message) => {
+    wsServer.current.onmessage = (msg) => {
       try {
-        const result = JSON.parse(message.data);
-        const { data, id } = result;
-        if (!data.startsWith('No')) {
-          // 第一次拿到数据
-          if (!store.id) {
-            store.setId(id);
-            store.setLastReply(data);
-          } else {
-            if (id !== store.id) {
-              store.setReply();
+        const result = JSON.parse(msg.data);
+        console.log(result);
+        const { type, data, id } = result;
+        if (type === 0) {
+          if (!data.startsWith('No')) {
+            // 第一次拿到数据
+            if (!store.id) {
               store.setId(id);
+              store.setLastReply(data);
+            } else {
+              if (id !== store.id) {
+                store.setReply();
+                store.setId(id);
+              }
+              store.setLastReply(data);
             }
-            store.setLastReply(data);
+          } else {
+            message.warning('无效提问或问题长度低于8，请重新尝试～');
           }
+        } else if (type === 99) {
+          message.error(data);
         }
       } catch (error) {
-        console.log('后端返回解析出错!')
+        console.log('后端返回解析出错!');
       }
     };
 
     wsServer.current.onclose = () => {
+      const req = {
+        "type": 3,
+        "data": {}
+      };
+      wsServer.current.send(JSON.stringify(req));
+      console.log('发送结束帧：', JSON.stringify(req));
       console.log('Server WebSocket关闭连接');
     };
 
@@ -177,14 +203,15 @@ const Interview = observer(() => {
   };
 
   const handleMessage = async (res) => {
-    if (res.type !== "FIN_TEXT") {
+    const { type, result } = res;
+    if (type !== "FIN_TEXT") {
       return;
     }
     // 文字不能太短
-    if (res.result.length < MIN_WORDS) {
+    if (result.length < MIN_WORDS) {
       return;
     }
-    store.addToConversation(res.result);
+    store.addToConversation(result);
 
     // 只保留最近20条对话
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {
@@ -192,9 +219,12 @@ const Interview = observer(() => {
     }
 
     // 要发送的数据
-    let req = {
-      last_reply: store.lastReply,
-      conversations: store.conversations
+    const req = {
+      "type": 2,
+      "data": {
+        last_reply: store.lastReply,
+        conversations: store.conversations
+      }
     };
 
     wsServer.current.send(JSON.stringify(req));
@@ -219,36 +249,14 @@ const Interview = observer(() => {
     // });
   };
 
-  const [DrawerState, setDrawerState] = useState(true)
+  const [DrawerState, setDrawerState] = useState(true);
 
   const handleDrawer = () => {
     setDrawerState(!DrawerState);
-  }
+  };
 
   return (
     <Content className='interview-detail'>
-      {/* <Row className='container'>
-        <TextArea 
-          bordered={true}
-          showCount={true}
-          placeholder='答案显示在这里'
-          value={store.lastReply + store.reply}
-          autoSize={{ minRows: 25, maxRows: 25 }} />
-      </Row>
-      <Row className='container'>
-        <TextArea 
-          bordered={true}
-          showCount={true}
-          placeholder='问题显示在这里'
-          value={store.request}
-          autoSize={{ minRows: 3, maxRows: 3 }} />
-      </Row> */}
-      {/* <Row className='btn'>
-        <Button type='primary' onClick={startRecording}>开始面试</Button>
-        <Button onClick={stopRecording}>结束面试</Button>
-      </Row> */}
-
-
       {/* <Row className='header'>
         <Col>
           <Row className='title'>后端开发 - 字节跳动 - 番茄小说</Row>

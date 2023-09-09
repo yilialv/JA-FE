@@ -24,6 +24,7 @@ module.exports = {
     }],
     "eqeqeq": "warn",
     "indent": ["warn", 2],
-    "space-before-blocks": ["warn", "always"]
+    "space-before-blocks": ["warn", "always"],
+    "semi": "warn"
   },
 }

@@ -1,14 +1,14 @@
-import { Button, Modal, Form, Select, Radio } from "antd";
+import { Button, Modal, Form, Select, Radio, Input } from "antd";
 import {
   BankOutlined,
-  ApartmentOutlined,
   EnterOutlined,
   MessageOutlined,
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import store from "../../store";
-import './App.less'
+import './App.less';
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
 
 const AssistantModal = () => {
 
@@ -19,14 +19,27 @@ const AssistantModal = () => {
   const navigate = useNavigate();
 
   const handleSubmit = (param) => {
-    const { apartment, company, position, round } = param
-    store.formApartment = apartment;
-    store.formCompany = company;
-    store.formPosition = position;
+    const { company, otherCompany, direction, round } = param;
+    if (company !== '其他') {
+      store.formCompany = company;
+    } else {
+      store.formCompany = otherCompany;
+    }
+    store.formDirection = direction;
     store.formRound = round;
     store.isAssistantModalOpen = false;
-    navigate('/interview')
+    navigate('/interview');
   };
+
+  const handleChange = (value) => {
+    if (value === '其他') {
+      setIsOtherCompany(true);
+    } else {
+      setIsOtherCompany(false);
+    }
+  };
+
+  const [ isOtherCompany, setIsOtherCompany ] = useState(false);
 
   return (
     <Modal
@@ -54,7 +67,7 @@ const AssistantModal = () => {
             <Select
               showSearch
               placeholder='请选择您要面试的公司'
-              // onChange={onChange}
+              onChange={handleChange}
               // onSearch={onSearch}
               // filterOption={filterOption}
               options={[
@@ -82,32 +95,21 @@ const AssistantModal = () => {
                   value: "美团",
                   label: "美团",
                 },
+                {
+                  value: "其他",
+                  label: "其他"
+                }
               ]}
             />
           </Form.Item>
-          <ApartmentOutlined />部门
-          <Form.Item name='apartment'>
-            <Select
-              showSearch
-              placeholder='请选择您要加入的部门'
-              rules={[{ required: true }]}
-              // onChange={onChange}
-              // onSearch={onSearch}
-              // filterOption={filterOption}
-              options={[
-                {
-                  value: "部门1",
-                  label: "部门1",
-                },
-                {
-                  value: "部门2",
-                  label: "部门2",
-                },
-              ]}
-            />
-          </Form.Item>
+          {
+            isOtherCompany &&
+            <Form.Item name='otherCompany'>
+              <Input placeholder="请输入公司名称" className="other-company" />
+            </Form.Item>
+          }
           <EnterOutlined />岗位方向
-          <Form.Item name='position'>
+          <Form.Item name='direction'>
             <Select
               showSearch
               placeholder='请选择您的岗位方向'
