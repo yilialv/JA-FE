@@ -29,8 +29,11 @@ const Interview = observer(() => {
   const wsServer = useRef(null); // 和后端的连接
 
   useEffect(() => {
-    const scrollBlock = document.getElementById('scrollBlock');
+    store.formCompany = localStorage.getItem('company');
+    store.formDirection = localStorage.getItem('direction');
+    store.formRound = localStorage.getItem('round');
 
+    const scrollBlock = document.getElementById('scrollBlock');
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
   });

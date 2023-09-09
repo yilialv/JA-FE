@@ -6,6 +6,7 @@ import { observer } from 'mobx-react';
 import store from '../store';
 import { logout } from '../router';
 import AssistantModal from '../pages/AssistantModal/App';
+import { setLocalStorage } from '../utils';
 
 const { Header } = Layout;
 
@@ -50,7 +51,7 @@ const NavigationMenu = () => {
       label: (<div onClick={() => logout()}>退出</div>),
       key: 'logout'
     }
-  ]
+  ];
 
   const navigate = useNavigate();
 
@@ -68,7 +69,12 @@ const NavigationMenu = () => {
     }
     const link = '/' + key;
     navigate(link);
-  }
+    setLocalStorage({
+      company: '', 
+      direction: '', 
+      round: ''
+    });
+  };
 
   return (
     <Header
@@ -123,6 +129,7 @@ const NavigationMenu = () => {
             </>
         }
       </div>
+      <AssistantModal/>
     </Header>
   );
 };

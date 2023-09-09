@@ -1,4 +1,4 @@
-import { Button, Modal, Form, Select, Radio, Input } from "antd";
+import { Button, Modal, Form, Select, Radio, Input, message } from "antd";
 import {
   BankOutlined,
   EnterOutlined,
@@ -9,6 +9,7 @@ import store from "../../store";
 import './App.less';
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { setLocalStorage } from "../../utils";
 
 const AssistantModal = () => {
 
@@ -20,6 +21,10 @@ const AssistantModal = () => {
 
   const handleSubmit = (param) => {
     const { company, otherCompany, direction, round } = param;
+    if ((!company && !otherCompany) || !direction || !round) {
+      message.info('填写面试信息可以方便生成面试记录并复盘哦！请填写相关信息再开始面试吧！');
+      return;
+    }
     if (company !== '其他') {
       store.formCompany = company;
     } else {
@@ -29,6 +34,11 @@ const AssistantModal = () => {
     store.formRound = round;
     store.isAssistantModalOpen = false;
     navigate('/interview');
+    setLocalStorage({
+      company: company, 
+      direction: direction, 
+      round: round
+    });
   };
 
   const handleChange = (value) => {
