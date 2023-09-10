@@ -1,18 +1,23 @@
-import { Avatar, Button, Menu } from "antd"
-import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons"
-import { Content } from "antd/es/layout/layout"
-import MineRecords from "./MineRecords"
-import "./App.less"
+import { Avatar, Button, Menu } from "antd";
+import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons";
+import { Content } from "antd/es/layout/layout";
+import MineRecords from "./MineRecords";
+import FavoriteRecords from "./FavoriteRecords";
+import "./App.less";
 
 
 const User = () => {
 
-  const currentMenu = 'mine'
+  const currentMenu = 'mine';
  
   const menuItems = [
     {
       key: 'mine',
       label: '我的面经',
+    },
+    {
+      key: 'collection',
+      label: '面经收藏',
     },
     {
       key: 'resume',
@@ -21,10 +26,6 @@ const User = () => {
     {
       key: 'simulation',
       label: '模拟记录',
-    },
-    {
-      key: 'collection',
-      label: '面经收藏',
     },
     {
       key: 'person-info',
@@ -58,9 +59,12 @@ const User = () => {
           className="filter-btn" 
           icon={<FilterOutlined />}>筛选</Button>
       </div>
-      <MineRecords />
+      <div className="components-container">
+        <MineRecords />
+        <FavoriteRecords />
+      </div>
     </Content>
-  )
-}
+  );
+};
 
-export default User
+export default User;
