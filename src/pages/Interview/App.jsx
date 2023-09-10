@@ -75,7 +75,6 @@ const Interview = observer(() => {
   // 开始录音
   const startRecording = () => {
     connectWebSocket();
-
     recorder.start({
       sampleRate: 16000,
       frameSize: frameSize,
@@ -168,7 +167,7 @@ const Interview = observer(() => {
         const { type, data, id } = result;
         if (type === 0) {
           if (!data.startsWith('No')) {
-          // 第一次拿到数据
+            // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
@@ -256,10 +255,11 @@ const Interview = observer(() => {
 
   const [ButtonState, setButtonstate] = useState(true);
 
-  const [AudioState, setAudioState] = useState(true);
+  const [AudioState, setAudioState] = useState(false);
 
   const [ReplyState, setReplyState] = useState(false);
 
+  //切换“生成中”，“等待面试官问题”状态
   const handleReplyState = () => {
     setReplyState(!ReplyState);
   };
@@ -268,14 +268,17 @@ const Interview = observer(() => {
     setDrawerState(!DrawerState);
   };
 
+  //开始，结束按钮状态切换
   const handleButton = () => {
     setButtonstate(!ButtonState);
   };
 
+  //麦克风按钮进入激活状态
   const activateAudioState = () => {
     setAudioState(true);
   };
 
+  //麦克风按钮回到默认状态
   const stopAudioState = () => {
     setAudioState(false);
   };
@@ -363,7 +366,7 @@ const Interview = observer(() => {
                   placeholder="input"
                   prefix={prefix}
                   className="input"
-                //value={store.request}
+                  value={store.request}
                 />
                 <Button style={{ color: '#3F9D13' }} type="default">
                   <SendOutlined />

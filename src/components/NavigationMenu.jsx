@@ -77,7 +77,7 @@ const NavigationMenu = () => {
     } else if (!store.isLogin) {
       store.isLoginModalOpen = true;
       return;
-    } else if (key === 'interview') {
+    } else if (key === 'interview' && store.currentMenu !== '/interview') {
       store.isAssistantModalOpen = true;
       return;
     }
