@@ -261,28 +261,24 @@ const Interview = observer(() => {
   const [ReplyState, setReplyState] = useState(false);
 
   const handleReplyState = () => {
-    setReplyState(!ReplyState)
-  }
+    setReplyState(!ReplyState);
+  };
 
   const handleDrawer = () => {
     setDrawerState(!DrawerState);
-  }
-
-  // const closeDrawer = () => {
-  //   setDrawerState(false);
-  // }
+  };
 
   const handleButton = () => {
     setButtonstate(!ButtonState);
-  }
+  };
 
   const activateAudioState = () => {
     setAudioState(true);
-  }
+  };
 
   const stopAudioState = () => {
     setAudioState(false);
-  }
+  };
 
   const prefix = (
     <div className='audio-display'>

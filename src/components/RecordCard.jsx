@@ -1,6 +1,6 @@
-import { Card, Avatar } from "antd"
-import aliyunUrl from '../imgs/aliyun.jpg'
-import "./components.less"
+import { Card, Avatar } from "antd";
+import aliyunUrl from '../imgs/aliyun.jpg';
+import "./components.less";
 
 const { Meta } = Card;
 

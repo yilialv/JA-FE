@@ -20,8 +20,8 @@ const NavigationMenu = () => {
   const location = useLocation();
 
   useEffect(() => {
-    const { pathname } = location
-    store.currentMenu = pathname
+    const { pathname } = location;
+    store.currentMenu = pathname;
   }, [location]);
 
   const menuItems = [
@@ -60,7 +60,7 @@ const NavigationMenu = () => {
       label: (<div onClick={() => logout()}>退出登录</div>),
       key: 'logout'
     }
-  ]
+  ];
 
   const [open, setOpen] = useState(false);
 
@@ -83,11 +83,11 @@ const NavigationMenu = () => {
     }
     navigate(link);
     setLocalStorage({
-      company: '', 
-      direction: '', 
+      company: '',
+      direction: '',
       round: ''
     });
-  }
+  };
 
   return (
     < Header
@@ -120,12 +120,12 @@ const NavigationMenu = () => {
                   {index !== 0 && <span>|</span>}
                   <div
                     className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
-                    onClick={() => { NavigateTo(item) }}
+                    onClick={() => { NavigateTo(item); }}
                     key={key}
                   >
                     {label}
                   </div>
-                </React.Fragment>
+                </React.Fragment>;
               })
             }
           </div>
@@ -159,7 +159,7 @@ const NavigationMenu = () => {
               className='mobile-menu-logined'
               menu={{
                 items,
-                onClick: () => { setOpen(false) }
+                onClick: () => { setOpen(false); }
               }}
               onOpenChange={handleOpenChange}
               open={open}
@@ -167,15 +167,15 @@ const NavigationMenu = () => {
                 <div className='mobile-menu-list'>
                   {
                     menuItems.map((item) => {
-                      const { key, link, label } = item
+                      const { key, link, label } = item;
                       return <React.Fragment key={key}>
                         <div
                           className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
-                          onClick={() => { NavigateTo(item), setOpen(false) }}
+                          onClick={() => { NavigateTo(item), setOpen(false); }}
                           key={key}>
                           {label}
                         </div>
-                      </React.Fragment>
+                      </React.Fragment>;
                     })
                   }
                   <Divider
@@ -194,7 +194,7 @@ const NavigationMenu = () => {
               overlayStyle={{ textAlign: 'center' }}
               placement="bottomRight"
             >
-              <Button className='mobile-menu' onClick={() => { setOpen(true) }}><BarsOutlined /></Button>
+              <Button className='mobile-menu' onClick={() => { setOpen(true); }}><BarsOutlined /></Button>
             </Dropdown >
             :
             <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
