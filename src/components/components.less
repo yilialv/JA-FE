@@ -4,7 +4,39 @@
 
     .ant-card-body {
         padding: 12px;
-        
+        color: #111;
+
+        .interview-title {
+            display: flex;
+            align-items: center;
+            .title-text {
+                font-family: Roboto;
+                font-size: 23px;
+                font-weight: 700;
+                line-height: 24px;
+            }
+            .ant-tag {
+                height: 18px;
+                border-radius: 10px;
+                margin-left: 8px;
+                margin-right: auto;
+                color: #FFF;
+                font-size: 10px;
+                font-weight: 500;
+                line-height: 16px;
+            }
+            .anticon {
+                font-weight: 900;
+                font-size: large;
+                // padding: 6px;
+                border-radius: 50%;
+                transition: transform 0.3s ease-in-out;
+            }
+            .anticon:hover {
+                transform: scale(1.1);
+                // background-color: #ccc;
+            }
+        }
         .interview-info {
             display: flex;
             justify-content: space-between;
@@ -14,16 +46,38 @@
                 font-size: 14px;
             }
         }
-        
         .interview-footer {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            
+            .edit-btn {
+                margin-left: 24px;
+                color: #3F9D13;
+                border-color: #3F9D13;
+            }
+            .edit-btn:hover {
+                background-color: rgba(100, 237, 172, 0.3);
+            }
+            .mock-btn {
+                margin-right: 12px;
+                padding-left: 6px;
+                padding-right: 4px;
+            }
+            .interview-footer-star {
+                line-height: 16px;
+                .star {
+                    font-size: 16px;
+                    margin-right: 2px;
+                }
+            }
             .interview-footer-user {
                 display: flex;
                 align-items: center;
+                .ant-avatar {
+                    border: 1px solid #ccc;
+                    margin-right: 2px;
+                }
             }
         }
     }
