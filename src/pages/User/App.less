@@ -1,11 +1,16 @@
 @border-style: 1px solid #ccc;
-@dialog-height: 600px;
-@dialog-margin: 20px 0;
-@dialog-box-shadow: 0 5px 10px rgba(145, 158, 171, 0.319);
-@dialog-border-radius: 15px;
 
 @screen-width: 80vw;
 @screen-height: 85vh;
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+}
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
 
 .user-page {
     display: flex;
@@ -78,21 +83,26 @@
         }
     }
 
+    .components-container {
+        width: 1280px;
+        margin-bottom: 4em;
+    }
+
     @media screen and (max-width: 1280px) {
-        .tab-container {
+        .tab-container, .components-container {
             width: 960px;
         }
     }
 
     @media screen and (max-width: 960px) {
-        .tab-container {
+        .tab-container, .components-container  {
             width: 640px;
         }
     }
 
     @media screen and (max-width: 640px) {
-        .tab-container {
-            width: auto;
+        .tab-container, .components-container  {
+            width: 96%;
         }
     }
 }
@@ -124,9 +134,7 @@
     }
 }
 
-.components-container {
-    margin-bottom: 2rem;
-}
+
 // ======== MineRecords =========
 .dash-card {
     border-style: dashed;

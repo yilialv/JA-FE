@@ -1,37 +1,40 @@
+import { useState } from 'react';
 import { Avatar, Button, Menu } from "antd";
 import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import MineRecords from "./MineRecords";
 import FavoriteRecords from "./FavoriteRecords";
+import SimulateList from "./SimulateList";
+import CopilotList from "./CopilotList";
+import Information from "./Information";
 import "./App.less";
-
 
 const User = () => {
 
-  const currentMenu = 'mine';
+  const [currentMenu, setCurrentMenu] = useState('information');
  
   const menuItems = [
-    {
-      key: 'mine',
-      label: '我的面经',
-    },
-    {
-      key: 'collection',
-      label: '面经收藏',
-    },
-    {
-      key: 'resume',
-      label: '辅助记录',
-    },
-    {
-      key: 'simulation',
-      label: '模拟记录',
-    },
-    {
-      key: 'person-info',
-      label: '个人信息',
-    }
+    {key: 'mine', label: '我的面经'},
+    {key: 'favorite', label: '面经收藏',},
+    {key: 'simulation', label: '模拟记录',},
+    {key: 'copilot', label: '辅助记录',},
+    {key: 'information', label: '个人信息',}
   ];
+
+  const renderComponent = () => {
+    switch (currentMenu) {
+    case 'information':
+      return <Information />;
+    case 'copilot':
+      return <CopilotList/>;
+    case 'simulation':
+      return <SimulateList />;
+    case 'favorite':
+      return <FavoriteRecords />;
+    default:
+      return <MineRecords />;
+    }
+  };
 
   return (
     <Content className="user-page">
@@ -51,17 +54,15 @@ const User = () => {
           items={menuItems}
           style={{ minWidth: '60px', flex: 1 }}
           defaultSelectedKeys={[currentMenu]}
-        >
-          {currentMenu}
-        </Menu>
+          onClick={(e)=>setCurrentMenu(e.key)}
+        />
         <Button 
           size="large"
           className="filter-btn" 
           icon={<FilterOutlined />}>筛选</Button>
       </div>
       <div className="components-container">
-        <MineRecords />
-        <FavoriteRecords />
+        {renderComponent()}
       </div>
     </Content>
   );
