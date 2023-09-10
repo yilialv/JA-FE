@@ -1,11 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { UserOutlined } from '@ant-design/icons';
-import { Menu, Layout, Button, Avatar, Dropdown } from 'antd';
+import { UserOutlined, BarsOutlined } from '@ant-design/icons';
+import { Divider, Layout, Button, Avatar, Dropdown } from 'antd';
 import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
 import store from '../store';
+import React, { useEffect, useState } from 'react';
 import { logout } from '../router';
 import AssistantModal from '../pages/AssistantModal/App';
+import { useLocation } from 'react-router-dom';
+
 
 const { Header } = Layout;
 
@@ -13,6 +16,13 @@ const NavigationMenu = () => {
   const showModal = () => {
     store.isLoginModalOpen = true;
   };
+
+  const location = useLocation();
+
+  useEffect(() => {
+    const { pathname } = location
+    store.currentMenu = pathname
+  }, [location]);
 
   const menuItems = [
     {
@@ -47,17 +57,22 @@ const NavigationMenu = () => {
       type: 'divider'
     },
     {
-      label: (<div onClick={() => logout()}>退出</div>),
+      label: (<div onClick={() => logout()}>退出登录</div>),
       key: 'logout'
     }
   ]
 
+  const [open, setOpen] = useState(false);
+
   const navigate = useNavigate();
 
+  const handleOpenChange = (flag) => {
+    setOpen(flag);
+  };
+
   const NavigateTo = (item) => {
-    const { key } = item;
-    if (key === 'home') {
-      navigate('/');
+    const { key, link } = item;
+    if (store.currentMenu === key) {
       return;
     } else if (!store.isLogin) {
       store.isLoginModalOpen = true;
@@ -66,64 +81,121 @@ const NavigationMenu = () => {
       store.isAssistantModalOpen = true;
       return;
     }
-    const link = '/' + key;
     navigate(link);
   }
 
   return (
-    <Header
+    < Header
       style={{
         padding: 0,
-        position: 'sticky',
+        position: 'absolute',
         width: '100%',
+        height: '64px',
         top: 0,
         zIndex: 1,
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
         backgroundColor: '#fff',
-        border: '1px solid rgba(5, 5, 5, 0.06)',
+        borderBottom: '1px solid rgba(5, 5, 5, 0.06)',
         userSelect: 'none'
-      }}
+      }
+      }
     >
-
+      <Login />
+      <AssistantModal />
       <Link to="/"><div className='page-title'>JobGPT</div></Link>
-      <div className='page-menu'>
-        <Menu
-          mode="horizontal"
-          className='page-menu-list'
-          items={menuItems}
-          style={{ minWidth: '60px', flex: 1 }}
-          defaultSelectedKeys={[store.currentMenu]}
-          onClick={NavigateTo}
-        >
-        </Menu>
-        {
-          store.isLogin ?
-            <>
-              |
-              <Dropdown menu={{ items }}
-                placement='bottomRight'
-                overlayStyle={{ textAlign: 'center' }}
-                arrow
-              >
-                <Avatar
-                  icon={<UserOutlined />}
-                  size='large'
-                  className='login-btn'
+      <div className='hide'>
+        <div className='page-menu'>
+          <div className='page-menu-list'>
+            {
+              menuItems.map((item, index) => {
+                const { key, link, label } = item;
+                return <React.Fragment key={index}>
+                  {index !== 0 && <span>|</span>}
+                  <div
+                    className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
+                    onClick={() => { NavigateTo(item) }}
+                    key={key}
+                  >
+                    {label}
+                  </div>
+                </React.Fragment>
+              })
+            }
+          </div>
+          {
+            store.isLogin ?
+              <>
+                <Dropdown menu={{ items }}
+                  placement='bottomRight'
+                  overlayStyle={{ textAlign: 'center' }}
                 >
-                </Avatar>
-              </Dropdown>
-            </>
+                  <Avatar
+                    icon={<UserOutlined />}
+                    size='large'
+                    className='login-icon'
+                  >
+                  </Avatar>
+                </Dropdown>
+              </>
+              :
+              <>
+                <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
+              </>
+          }
+        </div>
+      </div>
+      <div className='mobile-menu'>
+        {
+          store.isLogin
+            ?
+            < Dropdown
+              className='mobile-menu-logined'
+              menu={{
+                items,
+                onClick: () => { setOpen(false) }
+              }}
+              onOpenChange={handleOpenChange}
+              open={open}
+              dropdownRender={(menu) => (
+                <div className='mobile-menu-list'>
+                  {
+                    menuItems.map((item) => {
+                      const { key, link, label } = item
+                      return <React.Fragment key={key}>
+                        <div
+                          className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
+                          onClick={() => { NavigateTo(item), setOpen(false) }}
+                          key={key}>
+                          {label}
+                        </div>
+                      </React.Fragment>
+                    })
+                  }
+                  <Divider
+                    style={{
+                      margin: 0,
+                    }}
+                  />
+                  {React.cloneElement(menu, {
+                    style: {
+                      borderRadius: 0,
+                      boxShadow: 'none'
+                    }
+                  })}
+                </div>
+              )}
+              overlayStyle={{ textAlign: 'center' }}
+              placement="bottomRight"
+            >
+              <Button className='mobile-menu' onClick={() => { setOpen(true) }}><BarsOutlined /></Button>
+            </Dropdown >
             :
-            <>
-              <Button type='default' className='login-btn' onClick={showModal}>登录</Button>
-              <Login />
-              <AssistantModal />
-            </>
+            <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
         }
       </div>
-    </Header>
+    </Header >
   );
 };
 

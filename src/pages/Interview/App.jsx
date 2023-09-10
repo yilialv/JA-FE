@@ -1,12 +1,11 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Drawer, Input, Row, Layout, Avatar, Col, Checkbox } from 'antd';
-import { UserOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Spin, Tag, Input, Layout, Avatar, Checkbox, Space } from 'antd';
+import { UserOutlined, PauseOutlined, CaretRightOutlined, SendOutlined, LoadingOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import store from '../../store'
 import './App.less'
 
-const { TextArea } = Input;
 const { Content } = Layout;
 
 /*
@@ -72,6 +71,7 @@ const Interview = observer(() => {
 
   // 开始录音
   const startRecording = () => {
+    handleButton();
     connectWebSocket();
 
     recorder.start({
@@ -82,6 +82,7 @@ const Interview = observer(() => {
 
   // 停止录音
   const stopRecording = () => {
+    handleButton();
     recorder.stop();
     ws.current?.close();
     wsServer.current?.close();
@@ -219,68 +220,102 @@ const Interview = observer(() => {
     // });
   };
 
-  const [DrawerState, setDrawerState] = useState(true)
+  const [DrawerState, setDrawerState] = useState(true);
+
+  const [ButtonState, setButtonstate] = useState(true);
+
+  const [AudioState, setAudioState] = useState(true);
+
+  const [ReplyState, setReplyState] = useState(false);
+
+  const handleReplyState = () => {
+    setReplyState(!ReplyState)
+  }
 
   const handleDrawer = () => {
     setDrawerState(!DrawerState);
   }
 
+  // const closeDrawer = () => {
+  //   setDrawerState(false);
+  // }
+
+  const handleButton = () => {
+    setButtonstate(!ButtonState);
+  }
+
+  const activateAudioState = () => {
+    setAudioState(true);
+  }
+
+  const stopAudioState = () => {
+    setAudioState(false);
+  }
+
+  const prefix = (
+    <div className='audio-display'>
+      <LoadingOutlined
+        className={`audio-loading ${AudioState ? 'loading-activated' : 'loading-default'}`}
+      />
+      <AudioOutlined
+        className={`audio ${AudioState ? 'audio-activated' : 'audio-default'}`}
+      />
+    </div>
+  );
+
   return (
     <Content className='interview-detail'>
-      {/* <Row className='container'>
-        <TextArea 
-          bordered={true}
-          showCount={true}
-          placeholder='答案显示在这里'
-          value={store.lastReply + store.reply}
-          autoSize={{ minRows: 25, maxRows: 25 }} />
-      </Row>
-      <Row className='container'>
-        <TextArea 
-          bordered={true}
-          showCount={true}
-          placeholder='问题显示在这里'
-          value={store.request}
-          autoSize={{ minRows: 3, maxRows: 3 }} />
-      </Row> */}
-      {/* <Row className='btn'>
-        <Button type='primary' onClick={startRecording}>开始面试</Button>
-        <Button onClick={stopRecording}>结束面试</Button>
-      </Row> */}
-
-
-      {/* <Row className='header'>
-        <Col>
-          <Row className='title'>后端开发 - 字节跳动 - 番茄小说</Row>
-          <Row className='subtitle'>辅助面试 二面 面试官发言 生成中</Row>
-        </Col>
-        <Col>
-          <Button type='primary' onClick={startRecording} className='interview-btn'>开始</Button>
-          <Button className={['interview-btn', 'pause']}>暂停</Button>
-          <Button danger type='primary' onClick={stopRecording} className='interview-btn'>结束</Button>
-        </Col>
-      </Row> */}
       <div className='container'>
         <div className='container-header'>
-          <div className='header-group'>
-            <div className='title'>后端开发@字节跳动 - 番茄小说</div>
-            <div className='states'>
-              <div className='state'>辅助面试</div>
-              <div className='state'>二面</div>
-              <div className='state'>面试官发言</div>
-              <div className='state'>发言中</div>
-            </div>
+          <div className='time'>
+            <ClockCircleOutlined style={{ color: '#3F9D13', fontSize: '20px' }} />
+            &nbsp;20min
           </div>
-          <div className='time'>当前时长：20分钟</div>
+          <div className='states'>
+            {ReplyState
+              ?
+              <div className='state'>
+                等待面试官问题
+              </div>
+              :
+              <div className='state'>
+                <span>生成中</span>
+                <Spin />
+              </div>
+            }
+          </div>
+          {
+            ButtonState
+              ?
+              <Button className='header-button' type='primary' onClick={startRecording}>
+                <CaretRightOutlined />
+                <span>开始</span>
+              </Button>
+              :
+              <Button danger className='header-button' type='primary' onClick={stopRecording}>
+                <PauseOutlined />
+                结束
+              </Button>
+          }
         </div>
         <div className='container-body'>
           <div className={`body-left ${DrawerState ? 'body-compressed' : 'body-fill'}`}>
             <div className='answer-block' id='scrollBlock'>
+              <div className='answer'>
+                <div className='answer-header'>
+                  <Avatar style={{ backgroundColor: '#87d068', marginRight: '5px' }} icon={<UserOutlined />} />
+                  <div>小助手</div>
+                </div>
+                <div className='text'>测试文本<br />测试文本</div>
+              </div>
               {
                 store.reply.map((item, key) => {
                   return (
                     <div className='answer' key={key}>
-                      <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+                      <div className='answer-header'>
+                        <Avatar style={{ backgroundColor: '#87d068', marginRight: '5px' }} icon={<UserOutlined />} />
+                        <div>小助手</div>
+                      </div>
                       <div className='text'>{item}</div>
                     </div>
                   );
@@ -294,12 +329,24 @@ const Interview = observer(() => {
                 </div>
               }
             </div>
-            <div className='question'>{store.request}</div>
-            <div className='drawer-button' onClick={handleDrawer}>
-              {
-                DrawerState ? <RightOutlined /> : <LeftOutlined />
-              }
+            <div className='question'>
+              <Space.Compact className='question-input' size="large">
+                <Input
+                  placeholder="input"
+                  prefix={prefix}
+                  className="input"
+                //value={store.request}
+                />
+                <Button style={{ color: '#3F9D13' }} type="default">
+                  <SendOutlined />
+                </Button>
+              </Space.Compact>
             </div>
+          </div>
+          <div className={`drawer-button ${DrawerState ? 'drawer-button-opening' : 'drawer-button-closed'}`} onClick={handleDrawer}>
+            {
+              DrawerState ? <RightOutlined /> : <LeftOutlined />
+            }
           </div>
           <div className={`drawer ${DrawerState ? 'drawer-opening' : 'drawer-closed'}`}>
             <div className='drawer-info'>
@@ -309,25 +356,20 @@ const Interview = observer(() => {
                 className='drawer-avatar'
               >
               </Avatar>
-              <div className='drawer-name'>万能小助手</div>
+              <div className='drawer-name'>
+                <div>字节跳动</div>
+                <div>@后端开发</div>
+              </div>
+              <div className='drawer-state'>
+                <Tag>辅助面试</Tag>
+                <Tag>三面</Tag>
+              </div>
               <div className='drawer-check'>
                 <Checkbox>
                   基于个人信息辅助
                 </Checkbox>
-                <QuestionCircleOutlined />
+                <QuestionCircleOutlined className='help' />
               </div>
-            </div>
-            <div></div>
-            <div className='drawer-buttons'>
-              <Button type='primary' onClick={startRecording}>
-                开始
-              </Button>
-              <Button className='pause'>
-                暂停
-              </Button>
-              <Button danger type='primary' onClick={stopRecording}>
-                结束
-              </Button>
             </div>
           </div>
         </div>
