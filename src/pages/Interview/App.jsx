@@ -167,7 +167,7 @@ const Interview = observer(() => {
         const { type, data, id } = result;
         if (type === 0) {
           if (!data.startsWith('No')) {
-            // 第一次拿到数据
+          // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
