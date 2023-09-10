@@ -4,6 +4,13 @@ html {
     font-size: 2vw;
 }
 
+.web-body {
+    height: calc(100vh - 64px);
+    margin-top: 64px;
+    overflow-y: auto;
+    background-color: #fff;
+}
+
 @media screen and (min-width:1300px) {
     html {
         font-size: 26px;
@@ -36,25 +43,100 @@ html {
     justify-content: space-evenly;
 }
 
+.hide {
+    height: 100%;
+}
+
+
+.mobile-menu {
+    display: none;
+}
+
+.mobile-menu-logined {
+    margin-right: 20px;
+    font-size: larger;
+    height: 70%;
+}
+
+.mobile-menu-list {
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+
+    .menu-item-selected {
+        margin: 10px;
+        color: #3f9d13;
+        box-shadow: 3px 0 0 -1px #3f9d13 inset, -3px 0 0 -1px #3f9d13 inset;
+    }
+
+    .menu-item-default {
+        margin: 10px;
+    }
+}
+
+@media screen and (max-width:585px) {
+    .hide {
+        display: none;
+    }
+
+    .mobile-menu {
+        display: block;
+    }
+}
+
 .page-menu {
-    font-weight: 600;
     display: flex;
-    flex-wrap: wrap;
     justify-items: end;
     align-items: center;
+    height: 100%;
 
-    @media screen and (max-width:585px) {
-        .page-menu-list {
-            width: 60px;
+    .page-menu-list {
+        display: flex;
+        font-size: 16px;
+        align-items: center;
+        height: 100%;
+
+        span {
+            color: #ccc;
+        }
+
+        div {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px 0 5px;
+            margin: 0 10px 0 10px;
+            cursor: pointer;
+            transition: 300ms;
+            height: 60%;
+        }
+
+        .menu-item-default:hover {
+            color: #3F9D13;
+        }
+
+        .menu-item-selected {
+            margin: 0 10px 0 10px;
+            color: #3F9D13;
+            box-shadow: 15px 15px 0px -14px #3F9D13, -15px -15px 0px -14px #3F9D13;
         }
     }
 
-    .login-btn {
-        margin-left: 20px;
+    .login-icon {
+        margin-left: 10px;
         margin-right: 20px;
-        font-weight: 600;
     }
+}
 
+.login-btn {
+    margin-left: 10px;
+    margin-right: 20px;
+    font-size: 16px;
+    height: 60%;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
 }
 
 .content {
@@ -78,13 +160,14 @@ html {
         text-align: center;
     }
 
-    
+
 
     .statistics {
         display: flex;
         align-items: center;
         margin-top: 20px;
         user-select: none;
+
         .text {
             font-size: 0.875rem;
             font-weight: 500;
@@ -224,10 +307,8 @@ html {
     display: flex;
     flex-direction: column;
     align-items: center;
-
-    .gap {
-        margin-top: 30px;
-    }
+    justify-content: space-around;
+    height: 55vh;
 
     .login-text {
         font-size: 18px;
@@ -247,13 +328,11 @@ html {
     .login-img {
         width: 200px;
         height: 200px;
-        margin: 20px 0;
     }
 
     .login-input {
         width: 200px;
         height: 40px;
-        margin-bottom: 20px;
     }
 }
 
@@ -272,7 +351,7 @@ html {
             align-items: center;
             margin-top: 20px;
 
-            .title{
+            .title {
                 font-weight: 600;
                 margin-bottom: 10px;
             }
