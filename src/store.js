@@ -20,9 +20,8 @@ class Store {
   isAssistantModalOpen = false;
 
   //表单数据
-  formApartment = '';
   formCompany = '';
-  formPosition = '';
+  formDirection = '';
   formRound = '';
 
   constructor() {
@@ -42,7 +41,7 @@ class Store {
   }
 
   setReply() {
-    this.reply.push(this.lastReply)
+    this.reply.push(this.lastReply);
     this.lastReply = '';
   }
 
