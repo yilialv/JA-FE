@@ -90,7 +90,7 @@ const NavigationMenu = () => {
   };
 
   return (
-    < Header
+    <Header
       style={{
         padding: 0,
         position: 'absolute',

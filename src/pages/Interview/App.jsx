@@ -1,10 +1,14 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Spin, Tag, Input, Layout, Avatar, Checkbox, Space, message } from 'antd';
-import { UserOutlined, PauseOutlined, CaretRightOutlined, SendOutlined, LoadingOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { Button, Spin, Input, Layout, Avatar, Checkbox, Space, message } from 'antd';
+import { UserOutlined, PauseOutlined, CaretRightOutlined, LoadingOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined, ImportOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import store from '../../store';
 import './App.less';
+import iconSend from '../../imgs/icon-send.svg';
+import iconBag from '../../imgs/icon-bag.svg';
+import iconCalendar from '../../imgs/icon-calendar.svg';
+import iconWaiting from '../../imgs/icon-waiting.svg';
 
 const { Content } = Layout;
 
@@ -79,6 +83,7 @@ const Interview = observer(() => {
       sampleRate: 16000,
       frameSize: frameSize,
     });
+    handleButton(false);
   };
 
   // 停止录音
@@ -86,6 +91,9 @@ const Interview = observer(() => {
     recorder.stop();
     ws.current?.close();
     wsServer.current?.close();
+    handleButton(true);
+    handleAudioState(false);
+    window.history.back();
   };
 
   recorder.onStart = () => {
@@ -99,12 +107,12 @@ const Interview = observer(() => {
 
   // 接收音频数据帧
   recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-    // console.log("onFrameRecorded");
     if (ws.current.readyState === ws.current.OPEN) {
       ws.current.send(new Int8Array(frameBuffer));
       if (isLastFrame) {
         console.log("接收最后一个音频帧");
       }
+      handleAudioState(true);
     }
   };
 
@@ -167,7 +175,7 @@ const Interview = observer(() => {
         const { type, data, id } = result;
         if (type === 0) {
           if (!data.startsWith('No')) {
-          // 第一次拿到数据
+            // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
@@ -257,7 +265,7 @@ const Interview = observer(() => {
 
   const [AudioState, setAudioState] = useState(false);
 
-  const [ReplyState, setReplyState] = useState(false);
+  const [ReplyState, setReplyState] = useState(true);
 
   //切换“生成中”，“等待面试官问题”状态
   const handleReplyState = () => {
@@ -269,18 +277,13 @@ const Interview = observer(() => {
   };
 
   //开始，结束按钮状态切换
-  const handleButton = () => {
-    setButtonstate(!ButtonState);
+  const handleButton = (flag) => {
+    setButtonstate(flag);
   };
 
-  //麦克风按钮进入激活状态
-  const activateAudioState = () => {
-    setAudioState(true);
-  };
-
-  //麦克风按钮回到默认状态
-  const stopAudioState = () => {
-    setAudioState(false);
+  //麦克风按钮是否激活状态
+  const handleAudioState = (flag) => {
+    setAudioState(flag);
   };
 
   const prefix = (
@@ -298,22 +301,28 @@ const Interview = observer(() => {
     <Content className='interview-detail'>
       <div className='container'>
         <div className='container-header'>
-          <div className='time'>
-            <ClockCircleOutlined style={{ color: '#3F9D13', fontSize: '20px' }} />
-            &nbsp;20min
-          </div>
-          <div className='states'>
-            {ReplyState
-              ?
-              <div className='state'>
-                等待面试官问题
-              </div>
-              :
-              <div className='state'>
-                <span>生成中</span>
-                <Spin />
-              </div>
-            }
+          <div className='header-left'>
+            <div className='return'>
+              <LeftOutlined onClick={() => { window.history.back(); }} />
+            </div>
+            <div className='time'>
+              <ClockCircleOutlined style={{ color: '#3F9D13', fontSize: '20px' }} />
+              &nbsp;20min
+            </div>
+            <div className='states'>
+              {ReplyState
+                ?
+                <div className='state'>
+                  <img src={iconWaiting} />
+                  <span>等待面试官问题</span>
+                </div>
+                :
+                <div className='state'>
+                  <Spin />
+                  <span>生成中</span>
+                </div>
+              }
+            </div>
           </div>
           {
             ButtonState
@@ -337,7 +346,7 @@ const Interview = observer(() => {
                   <Avatar style={{ backgroundColor: '#87d068', marginRight: '5px' }} icon={<UserOutlined />} />
                   <div>小助手</div>
                 </div>
-                <div className='text'>测试文本<br />测试文本</div>
+                <div className='text'>小助手会分析语音识别的内容，只回复面试官的提问</div>
               </div>
               {
                 store.reply.map((item, key) => {
@@ -368,8 +377,8 @@ const Interview = observer(() => {
                   className="input"
                   value={store.request}
                 />
-                <Button style={{ color: '#3F9D13' }} type="default">
-                  <SendOutlined />
+                <Button className='send-button' type="default">
+                  <img src={iconSend} />
                 </Button>
               </Space.Compact>
             </div>
@@ -392,8 +401,14 @@ const Interview = observer(() => {
                 <div>@后端开发</div>
               </div>
               <div className='drawer-state'>
-                <Tag>辅助面试</Tag>
-                <Tag>三面</Tag>
+                <div className='state-item'>
+                  <img src={iconBag} />
+                  辅助面试
+                </div>
+                <div className='state-item'>
+                  <img src={iconCalendar} />
+                  三面
+                </div>
               </div>
               <div className='drawer-check'>
                 <Checkbox>
