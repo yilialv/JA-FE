@@ -50,3 +50,21 @@ export function logout() {
     store.isLogin = false;
   });
 }
+
+export function getToken() {
+  return axios.get(`${BASE_URL}/api/alibaba/token`) // 确保总是返回一个 Promise
+    .then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        const { token } = res.data;
+        const { id } = token;
+        return id; // 当请求成功时返回 token ID
+      }
+      throw new Error("Failed to get a valid response status"); // 抛出一个错误，如果响应状态不是 200
+    })
+    .catch((err) => {
+      console.log('err:', err);
+      message.error('获取token失败');
+      throw err; // 确保错误被重新抛出，以便调用函数可以捕获它
+    });
+}

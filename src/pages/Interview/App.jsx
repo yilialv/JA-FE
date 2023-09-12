@@ -4,6 +4,7 @@ import {
   MIN_WORDS,
   MAX_CONVERSATION_COUNT,
   SERVER_URL,
+  BASE_URL,
 } from "../../constant";
 import {
   Button,
@@ -35,6 +36,7 @@ import iconSend from "../../imgs/icon-send.svg";
 import iconBag from "../../imgs/icon-bag.svg";
 import iconCalendar from "../../imgs/icon-calendar.svg";
 import iconWaiting from "../../imgs/icon-waiting.svg";
+import { getToken } from "../../router";
 
 const { Content } = Layout;
 
@@ -53,7 +55,7 @@ const { Content } = Layout;
 const Interview = observer(() => {
   const recorder = new RecorderManager("/recorder_manager");
   const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
-  const uri = URI + "?token=" + "5311699e60cd489e895589c5bbc2d93a"; //todo: 临时token，修改为通过服务端获取
+  const [uri, setUri] = useState("");
   const task_id = crypto.randomUUID().replace(/-/g, "");
 
   const ws = useRef(null); // 和百度的连接
@@ -63,7 +65,10 @@ const Interview = observer(() => {
     store.formCompany = localStorage.getItem("company");
     store.formDirection = localStorage.getItem("direction");
     store.formRound = localStorage.getItem("round");
-
+    // 获取token
+    getToken().then((fetchedToken) => {
+      setUri(URI + "?token=" + fetchedToken);
+    });
     const scrollBlock = document.getElementById("scrollBlock");
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
