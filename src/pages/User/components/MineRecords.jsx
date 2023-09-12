@@ -1,10 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
 import { Button, Card } from "antd";
-import RecordCard from "../../components/RecordCard";
-import "./App.less";
+import RecordCard from "../../../components/RecordCard";
+import "./components.less";
 
 
 const MineRecords = () => {
+  const navigate = useNavigate();
   const list = ['1','2','3','4','5'];
   const data = {
     company: '阿里巴巴',
@@ -33,6 +35,7 @@ const MineRecords = () => {
             className="dash-card-btn"
             type="primary"
             size="large"
+            onClick={()=>navigate('/experience/upload')}
           >
             上传
           </Button>

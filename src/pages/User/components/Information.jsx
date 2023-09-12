@@ -1,8 +1,8 @@
 import { Button, Input, Select } from "antd";
 import { SaveOutlined, PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
+import "./components.less";
 
 const { TextArea } = Input;
-
 
 const Information = () => {
   return (
