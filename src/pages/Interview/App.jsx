@@ -1,14 +1,40 @@
-import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
-import { Button, Spin, Input, Layout, Avatar, Checkbox, Space, message } from 'antd';
-import { UserOutlined, PauseOutlined, CaretRightOutlined, LoadingOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined, ImportOutlined } from '@ant-design/icons';
-import { observer } from 'mobx-react';
-import { useEffect, useRef, useState } from 'react';
-import store from '../../store';
-import './App.less';
-import iconSend from '../../imgs/icon-send.svg';
-import iconBag from '../../imgs/icon-bag.svg';
-import iconCalendar from '../../imgs/icon-calendar.svg';
-import iconWaiting from '../../imgs/icon-waiting.svg';
+import {
+  APPKEY,
+  URI,
+  MIN_WORDS,
+  MAX_CONVERSATION_COUNT,
+  SERVER_URL,
+} from "../../constant";
+import {
+  Button,
+  Spin,
+  Input,
+  Layout,
+  Avatar,
+  Checkbox,
+  Space,
+  message,
+} from "antd";
+import {
+  UserOutlined,
+  PauseOutlined,
+  CaretRightOutlined,
+  LoadingOutlined,
+  AudioOutlined,
+  ClockCircleOutlined,
+  RightOutlined,
+  LeftOutlined,
+  QuestionCircleOutlined,
+  ImportOutlined,
+} from "@ant-design/icons";
+import { observer } from "mobx-react";
+import { useEffect, useRef, useState } from "react";
+import store from "../../store";
+import "./App.less";
+import iconSend from "../../imgs/icon-send.svg";
+import iconBag from "../../imgs/icon-bag.svg";
+import iconCalendar from "../../imgs/icon-calendar.svg";
+import iconWaiting from "../../imgs/icon-waiting.svg";
 
 const { Content } = Layout;
 
@@ -25,55 +51,67 @@ const { Content } = Layout;
 */
 
 const Interview = observer(() => {
-  const recorder = new RecorderManager('/recorder_manager');
-  const frameSize = 16000 * 2 / 1000 * 160; // 定义每帧大小
-  const uri = URI + '?sn=' + crypto.randomUUID();
+  const recorder = new RecorderManager("/recorder_manager");
+  const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
+  const uri = URI + "?token=" + "5311699e60cd489e895589c5bbc2d93a"; //todo: 临时token，修改为通过服务端获取
+  const task_id = crypto.randomUUID().replace(/-/g, "");
 
   const ws = useRef(null); // 和百度的连接
   const wsServer = useRef(null); // 和后端的连接
 
   useEffect(() => {
-    store.formCompany = localStorage.getItem('company');
-    store.formDirection = localStorage.getItem('direction');
-    store.formRound = localStorage.getItem('round');
+    store.formCompany = localStorage.getItem("company");
+    store.formDirection = localStorage.getItem("direction");
+    store.formRound = localStorage.getItem("round");
 
-    const scrollBlock = document.getElementById('scrollBlock');
+    const scrollBlock = document.getElementById("scrollBlock");
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
   });
 
   /**
    * 发送开始帧
-   * @param {WebSocket} ws 
+   * @param {WebSocket} ws
    */
   const sendStartParams = () => {
     const req = {
-      'type': 'START',
-      'data': {
-        'appid': APPID,  // 网页上的appid
-        'appkey': APPKEY,  // 网页上的appid对应的appkey
-        'dev_pid': DEV_PID,  // 识别模型
-        'cuid': 'ja_',  // 随便填不影响使用。机器的mac或者其它唯一id，百度计算UV用。
-        'sample': 16000,  // 固定参数
-        'format': 'pcm'  // 固定参数
-      }
+      header: {
+        appkey: APPKEY,
+        message_id: crypto.randomUUID().replace(/-/g, ""),
+        task_id: task_id,
+        namespace: "SpeechTranscriber",
+        name: "StartTranscription",
+      },
+      payload: {
+        enable_intermediate_result: true,
+        enable_punctuation_prediction: true,
+        disfluency: true,
+        //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
+        vocabulary_id: "6851f419a17a44969752070669b227c2", // 后端热词表 todo:根据行业方向更换热词id
+      },
     };
     const body = JSON.stringify(req);
     ws.current.send(body);
-    console.log('发送开始帧:' + body);
+    console.log("发送开始帧:" + body);
   };
 
   /**
    * 发送结束帧
-   * @param {WebSocket} ws 
+   * @param {WebSocket} ws
    */
   const sendFinish = () => {
     const req = {
-      'type': 'FINISH'
+      header: {
+        appkey: APPKEY,
+        message_id: crypto.randomUUID().replace(/-/g, ""),
+        task_id: task_id,
+        namespace: "SpeechTranscriber",
+        name: "StopTranscription",
+      },
     };
     const body = JSON.stringify(req);
     ws.current.send(body);
-    console.log('发送结束帧');
+    console.log("发送结束帧");
   };
 
   // 开始录音
@@ -102,7 +140,7 @@ const Interview = observer(() => {
 
   recorder.onStop = function () {
     sendFinish();
-    console.log('录音结束');
+    console.log("录音结束");
   };
 
   // 接收音频数据帧
@@ -123,49 +161,51 @@ const Interview = observer(() => {
 
     ws.current.onopen = () => {
       sendStartParams();
-      console.log('WebSocket开始连接');
+      console.log("WebSocket开始连接");
     };
 
     ws.current.onmessage = (message) => {
       try {
         const res = JSON.parse(message.data);
-        const { type, err_no, err_msg, result } = res;
-        if (type === 'MID_TEXT' || type === 'FIN_TEXT') {
-          if (err_no === 0) {
+        const { payload, header } = res;
+        const { name, status, status_message } = header;
+        const { result } = payload;
+        if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
+          if (status === 20000000) {
             store.setNextRequest(result);
             store.setRequest();
           } else {
-            throw Error(err_msg);
+            throw Error(status_message);
           }
         }
-        handleMessage(res);
+        handleMessage(name, result);
       } catch (err) {
         console.error(err);
       }
     };
 
     ws.current.onclose = () => {
-      console.log('WebSocket关闭连接');
+      console.log("WebSocket关闭连接");
     };
 
     ws.current.onerror = (error) => {
       recorder.stop();
-      console.log('error:', error);
+      console.log("error:", error);
     };
 
     wsServer.current.onopen = () => {
-      console.log('Server WebSocket打开连接');
+      console.log("Server WebSocket打开连接");
       const req = {
-        'type': 1,
-        'data': {
-          "company": store.formCompany,
-          "direction": store.formDirection,
-          "round": store.formRound
-        }
+        type: 1,
+        data: {
+          company: store.formCompany,
+          direction: store.formDirection,
+          round: store.formRound,
+        },
       };
       const body = JSON.stringify(req);
       wsServer.current.send(body);
-      console.log('发送开始帧:' + body);
+      console.log("发送开始帧:" + body);
     };
 
     wsServer.current.onmessage = (msg) => {
@@ -174,7 +214,7 @@ const Interview = observer(() => {
         console.log(result);
         const { type, data, id } = result;
         if (type === 0) {
-          if (!data.startsWith('No')) {
+          if (!data.startsWith("No")) {
             // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
@@ -187,34 +227,33 @@ const Interview = observer(() => {
               store.setLastReply(data);
             }
           } else {
-            message.warning('无效提问或问题长度低于8，请重新尝试～');
+            message.warning("无效提问或问题长度低于8，请重新尝试～");
           }
         } else if (type === 99) {
           message.error(data);
         }
       } catch (error) {
-        console.log('后端返回解析出错!');
+        console.log("后端返回解析出错!");
       }
     };
 
     wsServer.current.onclose = () => {
       const req = {
-        "type": 3,
-        "data": {}
+        type: 3,
+        data: {},
       };
       wsServer.current.send(JSON.stringify(req));
-      console.log('发送结束帧：', JSON.stringify(req));
-      console.log('Server WebSocket关闭连接');
+      console.log("发送结束帧：", JSON.stringify(req));
+      console.log("Server WebSocket关闭连接");
     };
 
     wsServer.current.onerror = (error) => {
-      console.log('error:', error);
+      console.log("error:", error);
     };
   };
 
-  const handleMessage = async (res) => {
-    const { type, result } = res;
-    if (type !== "FIN_TEXT") {
+  const handleMessage = async (type, result) => {
+    if (type !== "SentenceEnd") {
       return;
     }
     // 文字不能太短
@@ -230,11 +269,11 @@ const Interview = observer(() => {
 
     // 要发送的数据
     const req = {
-      "type": 2,
-      "data": {
+      type: 2,
+      data: {
         last_reply: store.lastReply,
-        conversations: store.conversations
-      }
+        conversations: store.conversations,
+      },
     };
 
     wsServer.current.send(JSON.stringify(req));
@@ -287,140 +326,173 @@ const Interview = observer(() => {
   };
 
   const prefix = (
-    <div className='audio-display'>
+    <div className="audio-display">
       <LoadingOutlined
-        className={`audio-loading ${AudioState ? 'loading-activated' : 'loading-default'}`}
+        className={`audio-loading ${
+          AudioState ? "loading-activated" : "loading-default"
+        }`}
       />
       <AudioOutlined
-        className={`audio ${AudioState ? 'audio-activated' : 'audio-default'}`}
+        className={`audio ${AudioState ? "audio-activated" : "audio-default"}`}
       />
     </div>
   );
 
   return (
-    <Content className='interview-detail'>
-      <div className='container'>
-        <div className='container-header'>
-          <div className='header-left'>
-            <div className='return'>
-              <LeftOutlined onClick={() => { window.history.back(); }} />
+    <Content className="interview-detail">
+      <div className="container">
+        <div className="container-header">
+          <div className="header-left">
+            <div className="return">
+              <LeftOutlined
+                onClick={() => {
+                  window.history.back();
+                }}
+              />
             </div>
-            <div className='time'>
-              <ClockCircleOutlined style={{ color: '#3F9D13', fontSize: '20px' }} />
+            <div className="time">
+              <ClockCircleOutlined
+                style={{ color: "#3F9D13", fontSize: "20px" }}
+              />
               &nbsp;20min
             </div>
-            <div className='states'>
-              {ReplyState
-                ?
-                <div className='state'>
+            <div className="states">
+              {ReplyState ? (
+                <div className="state">
                   <img src={iconWaiting} />
                   <span>等待面试官问题</span>
                 </div>
-                :
-                <div className='state'>
+              ) : (
+                <div className="state">
                   <Spin />
                   <span>生成中</span>
                 </div>
-              }
+              )}
             </div>
           </div>
-          {
-            ButtonState
-              ?
-              <Button className='header-button' type='primary' onClick={startRecording}>
-                <CaretRightOutlined />
-                <span>开始</span>
-              </Button>
-              :
-              <Button danger className='header-button' type='primary' onClick={stopRecording}>
-                <PauseOutlined />
-                结束
-              </Button>
-          }
+          {ButtonState ? (
+            <Button
+              className="header-button"
+              type="primary"
+              onClick={startRecording}
+            >
+              <CaretRightOutlined />
+              <span>开始</span>
+            </Button>
+          ) : (
+            <Button
+              danger
+              className="header-button"
+              type="primary"
+              onClick={stopRecording}
+            >
+              <PauseOutlined />
+              结束
+            </Button>
+          )}
         </div>
-        <div className='container-body'>
-          <div className={`body-left ${DrawerState ? 'body-compressed' : 'body-fill'}`}>
-            <div className='answer-block' id='scrollBlock'>
-              <div className='answer'>
-                <div className='answer-header'>
-                  <Avatar style={{ backgroundColor: '#87d068', marginRight: '5px' }} icon={<UserOutlined />} />
+        <div className="container-body">
+          <div
+            className={`body-left ${
+              DrawerState ? "body-compressed" : "body-fill"
+            }`}
+          >
+            <div className="answer-block" id="scrollBlock">
+              <div className="answer">
+                <div className="answer-header">
+                  <Avatar
+                    style={{ backgroundColor: "#87d068", marginRight: "5px" }}
+                    icon={<UserOutlined />}
+                  />
                   <div>小助手</div>
                 </div>
-                <div className='text'>小助手会分析语音识别的内容，只回复面试官的提问</div>
-              </div>
-              {
-                store.reply.map((item, key) => {
-                  return (
-                    <div className='answer' key={key}>
-                      <div className='answer-header'>
-                        <Avatar style={{ backgroundColor: '#87d068', marginRight: '5px' }} icon={<UserOutlined />} />
-                        <div>小助手</div>
-                      </div>
-                      <div className='text'>{item}</div>
-                    </div>
-                  );
-                })
-              }
-              {
-                !!store.lastReply &&
-                <div className='answer'>
-                  <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
-                  <div className='text'>{store.lastReply}</div>
+                <div className="text">
+                  小助手会分析语音识别的内容，只回复面试官的提问
                 </div>
-              }
+              </div>
+              {store.reply.map((item, key) => {
+                return (
+                  <div className="answer" key={key}>
+                    <div className="answer-header">
+                      <Avatar
+                        style={{
+                          backgroundColor: "#87d068",
+                          marginRight: "5px",
+                        }}
+                        icon={<UserOutlined />}
+                      />
+                      <div>小助手</div>
+                    </div>
+                    <div className="text">{item}</div>
+                  </div>
+                );
+              })}
+              {!!store.lastReply && (
+                <div className="answer">
+                  <Avatar
+                    style={{ backgroundColor: "#87d068" }}
+                    icon={<UserOutlined />}
+                  />
+                  <div className="text">{store.lastReply}</div>
+                </div>
+              )}
             </div>
-            <div className='question'>
-              <Space.Compact className='question-input' size="large">
+            <div className="question">
+              <Space.Compact className="question-input" size="large">
                 <Input
                   placeholder="input"
                   prefix={prefix}
                   className="input"
                   value={store.request}
                 />
-                <Button className='send-button' type="default">
+                <Button className="send-button" type="default">
                   <img src={iconSend} />
                 </Button>
               </Space.Compact>
             </div>
           </div>
-          <div className={`drawer-button ${DrawerState ? 'drawer-button-opening' : 'drawer-button-closed'}`} onClick={handleDrawer}>
-            {
-              DrawerState ? <RightOutlined /> : <LeftOutlined />
-            }
+          <div
+            className={`drawer-button ${
+              DrawerState ? "drawer-button-opening" : "drawer-button-closed"
+            }`}
+            onClick={handleDrawer}
+          >
+            {DrawerState ? <RightOutlined /> : <LeftOutlined />}
           </div>
-          <div className={`drawer ${DrawerState ? 'drawer-opening' : 'drawer-closed'}`}>
-            <div className='drawer-info'>
+          <div
+            className={`drawer ${
+              DrawerState ? "drawer-opening" : "drawer-closed"
+            }`}
+          >
+            <div className="drawer-info">
               <Avatar
                 icon={<UserOutlined />}
                 size={96}
-                className='drawer-avatar'
-              >
-              </Avatar>
-              <div className='drawer-name'>
+                className="drawer-avatar"
+              ></Avatar>
+              <div className="drawer-name">
                 <div>字节跳动</div>
                 <div>@后端开发</div>
               </div>
-              <div className='drawer-state'>
-                <div className='state-item'>
+              <div className="drawer-state">
+                <div className="state-item">
                   <img src={iconBag} />
                   辅助面试
                 </div>
-                <div className='state-item'>
+                <div className="state-item">
                   <img src={iconCalendar} />
                   三面
                 </div>
               </div>
-              <div className='drawer-check'>
-                <Checkbox>
-                  基于个人信息辅助
-                </Checkbox>
-                <QuestionCircleOutlined className='help' />
+              <div className="drawer-check">
+                <Checkbox>基于个人信息辅助</Checkbox>
+                <QuestionCircleOutlined className="help" />
               </div>
             </div>
           </div>
         </div>
       </div>
-    </Content >
+    </Content>
   );
 });
 
