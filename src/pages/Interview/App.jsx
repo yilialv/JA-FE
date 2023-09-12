@@ -1,6 +1,6 @@
 import { APPID, APPKEY, DEV_PID, URI, MIN_WORDS, MAX_CONVERSATION_COUNT, SERVER_URL } from '../../constant';
 import { Button, Spin, Input, Layout, Avatar, Checkbox, Space, message } from 'antd';
-import { UserOutlined, PauseOutlined, CaretRightOutlined, LoadingOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined, ImportOutlined } from '@ant-design/icons';
+import { UserOutlined, PauseOutlined, CaretRightOutlined, AudioOutlined, ClockCircleOutlined, RightOutlined, LeftOutlined, QuestionCircleOutlined, ImportOutlined } from '@ant-design/icons';
 import { observer } from 'mobx-react';
 import { useEffect, useRef, useState } from 'react';
 import store from '../../store';
@@ -84,6 +84,7 @@ const Interview = observer(() => {
       frameSize: frameSize,
     });
     handleButton(false);
+    handleAudioState(true);
   };
 
   // 停止录音
@@ -112,7 +113,6 @@ const Interview = observer(() => {
       if (isLastFrame) {
         console.log("接收最后一个音频帧");
       }
-      handleAudioState(true);
     }
   };
 
@@ -132,6 +132,7 @@ const Interview = observer(() => {
         const { type, err_no, err_msg, result } = res;
         if (type === 'MID_TEXT' || type === 'FIN_TEXT') {
           if (err_no === 0) {
+            handleReplyState(true);
             store.setNextRequest(result);
             store.setRequest();
           } else {
@@ -175,6 +176,7 @@ const Interview = observer(() => {
         const { type, data, id } = result;
         if (type === 0) {
           if (!data.startsWith('No')) {
+            handleReplyState(false);
             // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
@@ -238,7 +240,6 @@ const Interview = observer(() => {
     };
 
     wsServer.current.send(JSON.stringify(req));
-
     // fetch(SERVER_URL, {
     //   method: 'POST', // or 'PUT'
     //   headers: {
@@ -261,15 +262,15 @@ const Interview = observer(() => {
 
   const [DrawerState, setDrawerState] = useState(true);
 
-  const [ButtonState, setButtonstate] = useState(true);
+  const [ButtonState, setButtonState] = useState(true);
 
   const [AudioState, setAudioState] = useState(false);
 
   const [ReplyState, setReplyState] = useState(true);
 
   //切换“生成中”，“等待面试官问题”状态
-  const handleReplyState = () => {
-    setReplyState(!ReplyState);
+  const handleReplyState = (flag) => {
+    setReplyState(flag);
   };
 
   const handleDrawer = () => {
@@ -278,7 +279,7 @@ const Interview = observer(() => {
 
   //开始，结束按钮状态切换
   const handleButton = (flag) => {
-    setButtonstate(flag);
+    setButtonState(flag);
   };
 
   //麦克风按钮是否激活状态
@@ -288,9 +289,6 @@ const Interview = observer(() => {
 
   const prefix = (
     <div className='audio-display'>
-      <LoadingOutlined
-        className={`audio-loading ${AudioState ? 'loading-activated' : 'loading-default'}`}
-      />
       <AudioOutlined
         className={`audio ${AudioState ? 'audio-activated' : 'audio-default'}`}
       />
