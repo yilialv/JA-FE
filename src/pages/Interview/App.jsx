@@ -54,7 +54,6 @@ const { Content } = Layout;
 const Interview = observer(() => {
   const recorder = new RecorderManager("/recorder_manager");
   const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
-  const [uri, setUri] = useState("");
   const task_id = crypto.randomUUID().replace(/-/g, "");
 
   const ws = useRef(null); // 和百度的连接
@@ -64,10 +63,7 @@ const Interview = observer(() => {
     store.formCompany = localStorage.getItem("company");
     store.formDirection = localStorage.getItem("direction");
     store.formRound = localStorage.getItem("round");
-    // 获取token
-    getToken().then((fetchedToken) => {
-      setUri(URI + "?token=" + fetchedToken);
-    });
+
     const scrollBlock = document.getElementById("scrollBlock");
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
@@ -159,8 +155,12 @@ const Interview = observer(() => {
   };
 
   // 建立连接
-  const connectWebSocket = () => {
-    ws.current = new WebSocket(uri);
+  const connectWebSocket = async () => {
+    await getToken().then((fetchedToken) => {
+      const uri = URI + "?token=" + fetchedToken;
+      ws.current = new WebSocket(uri);
+    });
+    
     wsServer.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {

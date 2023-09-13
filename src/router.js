@@ -12,13 +12,13 @@ export function getHomeData() {
       const { nick_name } = res.data;
       const params = {
         nickName: nick_name,
-      }
+      };
       store.setHomeInfo(params);
     }
   }).catch((err) => {
     console.log('err:', err);
-    message.error('获取首页信息失败')
-  })
+    message.error('获取首页信息失败');
+  });
 }
 
 export function login(params) {
@@ -31,7 +31,7 @@ export function login(params) {
     }
   }).catch((err) => {
     console.log('err:', err);
-    message.error('登录失败，别灰心，再试一次吧～')
+    message.error('登录失败，别灰心，再试一次吧～');
   }).finally(() => {
     store.isLoginModalOpen = false;
   });
@@ -45,14 +45,14 @@ export function logout() {
     }
   }).catch((err) => {
     console.log('err:', err);
-    message.error('登出失败')
+    message.error('登出失败');
   }).finally(() => {
     store.isLogin = false;
   });
 }
 
 export function getToken() {
-  return axios.get(`${BASE_URL}/api/alibaba/token`) // 确保总是返回一个 Promise
+  return axios.get(`${BASE_URL}/api/alibaba/token`)
     .then((res) => {
       const { status } = res;
       if (status === 200) {
