@@ -6,6 +6,7 @@
 .flex-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .flex-col {
     display: flex;
@@ -103,6 +104,81 @@
     @media screen and (max-width: 640px) {
         .tab-container, .components-container  {
             width: 96%;
+        }
+    }
+}
+
+.record-upload {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 4em;
+    justify-content: space-between;
+    align-items: flex-start;
+
+    .text-bold {
+        flex-wrap: nowrap;
+        color: #111;
+        font-family: Arial;
+        font-size: large;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 24px; /* 120% */
+    }
+    .upload-left {
+        width: auto;
+        margin-right: 24px;
+        flex-grow: 1;
+        .left-unit {
+            border-bottom: @border-style;
+            padding: 4px;
+        }
+        .text-bold {
+            min-width: 3em;
+        }
+        .ant-input {
+            height: 45px;
+            margin: 6px;
+        }
+        .small-btn {
+            color: #ccc;
+            align-self: flex-start;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .small-btn:hover {
+            color: red;
+        }
+        .add-btn {
+            max-width: 10em;
+            font-weight: bold;
+            font-size: large;
+        }
+        .add-btn:hover {
+            background: none;
+            color: #3f8600;
+        }
+    }
+    .upload-right {
+        margin-left: 4em;
+        width: 300px;
+        .text-bold {
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
+    }
+}
+
+@media screen and (max-width: 640px) {
+    .record-upload {
+        flex-direction: column;
+        padding: 2em;
+        .upload-left {
+            margin: auto;
+            width: 100%;
+        }
+        .upload-right {
+            margin: auto;
         }
     }
 }
