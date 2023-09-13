@@ -1,20 +1,38 @@
+import axios from "axios";
+import { BASE_URL } from "../../../constant";
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
-import { Button, Card } from "antd";
+import { Button, Card, message } from "antd";
 import RecordCard from "../../../components/RecordCard";
 import "./components.less";
 
-
 const MineRecords = () => {
+  const [list, setList] = useState([]);
   const navigate = useNavigate();
-  const list = ['1','2','3','4','5'];
-  const data = {
-    company: '阿里巴巴',
-    direction: '后端',
-    category: 2,
-    stared: true,
-    starNumber: 25,
-  };
+  useEffect(()=> {
+    getMineRecords(1);
+  },[]);
+
+  
+
+  function getMineRecords(page) {
+    const params = {
+      page: page,
+      limit: 10
+    };
+    axios.post(`${BASE_URL}/api/experience/get_list`, params).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        setList(res.data);
+      }
+    }).catch((err) => {
+      console.log('err:', err);
+      message.error('获取面经列表失败');
+    });
+  }
+
+  
   return (
     <Content className="records-container">
       <div className="records">
@@ -41,9 +59,9 @@ const MineRecords = () => {
           </Button>
         </Card>
         {list.map((item, key) => { 
-          data.type = 'mine';
+          item.type = 'mine';
           return (
-            <RecordCard key={key} data={data}/>
+            <RecordCard key={key} data={item}/>
           );
         })}
       </div>
