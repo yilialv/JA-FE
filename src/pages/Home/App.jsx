@@ -6,8 +6,10 @@ import souhuUrl from '../../imgs/souhu.jpg';
 import zuiyouUrl from '../../imgs/zuiyou.jpg';
 import { observer } from 'mobx-react';
 import store from '../../store';
+import { useState, useRef } from 'react';
 import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
+import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 const { Meta } = Card;
 
@@ -22,10 +24,24 @@ const Home = () => {
     store.isAssistantModalOpen = true;
   };
 
+  const [scrollBox, setScrollBox] = useState(0);
+
+  const recordsContainerRef = useRef(null);
+
+  const handleScrollBox = (flag) => {
+    const { current: { offsetWidth } } = recordsContainerRef;
+    const delta = flag ? offsetWidth : -1 * offsetWidth;
+    let amount = scrollBox + delta;
+    if (amount > 0) {
+      amount = 0;
+    }
+    setScrollBox(amount);
+  };
+
   return (
     <>
       <Content className='content'>
-        <AssistantModal/>
+        <AssistantModal />
         <img src={logo1Url} className='logo' />
         <div className='title'>AI面试小助手，助力收割大厂offer</div>
         <div className='statistics'>
@@ -52,199 +68,102 @@ const Home = () => {
           }
         </div>
         <Divider>
-                模拟面试官大厅
+          <Link to='/'>模拟面试官大厅</Link>
         </Divider>
         <div className='records-container'>
-          <div className='records'>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="aliyun" src={aliyunUrl} />}
-            >
-              <Meta title="阿里云2024面试" />
-              <div className='interview-info'>
-                <div className='info'>Golang开发</div>
-                <div className='info'>2h10min</div>
-              </div>
-              <Meta
-                description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+          <div className='records-button' onClick={() => { handleScrollBox(true); }}>
+            <CaretLeftOutlined />
+          </div>
+          <div className='records-subcontainer' ref={recordsContainerRef}>
+            <div className='records' style={{ left: scrollBox + 'px' }}>
+              <Card
+                hoverable
+                className='interview'
+                cover={<img alt="aliyun" src={aliyunUrl} />}
+              >
+                <Meta title="阿里云2024面试" />
+                <div className='interview-info'>
+                  <div className='info'>Golang开发</div>
+                  <div className='info'>2h10min</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="souhu" src={souhuUrl} />}
-            >
-              <Meta title="搜狐2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>2h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+                <Meta
+                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
+                />
+                <div className='interview-footer'>
+                  <div className='interview-footer-user'>
+                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+                    <div>userName</div>
+                  </div>
+                  <div className='interview-footer-star'>★25</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="zuiyou" src={zuiyouUrl} />}
-            >
-              <Meta title="最右2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>1h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+              </Card>
+              <Card
+                hoverable
+                className='interview'
+                cover={<img alt="aliyun" src={aliyunUrl} />}
+              >
+                <Meta title="阿里云2024面试" />
+                <div className='interview-info'>
+                  <div className='info'>Golang开发</div>
+                  <div className='info'>2h10min</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="aliyun" src={aliyunUrl} />}
-            >
-              <Meta title="阿里云2024面试" />
-              <div className='interview-info'>
-                <div className='info'>Golang开发</div>
-                <div className='info'>2h10min</div>
-              </div>
-              <Meta
-                description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+                <Meta
+                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
+                />
+                <div className='interview-footer'>
+                  <div className='interview-footer-user'>
+                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+                    <div>userName</div>
+                  </div>
+                  <div className='interview-footer-star'>★25</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="souhu" src={souhuUrl} />}
-            >
-              <Meta title="搜狐2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>2h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+              </Card>
+              <Card
+                hoverable
+                className='interview'
+                cover={<img alt="aliyun" src={aliyunUrl} />}
+              >
+                <Meta title="阿里云2024面试" />
+                <div className='interview-info'>
+                  <div className='info'>Golang开发</div>
+                  <div className='info'>2h10min</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="zuiyou" src={zuiyouUrl} />}
-            >
-              <Meta title="最右2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>1h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+                <Meta
+                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
+                />
+                <div className='interview-footer'>
+                  <div className='interview-footer-user'>
+                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+                    <div>userName</div>
+                  </div>
+                  <div className='interview-footer-star'>★25</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="aliyun" src={aliyunUrl} />}
-            >
-              <Meta title="阿里云2024面试" />
-              <div className='interview-info'>
-                <div className='info'>Golang开发</div>
-                <div className='info'>2h10min</div>
-              </div>
-              <Meta
-                description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+              </Card>
+              <Card
+                hoverable
+                className='interview'
+                cover={<img alt="aliyun" src={aliyunUrl} />}
+              >
+                <Meta title="阿里云2024面试" />
+                <div className='interview-info'>
+                  <div className='info'>Golang开发</div>
+                  <div className='info'>2h10min</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="souhu" src={souhuUrl} />}
-            >
-              <Meta title="搜狐2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>2h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
+                <Meta
+                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
+                />
+                <div className='interview-footer'>
+                  <div className='interview-footer-user'>
+                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
+                    <div>userName</div>
+                  </div>
+                  <div className='interview-footer-star'>★25</div>
                 </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
-            <Card
-              hoverable
-              className='interview'
-              cover={<img alt="zuiyou" src={zuiyouUrl} />}
-            >
-              <Meta title="最右2024面试" />
-              <div className='interview-info'>
-                <div className='info'>前端开发</div>
-                <div className='info'>1h30min</div>
-              </div>
-              <Meta
-                description="简单介绍一下闭包的基本原理？是否了解react框架？请你简单介绍一下什么场景..."
-              />
-              <div className='interview-footer'>
-                <div className='interview-footer-user'>
-                  <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                  <div>userName</div>
-                </div>
-                <div className='interview-footer-star'>★25</div>
-              </div>
-            </Card>
+              </Card>
+            </div>
+          </div>
+          <div className='records-button' onClick={() => { handleScrollBox(false); }}>
+            <CaretRightOutlined />
           </div>
         </div>
       </Content>

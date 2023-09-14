@@ -135,6 +135,7 @@ const Interview = observer(() => {
             handleReplyState(true);
             store.setNextRequest(result);
             store.setRequest();
+            setInputValue(store.request);
           } else {
             throw Error(err_msg);
           }
@@ -268,6 +269,13 @@ const Interview = observer(() => {
 
   const [ReplyState, setReplyState] = useState(true);
 
+  const [inputValue, setInputValue] = useState('');
+
+  const handleInput = (e) => {
+    const { target: { value } } = e;
+    setInputValue(value);
+  };
+
   //切换“生成中”，“等待面试官问题”状态
   const handleReplyState = (flag) => {
     setReplyState(flag);
@@ -373,9 +381,16 @@ const Interview = observer(() => {
                   placeholder="input"
                   prefix={prefix}
                   className="input"
-                  value={store.request}
+                  value={inputValue}
+                  onChange={handleInput}
+                //onFocus={}
+                //onBlur={}
                 />
-                <Button className='send-button' type="default">
+                <Button
+                  className='send-button'
+                  type="default"
+                //</Space.Compact>onClick={}
+                >
                   <img src={iconSend} />
                 </Button>
               </Space.Compact>
@@ -395,8 +410,8 @@ const Interview = observer(() => {
               >
               </Avatar>
               <div className='drawer-name'>
-                <div>字节跳动</div>
-                <div>@后端开发</div>
+                <div>{store.formCompany}</div>
+                <div>@{store.formDirection}</div>
               </div>
               <div className='drawer-state'>
                 <div className='state-item'>
