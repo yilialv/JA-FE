@@ -26,7 +26,6 @@ import {
   RightOutlined,
   LeftOutlined,
   QuestionCircleOutlined,
-  ImportOutlined,
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useEffect, useRef, useState } from "react";
@@ -160,7 +159,7 @@ const Interview = observer(() => {
       const uri = URI + "?token=" + fetchedToken;
       ws.current = new WebSocket(uri);
     });
-    
+
     wsServer.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {
@@ -176,7 +175,6 @@ const Interview = observer(() => {
         const { result } = payload;
         if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
           if (status === 20000000) {
-            handleReplyState(true);
             store.setNextRequest(result);
             store.setRequest();
             setInputValue(store.request);
@@ -401,9 +399,7 @@ const Interview = observer(() => {
         </div>
         <div className="container-body">
           <div
-            className={`body-left ${
-              DrawerState ? "body-compressed" : "body-fill"
-            }`}
+            className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
           >
             <div className="answer-block" id="scrollBlock">
               <div className="answer">
@@ -436,11 +432,17 @@ const Interview = observer(() => {
                 );
               })}
               {!!store.lastReply && (
-                <div className="answer">
-                  <Avatar
-                    style={{ backgroundColor: "#87d068" }}
-                    icon={<UserOutlined />}
-                  />
+                <div className="answer animation">
+                  <div className="answer-header">
+                    <Avatar
+                      style={{
+                        backgroundColor: "#87d068",
+                        marginRight: "5px",
+                      }}
+                      icon={<UserOutlined />}
+                    />
+                    <div>小助手</div>
+                  </div>
                   <div className="text">{store.lastReply}</div>
                 </div>
               )}
@@ -457,23 +459,19 @@ const Interview = observer(() => {
                 //onBlur={}
                 />
                 <Button className="send-button" type="default">
-                  <img src={iconSend} />
+                  <img src={iconSend} onClick={() => { console.log(store.request); }} />
                 </Button>
               </Space.Compact>
             </div>
           </div>
           <div
-            className={`drawer-button ${
-              DrawerState ? "drawer-button-opening" : "drawer-button-closed"
-            }`}
+            className={`drawer-button ${DrawerState ? "drawer-button-opening" : "drawer-button-closed"}`}
             onClick={handleDrawer}
           >
             {DrawerState ? <RightOutlined /> : <LeftOutlined />}
           </div>
           <div
-            className={`drawer ${
-              DrawerState ? "drawer-opening" : "drawer-closed"
-            }`}
+            className={`drawer ${DrawerState ? "drawer-opening" : "drawer-closed"}`}
           >
             <div className="drawer-info">
               <Avatar

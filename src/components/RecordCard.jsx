@@ -2,6 +2,9 @@ import { Card, Avatar, Tag, Button } from "antd";
 import { DeleteOutlined} from "@ant-design/icons";
 import aliyunUrl from '../imgs/aliyun.jpg';
 import "./components.less";
+import bookmarkUser from '../imgs/bookmark-user.png';
+import bookmarkCopilot from '../imgs/bookmark.png';
+
 
 const { Meta } = Card;
 
@@ -31,6 +34,7 @@ const RecordCard = (e) => {
       hoverable
       cover={<img alt="aliyun" src={aliyunUrl} />}
     >
+      <img className="bookmark" src={bookmarkCopilot}/>
       <div className="interview-title">
         <span className="title-text">{company}</span>
         {category ? CategoryTag(category) : <></>}

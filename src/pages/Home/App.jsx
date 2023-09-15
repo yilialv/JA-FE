@@ -1,9 +1,8 @@
-import { Button, Layout, Card, Divider, Avatar } from 'antd';
+import { Button, Layout, Divider } from 'antd';
 import { Link } from 'react-router-dom';
 import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg';
-import souhuUrl from '../../imgs/souhu.jpg';
-import zuiyouUrl from '../../imgs/zuiyou.jpg';
+import RecordCard from "../../components/RecordCard";
 import { observer } from 'mobx-react';
 import store from '../../store';
 import { useState, useRef } from 'react';
@@ -11,9 +10,14 @@ import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
 import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
 const { Content } = Layout;
-const { Meta } = Card;
 
-
+const data = {
+  company: '阿里巴巴',
+  direction: '后端',
+  category: 2,
+  stared: true,
+  starNumber: 25,
+};
 
 const Home = () => {
   const openLogin = () => {
@@ -68,7 +72,9 @@ const Home = () => {
           }
         </div>
         <Divider>
-          <Link to='/'>模拟面试官大厅</Link>
+          <Link to='/' style={{ color: '#555' }}>
+            模拟面试大厅
+          </Link>
         </Divider>
         <div className='records-container'>
           <div className='records-button' onClick={() => { handleScrollBox(true); }}>
@@ -76,90 +82,14 @@ const Home = () => {
           </div>
           <div className='records-subcontainer' ref={recordsContainerRef}>
             <div className='records' style={{ left: scrollBox + 'px' }}>
-              <Card
-                hoverable
-                className='interview'
-                cover={<img alt="aliyun" src={aliyunUrl} />}
-              >
-                <Meta title="阿里云2024面试" />
-                <div className='interview-info'>
-                  <div className='info'>Golang开发</div>
-                  <div className='info'>2h10min</div>
-                </div>
-                <Meta
-                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-                />
-                <div className='interview-footer'>
-                  <div className='interview-footer-user'>
-                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                    <div>userName</div>
-                  </div>
-                  <div className='interview-footer-star'>★25</div>
-                </div>
-              </Card>
-              <Card
-                hoverable
-                className='interview'
-                cover={<img alt="aliyun" src={aliyunUrl} />}
-              >
-                <Meta title="阿里云2024面试" />
-                <div className='interview-info'>
-                  <div className='info'>Golang开发</div>
-                  <div className='info'>2h10min</div>
-                </div>
-                <Meta
-                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-                />
-                <div className='interview-footer'>
-                  <div className='interview-footer-user'>
-                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                    <div>userName</div>
-                  </div>
-                  <div className='interview-footer-star'>★25</div>
-                </div>
-              </Card>
-              <Card
-                hoverable
-                className='interview'
-                cover={<img alt="aliyun" src={aliyunUrl} />}
-              >
-                <Meta title="阿里云2024面试" />
-                <div className='interview-info'>
-                  <div className='info'>Golang开发</div>
-                  <div className='info'>2h10min</div>
-                </div>
-                <Meta
-                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-                />
-                <div className='interview-footer'>
-                  <div className='interview-footer-user'>
-                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                    <div>userName</div>
-                  </div>
-                  <div className='interview-footer-star'>★25</div>
-                </div>
-              </Card>
-              <Card
-                hoverable
-                className='interview'
-                cover={<img alt="aliyun" src={aliyunUrl} />}
-              >
-                <Meta title="阿里云2024面试" />
-                <div className='interview-info'>
-                  <div className='info'>Golang开发</div>
-                  <div className='info'>2h10min</div>
-                </div>
-                <Meta
-                  description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
-                />
-                <div className='interview-footer'>
-                  <div className='interview-footer-user'>
-                    <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-                    <div>userName</div>
-                  </div>
-                  <div className='interview-footer-star'>★25</div>
-                </div>
-              </Card>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
+              <RecordCard data={data}/>
             </div>
           </div>
           <div className='records-button' onClick={() => { handleScrollBox(false); }}>

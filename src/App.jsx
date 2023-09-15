@@ -4,7 +4,8 @@ import NavigationMenu from './components/NavigationMenu';
 import Home from './pages/Home/App';
 import Interview from './pages/Interview/App';
 import User from './pages/User/App';
-import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import MockInterviewHall from './pages/mockInterviewHall/App';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { getHomeData } from './router';
@@ -26,6 +27,7 @@ const App = observer(() => {
             <Route path="/interview" element={<Interview />} /> : 
             <Route path="/interview" element={<Navigate to="/" />}/>
           } */}
+            <Route path="/mockInterviewHall" element={<MockInterviewHall />} />
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
           </Routes>
