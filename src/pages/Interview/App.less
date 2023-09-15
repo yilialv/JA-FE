@@ -221,6 +221,12 @@
                     flex-direction: column;
                     overflow: auto;
 
+
+                    .animation {
+                        -webkit-animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+                        animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+                    }
+
                     .answer {
                         //box-shadow: rgb(225, 225, 225) 1px 1px 2px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
                         margin: 0 0 20px 0;
@@ -228,8 +234,6 @@
                         padding: 15px;
                         background-color: rgb(244, 246, 248);
                         border-radius: @dialog-border-radius;
-                        -webkit-animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-                        animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
 
                         .answer-header {
                             display: flex;

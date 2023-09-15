@@ -224,60 +224,84 @@ html {
     }
 
     .records-container {
+        user-select: none;
+        display: grid;
+        grid-template-columns: 30px 1120px 30px;
+        height: 400px;
+        place-items: center center;
 
-        .records {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
+        .records-button {
+            cursor: pointer;
+            font-size: 24px;
+            color: rgb(93, 93, 93);
+            transition: 300ms;
+        }
 
-            .interview {
-                width: 240px;
-                margin: 20px;
+        .records-button:active {
+            color: #ccc;
+        }
 
-                .interview-info {
-                    display: flex;
-                    justify-content: space-between;
-                    margin: 10px 0;
+        .records-subcontainer {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            position: relative;
 
-                    .info {
-                        font-size: 14px;
+            .records {
+                top: 0;
+                transition: 300ms;
+                position: absolute;
+                height: 100%;
+                display: flex;
+
+                .interview {
+                    width: 240px;
+                    margin: 20px;
+
+                    .interview-info {
+                        display: flex;
+                        justify-content: space-between;
+                        margin: 10px 0;
+
+                        .info {
+                            font-size: 14px;
+                        }
                     }
-                }
 
-                .interview-footer {
-                    margin-top: 20px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-
-                    .interview-footer-user {
+                    .interview-footer {
+                        margin-top: 20px;
                         display: flex;
                         align-items: center;
+                        justify-content: space-between;
+
+                        .interview-footer-user {
+                            display: flex;
+                            align-items: center;
+                        }
                     }
                 }
             }
-        }
-
-        @media screen and (max-width: 1230px) {
-            .records {
-                grid-template-columns: 1fr 1fr 1fr;
-            }
-        }
-
-        @media screen and (max-width: 860px) {
-            .records {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media screen and (max-width: 585px) {
-            .records {
-                grid-template-columns: 1fr;
-            }
-
         }
     }
 
+    @media screen and (max-width: 1230px) {
+        .records-container {
+            grid-template-columns: 30px 840px 30px;
+        }
+    }
 
+    @media screen and (max-width: 920px) {
+        .records-container {
+            grid-template-columns: 30px 560px 30px;
+        }
+    }
+
+    @media screen and (max-width: 640px) {
+        .records-container {
+            grid-template-columns: 30px 280px 30px;
+        }
+
+    }
 
 
 

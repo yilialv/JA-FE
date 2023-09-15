@@ -41,9 +41,9 @@ const NavigationMenu = () => {
       link: '/interview'
     },
     {
-      key: 'mockInterview',
-      label: '模拟面试',
-      link: '/mockInterview'
+      key: 'mockInterviewHall',
+      label: '模拟面试大厅',
+      link: '/mockInterviewHall'
     }
   ];
 
