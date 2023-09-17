@@ -1,5 +1,4 @@
 import { Divider, Select } from "antd";
-import { observer } from "mobx-react";
 import RecordCard from "../../components/RecordCard";
 import "./App.less";
 import iconBuilding from '../../imgs/icon-building.svg';
@@ -104,4 +103,4 @@ const mockInterviewHall = () => {
   );
 };
 
-export default observer(mockInterviewHall);
+export default mockInterviewHall;

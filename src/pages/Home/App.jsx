@@ -38,6 +38,8 @@ const Home = () => {
     let amount = scrollBox + delta;
     if (amount > 0) {
       amount = 0;
+    } else if (amount < -2800) {
+      amount = scrollBox;
     }
     setScrollBox(amount);
   };
@@ -73,7 +75,7 @@ const Home = () => {
         </div>
         <Divider>
           <Link to='/' style={{ color: '#555' }}>
-            模拟面试大厅
+            点击卡片开始模拟面试
           </Link>
         </Divider>
         <div className='records-container'>
@@ -82,14 +84,17 @@ const Home = () => {
           </div>
           <div className='records-subcontainer' ref={recordsContainerRef}>
             <div className='records' style={{ left: scrollBox + 'px' }}>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
             </div>
           </div>
           <div className='records-button' onClick={() => { handleScrollBox(false); }}>
