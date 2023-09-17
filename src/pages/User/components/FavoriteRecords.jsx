@@ -1,6 +1,6 @@
 import { Content } from "antd/es/layout/layout";
-import RecordCard from "../../components/RecordCard";
-import "./App.less";
+import RecordCard from "../../../components/RecordCard";
+import "./components.less";
 
 
 const MineRecords = () => {

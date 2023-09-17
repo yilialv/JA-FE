@@ -2,16 +2,16 @@ import { useState } from 'react';
 import { Avatar, Button, Menu } from "antd";
 import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import MineRecords from "./MineRecords";
-import FavoriteRecords from "./FavoriteRecords";
-import SimulateList from "./SimulateList";
-import CopilotList from "./CopilotList";
-import Information from "./Information";
+import MineRecords from "./components/MineRecords";
+import FavoriteRecords from "./components/FavoriteRecords";
+import SimulateList from "./components/SimulateList";
+import CopilotList from "./components/CopilotList";
+import Information from "./components/Information";
 import "./App.less";
 
 const User = () => {
 
-  const [currentMenu, setCurrentMenu] = useState('information');
+  const [currentMenu, setCurrentMenu] = useState('mine');
  
   const menuItems = [
     {key: 'mine', label: '我的面经'},

@@ -6,6 +6,7 @@
 .flex-row {
     display: flex;
     flex-direction: row;
+    align-items: center;
 }
 .flex-col {
     display: flex;
@@ -107,128 +108,78 @@
     }
 }
 
-.records-container {
-
-    .records {
-        display: grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
-        justify-items: center;
-    }
-
-    @media screen and (max-width: 1280px) {
-        .records {
-            grid-template-columns: 1fr 1fr 1fr;
-        }
-    }
-
-    @media screen and (max-width: 960px) {
-        .records {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-
-    @media screen and (max-width: 640px) {
-        .records {
-            grid-template-columns: 1fr;
-        }
-    }
-}
-
-
-// ======== MineRecords =========
-.dash-card {
-    border-style: dashed;
-    border-width: 3px;
+.record-upload {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    // padding-top: 55px;
+    flex-direction: row;
+    width: 100%;
+    padding: 4em;
+    justify-content: space-between;
+    align-items: flex-start;
 
-    .svg-container {
-        height: 22px;
-        text-align: center;
-    }
-    .dash-card-title {
-        margin-top: 20px;
-        text-align: center;
+    .text-bold {
+        flex-wrap: nowrap;
         color: #111;
         font-family: Arial;
-        font-size: 20px;
+        font-size: large;
         font-style: normal;
         font-weight: 700;
         line-height: 24px; /* 120% */
     }
-    .dash-card-text {
-        margin-top: 12px;
-        color: #111;
-        text-align: center;
-        font-family: Arial;
-        font-size: 15px;
-        font-style: normal;
-        font-weight: 400;
-        line-height: 24px; /* 160% */
+    .upload-left {
+        width: auto;
+        margin-right: 24px;
+        flex-grow: 1;
+        .left-unit {
+            border-bottom: @border-style;
+            padding: 4px;
+        }
+        .text-bold {
+            min-width: 3em;
+        }
+        .ant-input {
+            height: 45px;
+            margin: 6px;
+        }
+        .small-btn {
+            color: #ccc;
+            align-self: flex-start;
+            margin-top: 8px;
+            font-weight: bold;
+        }
+        .small-btn:hover {
+            color: red;
+        }
+        .add-btn {
+            max-width: 10em;
+            font-weight: bold;
+            font-size: large;
+        }
+        .add-btn:hover {
+            background: none;
+            color: #3f8600;
+        }
     }
-    .dash-card-btn {
-        margin: auto 66px;
-        margin-top: 60px;
-        width: 120px;
-        height: 50px;
-        border-radius: 20px;
-        font-size: large;
-        font-weight: bold;
+    .upload-right {
+        margin-left: 4em;
+        width: 300px;
+        .text-bold {
+            margin-top: 24px;
+            margin-bottom: 12px;
+        }
     }
 }
 
-.person-info {
-    .ant-btn {
-        font-size: larger;
-        font-weight: bolder;
-    }
-    .title-container {
-        margin-top: 2em;
-        margin-left: 1em;
-        .info-title {
-            margin-right: 1em;
-            display: inline-block;
-            vertical-align: middle;
-            color: #111;
-            font-family: Arial;
-            font-size: 2em;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 2em;
-        }
-    }
-    .info-unit {
-        margin-left: 3em;
-        margin-top: 2em;
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        .info-subtitle {
-            margin-bottom: 1em;
-            color: #111;
-            font-family: Arial;
-            font-size: 1.4em;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 1em; /* 160% */
-        }
-        .text-subtitle {
-            margin: 12px;
-            color: #111;
-            font-family: Arial;
-            font-size: 1.4em;
-            font-style: normal;
-            font-weight: 700;
-            line-height: 1em; /* 160% */
-        }
-        .info-input {
+@media screen and (max-width: 640px) {
+    .record-upload {
+        flex-direction: column;
+        padding: 2em;
+        .upload-left {
+            margin: auto;
             width: 100%;
         }
-        .delate-btn {
-            margin-bottom: 10px;
+        .upload-right {
+            margin: auto;
         }
     }
 }
+
