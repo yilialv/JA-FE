@@ -177,7 +177,9 @@ const Interview = observer(() => {
           if (status === 20000000) {
             store.setNextRequest(result);
             store.setRequest();
-            setInputValue(store.request);
+            if (!inputFocus) {
+              setInputValue(store.request);
+            }
           } else {
             throw Error(status_message);
           }
@@ -236,6 +238,8 @@ const Interview = observer(() => {
           }
         } else if (type === 99) {
           message.error(data);
+        } else if (type === 9) {
+          handleReplyState(true);
         }
       } catch (error) {
         console.log("后端返回解析出错!");
@@ -312,6 +316,8 @@ const Interview = observer(() => {
 
   const [inputValue, setInputValue] = useState('');
 
+  const [inputFocus, setInputFocus] = useState(false);
+
   const handleInput = (e) => {
     const { target: { value } } = e;
     setInputValue(value);
@@ -334,6 +340,17 @@ const Interview = observer(() => {
   //麦克风按钮是否激活状态
   const handleAudioState = (flag) => {
     setAudioState(flag);
+  };
+
+  const sendManually = () => {
+    const req = {
+      type: 4,
+      data: {
+        conversations: store.conversations,
+        question: inputValue
+      },
+    };
+    wsServer.current.send(JSON.stringify(req));
   };
 
   const prefix = (
@@ -455,11 +472,11 @@ const Interview = observer(() => {
                   className="input"
                   value={inputValue}
                   onChange={handleInput}
-                //onFocus={}
-                //onBlur={}
+                  onFocus={() => { setInputFocus(true);console.log('onFocus') }}
+                  onBlur={() => { setInputFocus(false); console.log('onBlur')}}
                 />
-                <Button className="send-button" type="default">
-                  <img src={iconSend} onClick={() => { console.log(store.request); }} />
+                <Button className="send-button" disabled={ButtonState} type="default">
+                  <img src={iconSend} onClick={sendManually} />
                 </Button>
               </Space.Compact>
             </div>

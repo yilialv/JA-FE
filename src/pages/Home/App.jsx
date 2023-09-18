@@ -8,7 +8,7 @@ import store from '../../store';
 import { useState, useRef } from 'react';
 import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
-import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CaretLeftOutlined, SwapRightOutlined } from '@ant-design/icons';
 const { Content } = Layout;
 
 const data = {
@@ -95,6 +95,12 @@ const Home = () => {
               <RecordCard data={data} />
               <RecordCard data={data} />
               <RecordCard data={data} />
+              <Link className='find-more' to='/mockInterviewHall' >
+                <div >
+                  查看更多
+                  <SwapRightOutlined />
+                </div>
+              </Link>
             </div>
           </div>
           <div className='records-button' onClick={() => { handleScrollBox(false); }}>
