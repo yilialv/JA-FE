@@ -68,3 +68,17 @@ export function getToken() {
       throw err; // 确保错误被重新抛出，以便调用函数可以捕获它
     });
 }
+
+export function uploadExperience(data) {
+  axios.post(`${BASE_URL}/api/experience/upload`, data).then((res) => {
+    const { status } = res;
+    if (status === 200) {
+      message.info('上传成功');
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+    message.error('上传失败');
+  }).finally(() => {
+    store.isLogin = false;
+  });
+}

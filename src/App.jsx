@@ -5,7 +5,8 @@ import Home from './pages/Home/App';
 import Interview from './pages/Interview/App';
 import User from './pages/User/App';
 import MockInterviewHall from './pages/mockInterviewHall/App';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import RecordUpload from './pages/User/RecordUpload';
+import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { getHomeData } from './router';
@@ -30,6 +31,7 @@ const App = observer(() => {
             <Route path="/mockInterviewHall" element={<MockInterviewHall />} />
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
+            <Route path="/experience/upload" element={<RecordUpload />} />
           </Routes>
         </div>
       </Layout>
