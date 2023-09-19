@@ -1,9 +1,5 @@
 //全局
 
-html {
-    font-size: 2vw;
-}
-
 .web-body {
     height: calc(100vh - 64px);
     margin-top: 64px;
@@ -154,13 +150,12 @@ html {
 
     .title {
         user-select: none;
-        font-size: calc(2.75rem);
+        font-size: 2rem;
         font-weight: 800;
         margin-top: 20px;
         text-align: center;
+        padding: 0 20px;
     }
-
-
 
     .statistics {
         display: flex;
@@ -169,8 +164,8 @@ html {
         user-select: none;
 
         .text {
-            font-size: 0.875rem;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 400;
             padding: 5px 5px 0 5px;
         }
 
@@ -306,11 +301,20 @@ html {
 
 
     // 滑动进入动画
-    .slide-enter {
+    .slide-up-enter {
         transform: translateY(100%);
     }
 
-    .slide-enter-active {
+    .slide-up-enter-active {
+        transform: translateY(0);
+        transition: transform 500ms ease-out;
+    }
+
+    .slide-down-enter {
+        transform: translateY(-100%);
+    }
+
+    .slide-down-enter-active {
         transform: translateY(0);
         transition: transform 500ms ease-out;
     }

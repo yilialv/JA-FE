@@ -9,6 +9,7 @@ import { useState, useRef } from 'react';
 import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
 import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
+import SlideInOnMount from '../../components/SlideInOnMount'
 const { Content } = Layout;
 
 const data = {
@@ -47,16 +48,18 @@ const Home = () => {
       <Content className='content'>
         <AssistantModal />
         <img src={logo1Url} className='logo' />
-        <div className='title'>AI面试小助手，助力收割大厂offer</div>
+        <SlideInOnMount slideUp={true}><div className='title'>AI面试小助手，助力收割大厂offer</div></SlideInOnMount>
         <div className='statistics'>
           <div className='text'>为你彻底解决背八股文的烦恼！</div>
         </div>
-        <div className='statistics'>
-          <div className='text'>已经成功帮助</div>
-          <div className='amount'>123456</div>
-          {/* <Statistic value={123456} valueStyle={{ fontSize:'1.2rem',color: '#3f8600', fontWeight: '600' }} /> */}
-          <div className='text'>人拿到心仪offer！</div>
-        </div>
+        <SlideInOnMount slideUp={false}>
+          <div className='statistics'>
+            <div className='text'>已经成功帮助</div>
+            <div className='amount'>123456</div>
+            {/* <Statistic value={123456} valueStyle={{ fontSize:'1.2rem',color: '#3f8600', fontWeight: '600' }} /> */}
+            <div className='text'>人拿到心仪offer！</div>
+          </div>
+        </SlideInOnMount>
         <div className='btn-container'>
           {
             store.isLogin ?
