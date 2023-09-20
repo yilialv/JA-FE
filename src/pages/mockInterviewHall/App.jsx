@@ -58,7 +58,7 @@ const data = {
   starNumber: 25,
 };
 
-const mockInterviewHall = () => {
+const MockInterviewHall = () => {
   return (
     <div>
       <div className="hall-header">
@@ -103,4 +103,4 @@ const mockInterviewHall = () => {
   );
 };
 
-export default mockInterviewHall;
+export default MockInterviewHall;

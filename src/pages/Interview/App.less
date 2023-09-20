@@ -149,7 +149,7 @@
                 border-left: @border-style;
                 transition: 300ms;
                 display: grid;
-                grid-template-rows: 5fr 2fr;
+                grid-template-rows: 5fr 1fr;
                 padding: 20px 0 20px 0;
                 z-index: 3;
 
@@ -168,17 +168,32 @@
                     }
 
                     .drawer-check {
-                        cursor: pointer;
-                        display: flex;
-                        align-items: center;
                         font-size: 16px;
                         color: rgb(168, 168, 168);
 
-                        .help:hover {
-                            transition: 200ms;
-                            scale: 1.2;
-                            color: rgb(101, 101, 101);
+                        span {
+                            padding-right: 0;
                         }
+
+                        .check-item {
+                            cursor: pointer;
+                            display: flex;
+                            align-items: center;
+                            margin-top: 10px;
+                        }
+                    }
+
+                    .help {
+                        margin-left: 5px;
+                        font-weight: 200;
+                        font-size: 16px;
+                        color: rgb(168, 168, 168);
+                    }
+
+                    .help:hover {
+                        transition: 200ms;
+                        scale: 1.2;
+                        color: rgb(101, 101, 101);
                     }
 
                     .drawer-state {
@@ -194,6 +209,28 @@
 
                             img {
                                 margin-right: 5px;
+                            }
+                        }
+                    }
+
+                    .drawer-setting {
+                        width: 100%;
+                        padding: 0 10% 0 10%;
+
+                        .setting-item {
+                            display: flex;
+                            flex-direction: column;
+                            width: 100%;
+                            align-items: flex-start;
+
+                            p {
+                                font-weight: 600;
+                                font-size: 16px;
+                                margin-bottom: 5px;
+                            }
+
+                            .setting-select {
+                                width: 100%;
                             }
                         }
                     }
@@ -228,7 +265,6 @@
                     }
 
                     .answer {
-                        //box-shadow: rgb(225, 225, 225) 1px 1px 2px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
                         margin: 0 0 20px 0;
                         width: 95%;
                         padding: 15px;
@@ -240,6 +276,25 @@
                             font-weight: 600;
                             align-items: center;
                             margin-bottom: 5px;
+                        }
+
+                        .answer-divider {
+                            width: 100%;
+                            margin: 5px 0 0 0;
+                            border-bottom: 1.5px solid #A3A3A3;
+                        }
+
+                        .answer-comment {
+                            font-weight: 600;
+                            margin-top: 5px;
+                            color: #A3A3A3;
+                            font-size: 14px;
+
+                            .comment-content {
+                                margin-top: 5px;
+                                font-size: 16px;
+                                font-weight: 500;
+                            }
                         }
 
                         .text {
