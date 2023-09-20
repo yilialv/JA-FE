@@ -24,7 +24,7 @@ const MineRecords = () => {
     axios.post(`${BASE_URL}/api/experience/get_list`, params).then((res) => {
       const { status } = res;
       if (status === 200) {
-        setList(res.data);
+        setList(res.data.data.experience_list);
       }
     }).catch((err) => {
       console.log('err:', err);
