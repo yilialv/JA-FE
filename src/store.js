@@ -76,10 +76,6 @@ class Store {
     // console.log("cookie set!");
   }
 
-  logout() {
-
-  }
-
   getJwtToken() {
     // this.jwtToken = getCookie("jwtToken");
     this.nickName = getCookie("nickName");

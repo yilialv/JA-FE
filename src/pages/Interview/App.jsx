@@ -217,7 +217,7 @@ const Interview = observer(() => {
     wsServer.current.onmessage = (msg) => {
       try {
         const result = JSON.parse(msg.data);
-        console.log(result);
+        // console.log(result);
         const { type, data, id } = result;
         if (type === 0) {
           if (!data.startsWith("No")) {
