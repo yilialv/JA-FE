@@ -66,7 +66,15 @@ const Interview = observer(() => {
     const scrollBlock = document.getElementById("scrollBlock");
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
-  });
+
+    const interval = setInterval(() => {
+      setCount((counts) => counts + 1);
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   /**
    * 发送开始帧
@@ -177,7 +185,9 @@ const Interview = observer(() => {
           if (status === 20000000) {
             store.setNextRequest(result);
             store.setRequest();
-            setInputValue(store.request);
+            if (!inputFocus) {
+              setInputValue(store.request);
+            }
           } else {
             throw Error(status_message);
           }
@@ -236,6 +246,8 @@ const Interview = observer(() => {
           }
         } else if (type === 99) {
           message.error(data);
+        } else if (type === 9) {
+          handleReplyState(true);
         }
       } catch (error) {
         console.log("后端返回解析出错!");
@@ -312,6 +324,10 @@ const Interview = observer(() => {
 
   const [inputValue, setInputValue] = useState('');
 
+  const [inputFocus, setInputFocus] = useState(false);
+
+  const [count, setCount] = useState(0);
+
   const handleInput = (e) => {
     const { target: { value } } = e;
     setInputValue(value);
@@ -334,6 +350,17 @@ const Interview = observer(() => {
   //麦克风按钮是否激活状态
   const handleAudioState = (flag) => {
     setAudioState(flag);
+  };
+
+  const sendManually = () => {
+    const req = {
+      type: 4,
+      data: {
+        conversations: store.conversations,
+        question: inputValue
+      },
+    };
+    wsServer.current.send(JSON.stringify(req));
   };
 
   const prefix = (
@@ -360,7 +387,7 @@ const Interview = observer(() => {
               <ClockCircleOutlined
                 style={{ color: "#3F9D13", fontSize: "20px" }}
               />
-              &nbsp;20min
+              &nbsp;{count}min
             </div>
             <div className="states">
               {ReplyState ? (
@@ -447,19 +474,21 @@ const Interview = observer(() => {
                 </div>
               )}
             </div>
-            <div className="question">
-              <Space.Compact className="question-input" size="large">
+            <div
+              onFocus={() => { setInputFocus(true); }}
+              onBlur={() => { setInputFocus(false); }}
+              className="question">
+              <Space.Compact
+                className="question-input" size="large">
                 <Input
                   placeholder="input"
                   prefix={prefix}
                   className="input"
                   value={inputValue}
                   onChange={handleInput}
-                //onFocus={}
-                //onBlur={}
                 />
-                <Button className="send-button" type="default">
-                  <img src={iconSend} onClick={() => { console.log(store.request); }} />
+                <Button className="send-button" onClick={sendManually} disabled={ButtonState} type="default">
+                  <img src={iconSend} />
                 </Button>
               </Space.Compact>
             </div>

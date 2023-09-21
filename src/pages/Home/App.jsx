@@ -8,7 +8,7 @@ import store from '../../store';
 import { useState, useRef } from 'react';
 import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
-import { CaretRightOutlined, CaretLeftOutlined } from '@ant-design/icons';
+import { CaretRightOutlined, CaretLeftOutlined, SwapRightOutlined } from '@ant-design/icons';
 import SlideInOnMount from '../../components/SlideInOnMount'
 const { Content } = Layout;
 
@@ -39,6 +39,8 @@ const Home = () => {
     let amount = scrollBox + delta;
     if (amount > 0) {
       amount = 0;
+    } else if (amount < -2800) {
+      amount = scrollBox;
     }
     setScrollBox(amount);
   };
@@ -76,7 +78,7 @@ const Home = () => {
         </div>
         <Divider>
           <Link to='/' style={{ color: '#555' }}>
-            模拟面试大厅
+            点击卡片开始模拟面试
           </Link>
         </Divider>
         <div className='records-container'>
@@ -85,14 +87,23 @@ const Home = () => {
           </div>
           <div className='records-subcontainer' ref={recordsContainerRef}>
             <div className='records' style={{ left: scrollBox + 'px' }}>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
-              <RecordCard data={data}/>
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <RecordCard data={data} />
+              <Link className='find-more' to='/mockInterviewHall' >
+                <div >
+                  查看更多
+                  <SwapRightOutlined />
+                </div>
+              </Link>
             </div>
           </div>
           <div className='records-button' onClick={() => { handleScrollBox(false); }}>

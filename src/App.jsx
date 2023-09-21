@@ -5,6 +5,7 @@ import Home from './pages/Home/App';
 import Interview from './pages/Interview/App';
 import User from './pages/User/App';
 import MockInterviewHall from './pages/mockInterviewHall/App';
+import MockInterview from './pages/mockInterview/App';
 import RecordUpload from './pages/User/RecordUpload';
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import { useEffect } from 'react';
@@ -29,6 +30,7 @@ const App = observer(() => {
             <Route path="/interview" element={<Navigate to="/" />}/>
           } */}
             <Route path="/mockInterviewHall" element={<MockInterviewHall />} />
+            <Route path="/mockInterview" element={<MockInterview />} />
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
             <Route path="/experience/upload" element={<RecordUpload />} />
