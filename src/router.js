@@ -9,7 +9,7 @@ export function getHomeData() {
   axios.get(`${BASE_URL}/api/page/index`).then((res) => {
     const { status } = res;
     if (status === 200) {
-      const { nick_name } = res.data;
+      const { nick_name } = res.data.data;
       const params = {
         nickName: nick_name,
       };
@@ -26,7 +26,7 @@ export function login(params) {
     const { status } = res;
     if (status === 200) {
       message.info('登录成功');
-      const { jwt_token, nick_name } = res.data;
+      const { jwt_token, nick_name } = res.data.data;
       store.setUserInfo(jwt_token, nick_name);
     }
   }).catch((err) => {
@@ -56,7 +56,7 @@ export function getToken() {
     .then((res) => {
       const { status } = res;
       if (status === 200) {
-        const { token } = res.data;
+        const { token } = res.data.data;
         const { id } = token;
         return id; // 当请求成功时返回 token ID
       }
