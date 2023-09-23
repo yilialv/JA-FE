@@ -60,7 +60,7 @@ const data = {
 
 const MockInterviewHall = () => {
   return (
-    <div>
+    <div className="mock-interview-hall">
       <div className="hall-header">
         <div className="hall-select">
           <div className="hall-label">

@@ -1,4 +1,8 @@
 import {
+  MOCK_SERVER_URL,
+} from "../../constant";
+
+import {
   Button,
   Spin,
   Input,
@@ -6,36 +10,166 @@ import {
   Checkbox,
   Space,
   Select,
-  Divider,
+  message,
 } from "antd";
 import {
   UserOutlined,
-  PauseOutlined,
-  CaretRightOutlined,
   ClockCircleOutlined,
   RightOutlined,
   LeftOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
 import store from "../../store";
+import { observer } from "mobx-react";
 import iconSend from "../../imgs/icon-send.svg";
-import iconBag from "../../imgs/icon-bag.svg";
-import iconCalendar from "../../imgs/icon-calendar.svg";
 import iconWaiting from "../../imgs/icon-waiting.svg";
 import '../Interview/App.less';
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
-const MockInterview = () => {
+const MockInterview = observer(() => {
+  const wsServer = useRef(null); // 和后端的连接
+
+  useEffect(() => {
+
+    connectWebSocket();
+
+    const scrollBlock = document.getElementById("scrollBlock");
+    // 将内容自动滚动到底部
+    scrollBlock.scrollTop = scrollBlock.scrollHeight;
+
+    const interval = setInterval(() => {
+      setCount((counts) => counts + 1);
+    }, 60000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+
+
+  const connectWebSocket = async () => {
+    wsServer.current = new WebSocket(MOCK_SERVER_URL);
+
+    wsServer.current.onopen = () => {
+      console.log("Server WebSocket打开连接");
+      const req = {
+        type: 1,
+        data: {
+          experience_id: 112
+        },
+      };
+      const body = JSON.stringify(req);
+      wsServer.current.send(body);
+      console.log("发送开始帧:" + body);
+      requestQuestion();
+    };
+
+    wsServer.current.onmessage = (msg) => {
+      try {
+        const result = JSON.parse(msg.data);
+        const { type, data, id } = result;
+        console.log(type, data);
+        if (type === 1) {
+          setReplyState(false);
+          // 第一次拿到数据
+          if (!store.mockID) {
+            store.setMockNewReply(id, type);
+            setInputValue('');
+          } else if (id !== store.mockID) {
+            store.setMockReplies();
+            store.setMockNewReply(id, type);
+            setInputValue('');
+          }
+          store.appendMockLastContent(data);
+        }
+        else if (type === 2) {
+          if (id !== store.mockID) {
+            store.setMockReplies();
+            store.setMockNewReply(id, 2);
+            store.setMockAnswer();
+            setInputValue('');
+          }
+          store.appendMockLastEvaluation(data);
+        }
+        else if (type === 99) {
+          message.error(data);
+        } else if (type === 9) {
+          setReplyState(true);
+          if (store.mockLastType === 2) {
+            requestQuestion();
+          }
+        }
+      } catch (error) {
+        console.log("后端返回解析出错!");
+      }
+    };
+
+    wsServer.current.onclose = () => {
+      const req = {
+        type: 9,
+        data: {},
+      };
+      wsServer.current.send(JSON.stringify(req));
+      console.log("发送结束帧：", JSON.stringify(req));
+      console.log("Server WebSocket关闭连接");
+    };
+
+    wsServer.current.onerror = (error) => {
+      console.log("error:", error);
+    };
+  };
+
+  const requestQuestion = () => {
+    const req = {
+      type: 2,
+      data: {
+        interactions: store.mockConversations,
+        style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
+        toleration: settingTempo, // 时间容忍度-高-中-低 
+        personalise: settingPersonalise //是否开启个性化提问
+      }
+    };
+    wsServer.current.send(JSON.stringify(req));
+  };
+
+  const sendAnswer = () => {
+    if (!inputValue) {
+      message.warning("请输入回答");
+      return;
+    }
+    const answer = inputValue;
+    const req = {
+      type: 3,
+      data: {
+        interactions: store.mockConversations,
+        answer: answer,
+        question_id: store.mockID,
+        evaluation: settingEvaluation
+      },
+    };
+    store.mockInputCache = answer;
+    wsServer.current.send(JSON.stringify(req));
+  };
+
+  const handleInput = (e) => {
+    const { target: { value } } = e;
+    setInputValue(value);
+  };
 
   const [DrawerState, setDrawerState] = useState(true);
-
-  const [AudioState, setAudioState] = useState(false);
 
   const [ReplyState, setReplyState] = useState(true);
 
   const [inputValue, setInputValue] = useState('');
 
-  const [inputFocus, setInputFocus] = useState(false);
+  const [settingPersonalise, setSettingPersonalise] = useState(false);
+
+  const [settingEvaluation, setSettingEvaluation] = useState(true);
+
+  const [settingStyle, setInterviewStyle] = useState('');
+
+  const [settingTempo, setInterviewTempo] = useState('');
 
   const [count, setCount] = useState(0);
 
@@ -81,82 +215,69 @@ const MockInterview = () => {
             className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
           >
             <div className="answer-block" id="scrollBlock">
-              <div className="answer">
-                <div className="answer-header">
-                  <Avatar
-                    style={{ backgroundColor: "#87d068", marginRight: "5px" }}
-                    icon={<UserOutlined />}
-                  />
-                  <div>李老师</div>
-                </div>
-                <div className="text">
-                  模拟面试提问1
-                </div>
-              </div>
-              <div className="answer">
-                <div className="answer-header">
-                  <Avatar
-                    style={{ backgroundColor: "#87d068", marginRight: "5px" }}
-                    icon={<UserOutlined />}
-                  />
-                  <div>李老师</div>
-                </div>
-                <div className="text">
-                  模拟面试回答<br />模拟面试回答
-                </div>
-                <div className="answer-divider"></div>
-                <div className="answer-comment">
-                  <div>
-                    回答评价
-                  </div>
-                  <div className="comment-content">
-                    评价内容
-                  </div>
-                </div>
-              </div>
-              {/* {store.reply.map((item, key) => {
+              {store.mockReplies.map((item, key) => {
+                const { content, evaluation } = item;
                 return (
                   <div className="answer" key={key}>
                     <div className="answer-header">
                       <Avatar
-                        style={{
-                          backgroundColor: "#87d068",
-                          marginRight: "5px",
-                        }}
+                        style={{ backgroundColor: "#87d068", marginRight: "5px" }}
                         icon={<UserOutlined />}
                       />
-                      <div>小助手</div>
+                      <div>{'replies'}</div>
                     </div>
-                    <div className="text">{item}</div>
+                    <div className="text">
+                      {content}
+                    </div>
+                    {!!evaluation && (
+                      <>
+                        <div className="answer-divider"></div>
+                        <div className="answer-comment">
+                          {evaluation}
+                        </div>
+                      </>
+                    )
+                    }
                   </div>
                 );
-              })} */}
-              {/* {!!store.lastReply && (
+              })}
+              {!!store.mockLastContent && (
                 <div className="answer animation">
                   <div className="answer-header">
                     <Avatar
                       style={{
                         backgroundColor: "#87d068",
-                        marginRight: "5px",
+                        marginRight: "5px"
                       }}
                       icon={<UserOutlined />}
                     />
-                    <div>小助手</div>
+                    <div>{'用户名'}</div>
                   </div>
-                  <div className="text">{store.lastReply}</div>
+                  <div className="text">
+                    {store.mockLastContent}
+                  </div>
+                  {!!store.mockLastEvaluation && (
+                    <>
+                      <div className="answer-divider"></div>
+                      <div className="answer-comment">
+                        {store.mockLastEvaluation}
+                      </div>
+                    </>
+                  )
+                  }
                 </div>
-              )} */}
+              )}
             </div>
             <div className="question">
               <Space.Compact
                 className="question-input" size="large">
                 <Input
                   placeholder="input"
-                  //prefix={prefix}
                   className="input"
                   value={inputValue}
+                  onChange={handleInput}
                 />
-                <Button className="send-button" type="default">
+                <Button className="send-button" type="default" onClick={sendAnswer}>
                   <img src={iconSend} />
                 </Button>
               </Space.Compact>
@@ -187,22 +308,49 @@ const MockInterview = () => {
                   <p>面试风格
                     <QuestionCircleOutlined className="help" />
                   </p>
-                  <Select className="setting-select" />
+                  <Select
+                    className="setting-select"
+                    defaultValue="活泼"
+                    options={[
+                      { value: '活泼', label: '活泼' },
+                      { value: '严肃', label: '严肃' }
+                    ]}
+                    onChange={(value) => { setInterviewStyle(value); }}
+                  />
                 </div>
                 <div className="setting-item">
                   <p>时间容忍度
                     <QuestionCircleOutlined className="help" />
                   </p>
-                  <Select className="setting-select" />
+                  <Select
+                    className="setting-select"
+                    defaultValue="高"
+                    options={[
+                      { value: '高', label: '高' },
+                      { value: '中', label: '中' },
+                      { value: '低', label: '低' }
+                    ]}
+                    onChange={(value) => { setInterviewTempo(value); }}
+                  />
                 </div>
               </div>
               <div className="drawer-check">
                 <div className="check-item">
-                  <Checkbox>提问个人项目</Checkbox>
+                  <Checkbox
+                    checked={settingPersonalise}
+                    onChange={() => { setSettingPersonalise(!settingPersonalise); }}
+                  >
+                    提问个人项目
+                  </Checkbox>
                   <QuestionCircleOutlined className="help" />
                 </div>
                 <div className="check-item">
-                  <Checkbox>开启回答评价</Checkbox>
+                  <Checkbox
+                    checked={settingEvaluation}
+                    onChange={() => { setSettingEvaluation(!settingEvaluation); }}
+                  >
+                    开启回答评价
+                  </Checkbox>
                   <QuestionCircleOutlined className="help" />
                 </div>
               </div>
@@ -212,6 +360,6 @@ const MockInterview = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MockInterview;

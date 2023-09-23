@@ -24,6 +24,54 @@ class Store {
   formDirection = '';
   formRound = '';
 
+  //模拟面试相关数据
+  mockConversations = [];
+  mockID = '';
+  mockLastContent = '';
+  mockReplies = [];
+  mockLastEvaluation = '';
+  mockLastType = 0; //question:1,answer:2
+  mockInputCache = '';
+
+  setMockNewReply(id, type) {
+    this.mockID = id;
+    this.mockLastType = type;
+  }
+
+  setMockAnswer() {
+    this.mockLastContent = store.mockInputCache;
+  }
+
+  addMockConversations(val) {
+    if (this.mockConversations.length === 6) {
+      this.mockConversations.shift();
+    }
+    this.mockConversations.push(val);
+  }
+
+  setMockReplies() {
+    this.addMockConversations({
+      type: this.mockLastType,
+      content: this.mockLastContent
+    });
+    this.mockReplies.push({
+      content: this.mockLastContent,
+      evaluation: this.mockLastEvaluation,
+      //type: this.mockLastType
+    });
+    this.mockLastContent = '';
+    this.mockLastEvaluation = '';
+    this.mockLastType = 0;
+  }
+
+  appendMockLastContent(content) {
+    this.mockLastContent += content;
+  }
+
+  appendMockLastEvaluation(content) {
+    this.mockLastEvaluation += content;
+  }
+
   constructor() {
     makeAutoObservable(this);
   }

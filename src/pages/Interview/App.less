@@ -55,7 +55,7 @@
     .container {
         background-color: #fff;
         width: @screen-width;
-        max-width: 1250px;
+        max-width: 1200px;
         max-height: 800px;
         border: @border-style;
         box-shadow: @dialog-box-shadow;
@@ -257,7 +257,7 @@
                     display: flex;
                     flex-direction: column;
                     overflow: auto;
-
+                    position: relative;
 
                     .animation {
                         -webkit-animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
@@ -285,16 +285,9 @@
                         }
 
                         .answer-comment {
-                            font-weight: 600;
                             margin-top: 5px;
                             color: #A3A3A3;
-                            font-size: 14px;
-
-                            .comment-content {
-                                margin-top: 5px;
-                                font-size: 16px;
-                                font-weight: 500;
-                            }
+                            font-size: 16px;
                         }
 
                         .text {
@@ -322,6 +315,12 @@
                             display: flex;
                             align-items: center;
                             justify-content: center;
+
+                            button {
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
+                            }
 
                             img {
                                 height: 75%;
