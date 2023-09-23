@@ -16,6 +16,7 @@ import {
   Checkbox,
   Space,
   message,
+  Tooltip,
 } from "antd";
 import {
   UserOutlined,
@@ -225,19 +226,21 @@ const Interview = observer(() => {
     wsServer.current.onmessage = (msg) => {
       try {
         const result = JSON.parse(msg.data);
-        // console.log(result);
         const { type, data, id } = result;
+        console.log(type,data);
         if (type === 0) {
           if (!data.startsWith("No")) {
-            handleReplyState(false);
+            setReplyState(false);
             // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
+              setInputValue('');
             } else {
               if (id !== store.id) {
                 store.setReply();
                 store.setId(id);
+                setInputValue('');
               }
               store.setLastReply(data);
             }
@@ -247,7 +250,7 @@ const Interview = observer(() => {
         } else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
-          handleReplyState(true);
+          setReplyState(true);
         }
       } catch (error) {
         console.log("后端返回解析出错!");
@@ -333,11 +336,6 @@ const Interview = observer(() => {
     setInputValue(value);
   };
 
-  //切换“生成中”，“等待面试官问题”状态
-  const handleReplyState = (flag) => {
-    setReplyState(flag);
-  };
-
   const handleDrawer = () => {
     setDrawerState(!DrawerState);
   };
@@ -353,14 +351,23 @@ const Interview = observer(() => {
   };
 
   const sendManually = () => {
+    if (!inputValue) {
+      message.warning("请输入问题");
+      return;
+    }
+    const question = inputValue;
     const req = {
       type: 4,
       data: {
         conversations: store.conversations,
-        question: inputValue
+        question: question
       },
     };
     wsServer.current.send(JSON.stringify(req));
+    store.addToConversation(question);
+    while (store.conversations.length > MAX_CONVERSATION_COUNT) {
+      store.removeFromConversation();
+    }
   };
 
   const prefix = (
@@ -487,10 +494,13 @@ const Interview = observer(() => {
                   value={inputValue}
                   onChange={handleInput}
                 />
-                <Button className="send-button" onClick={sendManually} disabled={ButtonState} type="default">
-                  <img src={iconSend} />
-                </Button>
+                <Tooltip placement="top" title={ButtonState ? '请点击开始按钮' : '强制回答该问题'}>
+                  <Button className="send-button" onClick={sendManually} disabled={ButtonState} type="default">
+                    <img src={iconSend} />
+                  </Button>
+                </Tooltip>
               </Space.Compact>
+
             </div>
           </div>
           <div
