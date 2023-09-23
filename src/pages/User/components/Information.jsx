@@ -4,7 +4,8 @@ import "./components.less";
 
 const { TextArea } = Input;
 
-const Information = () => {
+const Information = ({userInfo, setUserInfo}) => {
+
   return (
     <div className="person-info">
       <div className="title-container">
@@ -24,7 +25,7 @@ const Information = () => {
           <div className="info-subtitle">姓名</div>
           <Input
             className="info-input"
-            placeholder='姓名'
+            placeholder={userInfo.nickname}
             size="large" />
         </div>
         <div className="info-unit" style={{width: '18em'}}>

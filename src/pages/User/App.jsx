@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { Avatar, Button, Menu } from "antd";
+import { useEffect, useState } from 'react';
+import { Avatar, Button, Menu, message } from "antd";
 import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import MineRecords from "./components/MineRecords";
@@ -8,10 +8,37 @@ import SimulateList from "./components/SimulateList";
 import CopilotList from "./components/CopilotList";
 import Information from "./components/Information";
 import "./App.less";
+import axios from "axios";
+import { BASE_URL } from "../../constant";
 
 const User = () => {
 
   const [currentMenu, setCurrentMenu] = useState('mine');
+  const [userInfo, setUserInfo] = useState({
+    "avatar": "",
+    "create_time": 0,
+    "direction": "",
+    "id": 0,
+    "nickname": "",
+    "projects": [],
+    "update_time": 0
+  });
+
+  useEffect(()=> {
+    if (!userInfo.id) {getUserInfo();}
+  },[userInfo]);
+
+  function getUserInfo() {
+    axios.get(`${BASE_URL}/api/user/info`).then((res)=> {
+      const { status } = res;
+      if (status === 200) {
+        setUserInfo(res.data.data);
+      }
+    }).catch((err) => {
+      console.log('err:', err);
+      message.error('获取个人信息失败');
+    });
+  }
  
   const menuItems = [
     {key: 'mine', label: '我的面经'},
@@ -24,7 +51,7 @@ const User = () => {
   const renderComponent = () => {
     switch (currentMenu) {
     case 'information':
-      return <Information />;
+      return <Information userInfo={userInfo} setUserInfo={setUserInfo} />;
     case 'copilot':
       return <CopilotList/>;
     case 'simulation':
@@ -40,10 +67,13 @@ const User = () => {
     <Content className="user-page">
       <div className="user-top">
         <div className="left">
-          <Avatar icon={<UserOutlined />} />
+          {!userInfo.avatar ?
+            <Avatar icon={<UserOutlined />} /> :
+            <Avatar src={userInfo.avatar} /> 
+          }
         </div>
         <div className="right">
-          <div className="username">用户名 123</div>
+          <div className="username">{userInfo.nickname}</div>
           <Button shape="round" icon={<SettingOutlined />} />
         </div>
       </div>
