@@ -25,6 +25,7 @@ module.exports = {
     "eqeqeq": "warn",
     "indent": ["warn", 2],
     "space-before-blocks": ["warn", "always"],
-    "semi": "warn"
+    "semi": "warn",
+    "react/prop-types": "off"
   },
 }

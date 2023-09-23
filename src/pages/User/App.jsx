@@ -14,6 +14,8 @@ import { BASE_URL } from "../../constant";
 const User = () => {
 
   const [currentMenu, setCurrentMenu] = useState('mine');
+  const [mineRecordList, setMineRecordList] = useState([]);
+  const [favoriteList, setFavoriteList] = useState([]);
   const [userInfo, setUserInfo] = useState({
     "avatar": "",
     "create_time": 0,
@@ -57,9 +59,9 @@ const User = () => {
     case 'simulation':
       return <SimulateList />;
     case 'favorite':
-      return <FavoriteRecords />;
+      return <FavoriteRecords list={favoriteList} setList={setFavoriteList}/>;
     default:
-      return <MineRecords />;
+      return <MineRecords list={mineRecordList} setList={setMineRecordList} />;
     }
   };
 

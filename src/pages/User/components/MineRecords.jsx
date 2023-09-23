@@ -1,25 +1,25 @@
 import axios from "axios";
 import { BASE_URL } from "../../../constant";
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
 import { Button, Card, message } from "antd";
 import RecordCard from "../../../components/RecordCard";
 import "./components.less";
 
-const MineRecords = () => {
-  const [list, setList] = useState([]);
+
+const MineRecords = ({list,setList}) => {
+
   const navigate = useNavigate();
+  
   useEffect(()=> {
     getMineRecords(1);
-  },[]);
-
-  
+  }, []);
 
   function getMineRecords(page) {
     const params = {
       page: page,
-      limit: 10
+      limit: 100
     };
     axios.post(`${BASE_URL}/api/experience/get_list`, params).then((res) => {
       const { status } = res;
@@ -31,7 +31,6 @@ const MineRecords = () => {
       message.error('获取面经列表失败');
     });
   }
-
   
   return (
     <Content className="records-container">
