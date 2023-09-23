@@ -12,16 +12,30 @@ const MineRecords = () => {
     stared: true,
     starNumber: 25,
   };
+  const navigate = useNavigate();
+
   return (
     <Content className="records-container">
-      <div className="records">
-        {list.map((item, key) => { 
-          data.type = 'favorite';
-          return (
-            <RecordCard key={key} data={data}/>
-          );
-        })}
-      </div>
+      {
+        list.length ?
+          <div className="records">
+            {list.map((item, key) => { 
+              item.type = 'favorite';
+              return (
+                <RecordCard key={key} data={item}/>
+              );
+            })}
+          </div>
+          :
+          <div className="empty">
+            <InfoCircleOutlined />
+            <div>暂无数据</div>
+            <div>快去模拟面试大厅看看吧</div>
+            <Button type="primary"
+              onClick={()=>navigate('/mockInterviewHall')}
+            >模拟面试大厅 &#10132;</Button>
+          </div>
+      }
     </Content>
   );
 };
