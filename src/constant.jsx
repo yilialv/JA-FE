@@ -10,4 +10,13 @@ export const MOCK_SERVER_URL = "wss://job581.cn/mock/stream";
 
 export const BASE_URL = "https://job581.cn";
 
+export const DIRECTIONLIST = [
+  {value: 'rd', label: '后端'},
+  {value: 'fe', label: '前端'},
+  {value: 'pm', label: '产品'},
+  {value: 'qa', label: '测试'},
+  {value: 'op', label: '运营'},
+  {value: 'ui', label: '设计'}
+];
+
 export const EXPIRES = 15; // jwt-token过期时间

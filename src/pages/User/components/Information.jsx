@@ -84,10 +84,7 @@ const Information = ({userInfo, setUserInfo}) => {
           <Select
             className="info-input"
             placeholder='目标岗位'
-            options={[
-              {label: '前端开发', value: 'front_end'},
-              {label: '后端开发', value: 'back_end'}
-            ]}
+            options={store.directionList}
             value={tempDirection}
             onChange={(value) => setDirection(value)}
             size="large" />
