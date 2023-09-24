@@ -227,7 +227,7 @@ const Interview = observer(() => {
       try {
         const result = JSON.parse(msg.data);
         const { type, data, id } = result;
-        console.log(type,data);
+        console.log(type, data);
         if (type === 0) {
           if (!data.startsWith("No")) {
             setReplyState(false);
@@ -485,6 +485,15 @@ const Interview = observer(() => {
               onFocus={() => { setInputFocus(true); }}
               onBlur={() => { setInputFocus(false); }}
               className="question">
+              <div className="question-history">
+                {store.conversations.toSpliced(0, store.conversations.length - 3).map((item, key) => {
+                  return (
+                    <div className="history-item" key={key} onClick={(item) => { setInputValue(item.target.innerText); }}>
+                      {item}
+                    </div>
+                  );
+                })}
+              </div>
               <Space.Compact
                 className="question-input" size="large">
                 <Input
@@ -500,7 +509,6 @@ const Interview = observer(() => {
                   </Button>
                 </Tooltip>
               </Space.Compact>
-
             </div>
           </div>
           <div
