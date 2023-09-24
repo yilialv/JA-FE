@@ -1,10 +1,58 @@
-import { Button, Input, Select } from "antd";
+import axios from "axios";
+import { BASE_URL } from "../../../constant";
+import { useState } from 'react';
+import { Button, Input, Select, message } from "antd";
 import { SaveOutlined, PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import "./components.less";
 
 const { TextArea } = Input;
 
 const Information = ({userInfo, setUserInfo}) => {
+
+  const {nickname, direction, projects } = userInfo;
+  const [tempNickname, setNickname] = useState(nickname);
+  const [tempDirection, setDirection] = useState(direction);
+  const [tempProjects, setProjects] = useState(!projects ? [] : projects);
+
+  function updateUserInfo() {
+    if (!tempDirection)
+      message.warning('请选择您的目标岗位');
+    else {
+      const filteredProjects = tempProjects.filter(item => item !== null && item !== "" && item !== undefined);
+      setProjects(filteredProjects);
+      const newInfo = Object.assign({},userInfo);
+      newInfo.nickname = tempNickname;
+      newInfo.direction = tempDirection;
+      newInfo.projects = tempProjects;
+      axios.post(`${BASE_URL}/api/user/update`, newInfo).then((res) => {
+        if (res.status === 200) {
+          setUserInfo(newInfo);
+          message.success('保存成功');
+        }
+      }).catch((err) => {
+        console.log('err:', err);
+        message.error('保存失败');
+      });
+    }
+  }
+
+  const addProject = () => {
+    const newProjects = [...tempProjects];
+    newProjects.push('');
+    setProjects(newProjects);
+  };
+
+  const changeProject = (e,index) => {
+    const newProjects = [...tempProjects];
+    newProjects[index] = e.target.value;
+    setProjects(newProjects);
+  };
+
+  const deleteProject = (e,index) => {
+    const newProjects = [...tempProjects];
+    newProjects.splice(index, 1);
+    setProjects(newProjects);
+  };
 
   return (
     <div className="person-info">
@@ -16,6 +64,7 @@ const Information = ({userInfo, setUserInfo}) => {
           size="large"
           shape="round"
           icon={<SaveOutlined />}
+          onClick={updateUserInfo}
         >
         保存
         </Button>
@@ -25,7 +74,9 @@ const Information = ({userInfo, setUserInfo}) => {
           <div className="info-subtitle">姓名</div>
           <Input
             className="info-input"
-            placeholder={userInfo.nickname}
+            placeholder='姓名'
+            value={tempNickname}
+            onChange={(e) => setNickname(e.target.value)}
             size="large" />
         </div>
         <div className="info-unit" style={{width: '18em'}}>
@@ -33,6 +84,12 @@ const Information = ({userInfo, setUserInfo}) => {
           <Select
             className="info-input"
             placeholder='目标岗位'
+            options={[
+              {label: '前端开发', value: 'front_end'},
+              {label: '后端开发', value: 'back_end'}
+            ]}
+            value={tempDirection}
+            onChange={(value) => setDirection(value)}
             size="large" />
         </div>
       </div>
@@ -41,35 +98,29 @@ const Information = ({userInfo, setUserInfo}) => {
         <Button
           className="title-btn"
           icon={<PlusCircleOutlined style={{color: '#3f8600'}}/>}
+          onClick={addProject}
           size="large" shape="round">
         增加
         </Button>
       </div>
       <div className="info-container flex-col">
-        <div className="info-unit">
-          <div className="text-subtitle">项目描述1</div>
-          <Button className="delate-btn"
-            icon={<DeleteOutlined style={{color: '#f00'}}/>}
-            size="large" shape="round">
-            删除
-          </Button>
-          <TextArea
-            className="info-input"
-            placeholder='请在此输入一段项目经历'
-            size="large" />
-        </div>
-        <div className="info-unit">
-          <div className="text-subtitle">项目描述2</div>
-          <Button className="delate-btn"
-            icon={<DeleteOutlined style={{color: '#f00'}}/>}
-            size="large" shape="round">
-            删除
-          </Button>
-          <TextArea
-            className="info-input"
-            placeholder='请在此输入下一段项目经历'
-            size="large" />
-        </div>
+        { tempProjects.map((item,index)=>(
+          <div className="info-unit" key={index}>
+            <div className="text-subtitle">项目描述{index + 1}</div>
+            <Button className="delate-btn"
+              icon={<DeleteOutlined style={{color: '#f00'}}/>}
+              onClick={deleteProject}
+              size="large" shape="round">
+              删除
+            </Button>
+            <TextArea
+              className="info-input"
+              placeholder='请在此输入一段项目经历'
+              value={tempProjects[index]}
+              onChange={(e) => changeProject(e, index)}
+              size="large" />
+          </div>
+        ))}
       </div>
     </div>
   );
