@@ -53,6 +53,7 @@ const AssistantModal = () => {
 
   return (
     <Modal
+      centered
       width={300}
       title='面试小助手'
       open={store.isAssistantModalOpen}
