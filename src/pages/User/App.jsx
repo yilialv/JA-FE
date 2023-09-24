@@ -4,7 +4,7 @@ import { UserOutlined, SettingOutlined, FilterOutlined } from "@ant-design/icons
 import { Content } from "antd/es/layout/layout";
 import MineRecords from "./components/MineRecords";
 import FavoriteRecords from "./components/FavoriteRecords";
-import SimulateList from "./components/SimulateList";
+import MockList from "./components/MockList";
 import CopilotList from "./components/CopilotList";
 import Information from "./components/Information";
 import "./App.less";
@@ -13,7 +13,7 @@ import { BASE_URL } from "../../constant";
 
 const User = () => {
 
-  const [currentMenu, setCurrentMenu] = useState('mine');
+  const [currentMenu, setCurrentMenu] = useState('information');
   const [mineRecordList, setMineRecordList] = useState([]);
   const [favoriteList, setFavoriteList] = useState([]);
   const [userInfo, setUserInfo] = useState({
@@ -43,22 +43,22 @@ const User = () => {
   }
  
   const menuItems = [
+    {key: 'info', label: '个人信息',},
     {key: 'mine', label: '我的面经'},
-    {key: 'favorite', label: '面经收藏',},
-    {key: 'simulation', label: '模拟记录',},
+    {key: 'star', label: '面经收藏',},
+    {key: 'mock', label: '模拟记录',},
     {key: 'copilot', label: '辅助记录',},
-    {key: 'information', label: '个人信息',}
   ];
 
   const renderComponent = () => {
     switch (currentMenu) {
-    case 'information':
+    case 'info':
       return <Information userInfo={userInfo} setUserInfo={setUserInfo} />;
     case 'copilot':
       return <CopilotList/>;
-    case 'simulation':
-      return <SimulateList />;
-    case 'favorite':
+    case 'mock':
+      return <MockList />;
+    case 'star':
       return <FavoriteRecords list={favoriteList} setList={setFavoriteList}/>;
     default:
       return <MineRecords list={mineRecordList} setList={setMineRecordList} />;

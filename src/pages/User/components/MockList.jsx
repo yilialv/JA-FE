@@ -2,7 +2,7 @@ import { Table, Badge } from "antd";
 import moment from 'moment';
 
 
-const SimulateList = () => {
+const MockList = () => {
   const dataSource = [
     {
       key: '1',
@@ -46,7 +46,7 @@ const SimulateList = () => {
       status: '1',
     },
   ];
-  
+
   const columns = [
     {
       title: '公司',
@@ -87,6 +87,6 @@ const SimulateList = () => {
   return (
     <Table dataSource={dataSource} columns={columns} />
   );
-  
+
 };
-export default SimulateList;
+export default MockList;
