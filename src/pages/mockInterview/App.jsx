@@ -27,28 +27,33 @@ import '../Interview/App.less';
 import { useEffect, useRef, useState } from "react";
 
 const MockInterview = observer(() => {
+
   const wsServer = useRef(null); // 和后端的连接
 
   useEffect(() => {
-
-    connectWebSocket();
-
     const scrollBlock = document.getElementById("scrollBlock");
     // 将内容自动滚动到底部
     scrollBlock.scrollTop = scrollBlock.scrollHeight;
+  }, []);
 
+  useEffect(() => {
     const interval = setInterval(() => {
       setCount((counts) => counts + 1);
     }, 60000);
 
     return () => {
+      wsServer.current?.close();
       clearInterval(interval);
     };
   }, []);
 
+  useEffect(() => {
+    connectWebsocket();
+  }, []);
 
+  const followingQuestionFlag = useRef(0);
 
-  const connectWebSocket = async () => {
+  const connectWebsocket = async () => {
     wsServer.current = new WebSocket(MOCK_SERVER_URL);
 
     wsServer.current.onopen = () => {
@@ -69,16 +74,18 @@ const MockInterview = observer(() => {
       try {
         const result = JSON.parse(msg.data);
         const { type, data, id } = result;
-        console.log(type, data);
-        if (type === 1) {
+        console.log(type, data, id);
+        if (type === 1 || type === 3) {
           setReplyState(false);
           // 第一次拿到数据
           if (!store.mockID) {
             store.setMockNewReply(id, type);
+            followingQuestionFlag.value = 1;
             setInputValue('');
           } else if (id !== store.mockID) {
+            if (type === 1) { store.addMockIndex(); followingQuestionFlag.value = 1; }
             store.setMockReplies();
-            store.setMockNewReply(id, type);
+            store.setMockNewReply(id, 1);
             setInputValue('');
           }
           store.appendMockLastContent(data);
@@ -86,7 +93,7 @@ const MockInterview = observer(() => {
         else if (type === 2) {
           if (id !== store.mockID) {
             store.setMockReplies();
-            store.setMockNewReply(id, 2);
+            store.setMockNewReply(id ? id : 'skipEvaluation', 2);
             store.setMockAnswer();
             setInputValue('');
           }
@@ -97,7 +104,8 @@ const MockInterview = observer(() => {
         } else if (type === 9) {
           setReplyState(true);
           if (store.mockLastType === 2) {
-            requestQuestion();
+            requestQuestion(store.settingFollowing);
+            store.mockLastType = 0;
           }
         }
       } catch (error) {
@@ -118,19 +126,28 @@ const MockInterview = observer(() => {
     wsServer.current.onerror = (error) => {
       console.log("error:", error);
     };
+
   };
 
-  const requestQuestion = () => {
+  const requestQuestion = (isFollowing) => {
+    const following = {
+      type: 4,
+      data: {
+        interactions: store.mockConversations
+      }
+    };
     const req = {
       type: 2,
       data: {
+        question_index: store.mockQuestionIndex,
         interactions: store.mockConversations,
         style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
-        toleration: settingTempo, // 时间容忍度-高-中-低 
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    wsServer.current.send(JSON.stringify(req));
+    console.log(isFollowing);
+    wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.value) ? following : req));
+    followingQuestionFlag.value = 0;
   };
 
   const sendAnswer = () => {
@@ -145,7 +162,8 @@ const MockInterview = observer(() => {
         interactions: store.mockConversations,
         answer: answer,
         question_id: store.mockID,
-        evaluation: settingEvaluation
+        evaluation: settingEvaluation,
+        toleration: settingTempo, // 时间容忍度-高-中-低 
       },
     };
     store.mockInputCache = answer;
@@ -276,6 +294,7 @@ const MockInterview = observer(() => {
                   className="input"
                   value={inputValue}
                   onChange={handleInput}
+                  onKeyDown={(e) => { const { key } = e; if (key === 'Enter') { sendAnswer(); } }}
                 />
                 <Button className="send-button" type="default" onClick={sendAnswer}>
                   <img src={iconSend} />
@@ -338,7 +357,7 @@ const MockInterview = observer(() => {
                 <div className="check-item">
                   <Checkbox
                     checked={settingPersonalise}
-                    onChange={() => { setSettingPersonalise(!settingPersonalise); }}
+                    onClick={() => { setSettingPersonalise(!settingPersonalise); }}
                   >
                     提问个人项目
                   </Checkbox>
@@ -347,9 +366,18 @@ const MockInterview = observer(() => {
                 <div className="check-item">
                   <Checkbox
                     checked={settingEvaluation}
-                    onChange={() => { setSettingEvaluation(!settingEvaluation); }}
+                    onClick={() => { setSettingEvaluation(!settingEvaluation);}}
                   >
                     开启回答评价
+                  </Checkbox>
+                  <QuestionCircleOutlined className="help" />
+                </div>
+                <div className="check-item">
+                  <Checkbox
+                    checked={store.settingFollowing}
+                    onClick={() => { store.settingFollowing=!store.settingFollowing;}}
+                  >
+                    开启回答追问
                   </Checkbox>
                   <QuestionCircleOutlined className="help" />
                 </div>

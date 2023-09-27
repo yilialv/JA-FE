@@ -32,10 +32,16 @@ class Store {
   mockLastEvaluation = '';
   mockLastType = 0; //question:1,answer:2
   mockInputCache = '';
+  mockQuestionIndex = 0;
+  settingFollowing = true;
 
   setMockNewReply(id, type) {
     this.mockID = id;
     this.mockLastType = type;
+  }
+
+  addMockIndex() {
+    this.mockQuestionIndex += 1;
   }
 
   setMockAnswer() {
