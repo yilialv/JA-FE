@@ -1,51 +1,31 @@
+import { useEffect, useState } from "react";
 import { Table, Badge } from "antd";
 import moment from 'moment';
+import { getMockList } from "../router";
 
 
 const MockList = () => {
-  const dataSource = [
-    {
-      key: '1',
-      company: '阿里巴巴',
-      direction: '后端',
-      category: ' 2',
-      interview_time: '1694334990',
-      minutes: '40',
-      status: '1',
-    },{
-      key: '2',
-      company: '阿里巴巴',
-      direction: '后端',
-      category: ' 2',
-      interview_time: '1694323490',
-      minutes: '40',
-      status: '1',
-    },{
-      key: '3',
-      company: '阿里巴巴',
-      direction: '后端',
-      category: ' 2',
-      interview_time: '1694314890',
-      minutes: '40',
-      status: '1',
-    },{
-      key: '4',
-      company: '阿里巴巴',
-      direction: '后端',
-      category: ' 2',
-      interview_time: '1683734990',
-      minutes: '40',
-      status: '1',
-    },{
-      key: '5',
-      company: '阿里巴巴',
-      direction: '后端',
-      category: ' 2',
-      interview_time: '1694376390',
-      minutes: '40',
-      status: '1',
-    },
-  ];
+  useEffect(()=> {
+    getListData();
+  },[]);
+
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(10);
+  const [company,setCompany] = useState('');
+  const [round, setRound] = useState('');
+  const [dataSource, setDataSource] = useState([]);
+
+  const  getListData = async () => {
+    const params = {
+      page: page,
+      limit: limit,
+      company: company,
+      round: round
+    };
+    await getMockList(params).then((data) => {
+      setDataSource(data.data.record_list);
+    });
+  };
 
   const columns = [
     {
@@ -84,8 +64,9 @@ const MockList = () => {
       render: () => <a>编辑</a>,
     },
   ];
+
   return (
-    <Table dataSource={dataSource} columns={columns} />
+    <Table dataSource={dataSource} columns={columns} pagination/>
   );
 
 };

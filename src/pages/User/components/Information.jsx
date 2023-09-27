@@ -1,9 +1,10 @@
-import axios from "axios";
-import { BASE_URL } from "../../../constant";
 import { useState } from 'react';
 import { Button, Input, Select, message } from "antd";
 import { SaveOutlined, PlusCircleOutlined, DeleteOutlined } from "@ant-design/icons";
 import "./components.less";
+// import { updateUserInfo } from "../router";
+import store from "../../../store";
+import { DIRECTIONLIST } from '../../../constant';
 
 const { TextArea } = Input;
 
@@ -14,7 +15,7 @@ const Information = ({userInfo, setUserInfo}) => {
   const [tempDirection, setDirection] = useState(direction);
   const [tempProjects, setProjects] = useState(!projects ? [] : projects);
 
-  function updateUserInfo() {
+  function handleUpdate() {
     if (!tempDirection)
       message.warning('请选择您的目标岗位');
     else {
@@ -24,15 +25,7 @@ const Information = ({userInfo, setUserInfo}) => {
       newInfo.nickname = tempNickname;
       newInfo.direction = tempDirection;
       newInfo.projects = tempProjects;
-      axios.post(`${BASE_URL}/api/user/update`, newInfo).then((res) => {
-        if (res.status === 200) {
-          setUserInfo(newInfo);
-          message.success('保存成功');
-        }
-      }).catch((err) => {
-        console.log('err:', err);
-        message.error('保存失败');
-      });
+      updateUserInfo(newInfo);
     }
   }
 
@@ -64,17 +57,17 @@ const Information = ({userInfo, setUserInfo}) => {
           size="large"
           shape="round"
           icon={<SaveOutlined />}
-          onClick={updateUserInfo}
+          onClick={handleUpdate}
         >
         保存
         </Button>
       </div>
       <div className="info-container flex-row">
         <div className="info-unit" style={{width: '18em'}}>
-          <div className="info-subtitle">姓名</div>
+          <div className="info-subtitle">昵称</div>
           <Input
             className="info-input"
-            placeholder='姓名'
+            placeholder=''
             value={tempNickname}
             onChange={(e) => setNickname(e.target.value)}
             size="large" />
@@ -84,7 +77,7 @@ const Information = ({userInfo, setUserInfo}) => {
           <Select
             className="info-input"
             placeholder='目标岗位'
-            options={store.directionList}
+            options={DIRECTIONLIST}
             value={tempDirection}
             onChange={(value) => setDirection(value)}
             size="large" />
