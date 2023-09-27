@@ -53,7 +53,7 @@ const RecordUpload = () => {
         {conversations.map((inputValue, index) => (
           <div className='flex-row left-unit' key={index}>
             <div className="text-bold">问题{index + 1}</div>
-            <Input
+            <Input.TextArea
               value={inputValue['question']}
               placeholder='面试官怎么说？'
               onChange={(e) => handleChangeLeft(e, index)}
