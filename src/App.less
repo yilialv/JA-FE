@@ -227,9 +227,14 @@
 
         .records-button {
             cursor: pointer;
-            font-size: 40px;
-            color: rgb(93, 93, 93);
+            font-size: 60px;
+            color: #ddd;
             transition: 300ms;
+            transform: scaleY(4);
+        }
+
+        .records-button:hover {
+            color: rgb(93,93,93);
         }
 
         .records-button:active {
@@ -244,14 +249,14 @@
 
             .records {
                 top: 0;
-                transition: 300ms;
+                transition: 400ms;
                 position: absolute;
                 height: 100%;
                 display: flex;
 
-                .find-more{
+                .find-more {
                     width: 240px;
-                    font-size: large;
+                    font-size: 24px;
                     margin: 20px;
                     display: flex;
                     align-items: center;
@@ -263,10 +268,9 @@
                     user-select: none;
                     font-weight: 600;
                     color: #666;
-                    box-shadow: 0 0 0 1px #ccc;
                 }
 
-                .find-more:hover{
+                .find-more:hover {
                     color: #3F9D13;
                 }
 

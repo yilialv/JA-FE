@@ -502,6 +502,7 @@ const Interview = observer(() => {
                   className="input"
                   value={inputValue}
                   onChange={handleInput}
+                  onKeyDown={(e) => { const { key } = e; if (key === 'Enter' && !ButtonState) { sendManually(); } }}
                 />
                 <Tooltip placement="top" title={ButtonState ? '请点击开始按钮' : '强制回答该问题'}>
                   <Button className="send-button" onClick={sendManually} disabled={ButtonState} type="default">

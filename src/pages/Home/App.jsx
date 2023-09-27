@@ -99,7 +99,7 @@ const Home = () => {
               <RecordCard data={data} />
               <RecordCard data={data} />
               <Link className='find-more' to='/mockInterviewHall' >
-                <div >
+                <div>
                   查看更多
                   <SwapRightOutlined />
                 </div>
