@@ -67,11 +67,17 @@ const CopilotList = () => {
       title: '操作',
       dataIndex: '',
       key: 'x',
-      render: () => <a>编辑</a>,
+      render: () => <a onClick={setIsShowDetail(true)}>编辑</a>,
     },
   ];
   return (
-    <Table dataSource={dataSource} columns={columns} />
+    // <>
+    //   <Table dataSource={dataSource} columns={columns} />
+    //   {
+    //     isShowDetail &&
+        <InterviewDetail />
+    //   }
+    // </>
   );
   
 };
