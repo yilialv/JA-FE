@@ -12,10 +12,10 @@ import {
 import { useState } from "react";
 import { observer } from "mobx-react";
 import { useEffect } from "react";
-import store from "../../store";
-import iconBag from "../../imgs/icon-bag.svg";
-import iconCalendar from "../../imgs/icon-calendar.svg";
-import { getInterviewDetail } from "../../router";
+import store from "../../../store";
+import iconBag from "../../../imgs/icon-bag.svg";
+import iconCalendar from "../../../imgs/icon-calendar.svg";
+import { getInterviewDetail } from "../router";
 
 const { Content } = Layout;
 
