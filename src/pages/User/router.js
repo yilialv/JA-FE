@@ -21,15 +21,7 @@ export function updateUserInfo(data) {
 }
 
 export function getCopilotList(params) {
-  api.post('/copilot/get_list', params).then((res) => {
-    console.log(res);
-    if (res.status === 200) {
-      return res.data;
-    }
-  }).catch((err) => {
-    console.log('err:', err);
-    message.error('获取辅助面试列表失败');
-  });
+  return api.post('/copilot/get_list', params);
 }
 
 export function getMockList(params) {

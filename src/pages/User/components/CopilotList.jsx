@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Table, Badge } from "antd";
+import { Table, Badge, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
 
@@ -22,8 +22,14 @@ const CopilotList = () => {
       company: company,
       round: round
     };
-    await getCopilotList(params).then((data) => {
-      setDataSource(data);
+    await getCopilotList(params).then((res) => {
+      console.log(res);
+      if (res.status === 200) {
+        setDataSource(res.data.data.record_list);
+      }
+    }).catch((err) => {
+      console.log('err:', err);
+      message.error('获取辅助面试列表失败');
     });
   };
   
@@ -38,12 +44,12 @@ const CopilotList = () => {
       key: 'direction',
     },{
       title: '轮数',
-      dataIndex: 'category',
-      key: 'category',
+      dataIndex: 'round',
+      key: 'round',
     },{
       title: '开始时间',
-      dataIndex: 'interview_time',
-      key: 'interview_time',
+      dataIndex: 'start_time',
+      key: 'start_time',
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.interview_time - b.interview_time,
       render: (timestamp) => 
