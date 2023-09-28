@@ -27,7 +27,6 @@
                 height: 18px;
                 border-radius: 10px;
                 margin-left: 8px;
-                margin-right: auto;
                 color: #FFF;
                 font-size: 10px;
                 font-weight: 500;
@@ -40,9 +39,23 @@
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
             }
-            .anticon:hover {
+            .setting-icon-container {
+                margin-left: auto;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+            }
+            .setting-icon {
+                margin-left: 2px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0.8;
+            }
+            .setting-icon:hover {
                 transform: scale(1.1);
-                // background-color: #ccc;
+                opacity: 1;
             }
         }
         .interview-info {
@@ -72,11 +85,21 @@
                 padding-left: 6px;
                 padding-right: 4px;
             }
-            .interview-footer-star {
-                line-height: 16px;
-                .star {
-                    font-size: 16px;
-                    margin-right: 2px;
+            .footer-left {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                .text-number {
+                    margin: 0 4px;
+                    padding-top: 3px;
+                    color: #000;
+                    font-family: Roboto;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 24px; /* 171.429% */
                 }
             }
             .interview-footer-user {
