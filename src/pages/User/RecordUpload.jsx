@@ -1,10 +1,14 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Input, Button, Select } from "antd";
-import { MinusCircleOutlined, PlusCircleOutlined, SaveOutlined, CheckCircleFilled } from "@ant-design/icons";
+import { MinusCircleOutlined, PlusCircleOutlined, SaveOutlined,
+  CheckCircleFilled, ArrowLeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
 import { uploadExperience } from '../../router';
 
 const RecordUpload = () => {
+
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState([{
     "question": "", "answer": ""
   }]);
@@ -50,6 +54,7 @@ const RecordUpload = () => {
   return (
     <Content className="record-upload">
       <div className="flex-col upload-left">
+        <Button icon={<ArrowLeftOutlined />} onClick={() => navigate(-1)} />
         {conversations.map((inputValue, index) => (
           <div className='flex-row left-unit' key={index}>
             <div className="text-bold">问题{index + 1}</div>
