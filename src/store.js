@@ -32,7 +32,7 @@ class Store {
   mockLastContent = '';
   mockReplies = [];
   mockLastEvaluation = '';
-  mockLastType = 0; //question:1,answer:2
+  mockLastType = 0; //question:1,answer:0,finish:4
   mockInputCache = '';
   mockQuestionIndex = 0;
   settingFollowing = true;
@@ -57,19 +57,21 @@ class Store {
     this.mockConversations.push(val);
   }
 
-  setMockReplies() {
-    this.addMockConversations({
-      type: this.mockLastType,
-      content: this.mockLastContent
-    });
-    this.mockReplies.push({
-      content: this.mockLastContent,
-      evaluation: this.mockLastEvaluation,
-      //type: this.mockLastType
-    });
+  setMockReplies(type) {
+    if (this.mockLastContent) {
+      this.addMockConversations({
+        type: this.mockLastType,
+        content: this.mockLastContent
+      });
+      this.mockReplies.push({
+        content: this.mockLastContent,
+        evaluation: this.mockLastEvaluation,
+        //type: this.mockLastType
+      });
+    }
     this.mockLastContent = '';
     this.mockLastEvaluation = '';
-    this.mockLastType = 0;
+    this.mockLastType = type ? type : 0;
   }
 
   appendMockLastContent(content) {

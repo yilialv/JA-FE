@@ -30,11 +30,11 @@ const MockInterview = observer(() => {
 
   const wsServer = useRef(null); // 和后端的连接
 
-  useEffect(() => {
-    const scrollBlock = document.getElementById("scrollBlock");
-    // 将内容自动滚动到底部
-    scrollBlock.scrollTop = scrollBlock.scrollHeight;
-  }, []);
+  // useEffect(() => {
+  //   const scrollBlock = document.getElementById("scrollBlock");
+  //   // 将内容自动滚动到底部
+  //   scrollBlock.scrollTop = scrollBlock.scrollHeight;
+  // }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -75,16 +75,16 @@ const MockInterview = observer(() => {
         const result = JSON.parse(msg.data);
         const { type, data, id } = result;
         console.log(type, data, id);
+        setReplyState(false);
         if (type === 1 || type === 3) {
-          setReplyState(false);
           // 第一次拿到数据
           if (!store.mockID) {
             store.setMockNewReply(id, type);
+            store.addMockIndex();
             followingQuestionFlag.value = 1;
             setInputValue('');
           } else if (id !== store.mockID) {
             if (type === 1) { store.addMockIndex(); followingQuestionFlag.value = 1; }
-            store.setMockReplies();
             store.setMockNewReply(id, 1);
             setInputValue('');
           }
@@ -93,19 +93,23 @@ const MockInterview = observer(() => {
         else if (type === 2) {
           if (id !== store.mockID) {
             store.setMockReplies();
-            store.setMockNewReply(id ? id : 'skipEvaluation', 2);
+            store.setMockNewReply(id ? id : 'skipEvaluation', 0);
             store.setMockAnswer();
-            setInputValue('');
           }
           store.appendMockLastEvaluation(data);
         }
-        else if (type === 99) {
+        else if (type === 4) {
+          store.setMockNewReply('conclusion', type);
+          store.setMockReplies(type);
+          setInputValue('');
+          store.appendMockLastContent(data);
+        }else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
           setReplyState(true);
-          if (store.mockLastType === 2) {
+          if (store.mockLastType === 0) {
+            store.setMockReplies();
             requestQuestion(store.settingFollowing);
-            store.mockLastType = 0;
           }
         }
       } catch (error) {
@@ -145,7 +149,8 @@ const MockInterview = observer(() => {
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    console.log(isFollowing);
+    console.log('interaction', Array.from(store.mockConversations));
+    console.log('index', store.mockQuestionIndex);
     wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.value) ? following : req));
     followingQuestionFlag.value = 0;
   };
@@ -235,7 +240,7 @@ const MockInterview = observer(() => {
             <div className="answer-block" id="scrollBlock">
               {store.mockReplies.map((item, key) => {
                 const { content, evaluation } = item;
-                return (
+                return !!content && (
                   <div className="answer" key={key}>
                     <div className="answer-header">
                       <Avatar
@@ -366,7 +371,7 @@ const MockInterview = observer(() => {
                 <div className="check-item">
                   <Checkbox
                     checked={settingEvaluation}
-                    onClick={() => { setSettingEvaluation(!settingEvaluation);}}
+                    onClick={() => { setSettingEvaluation(!settingEvaluation); }}
                   >
                     开启回答评价
                   </Checkbox>
@@ -375,7 +380,7 @@ const MockInterview = observer(() => {
                 <div className="check-item">
                   <Checkbox
                     checked={store.settingFollowing}
-                    onClick={() => { store.settingFollowing=!store.settingFollowing;}}
+                    onClick={() => { store.settingFollowing = !store.settingFollowing; }}
                   >
                     开启回答追问
                   </Checkbox>
