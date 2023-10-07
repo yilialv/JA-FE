@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import { Table, Badge, message } from "antd";
+import { Table, Badge, Select, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
+import { Content } from "antd/es/layout/layout";
+import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
+import { fetchCompanyList } from "../../../router";
 
 
 const CopilotList = () => {
   useEffect(()=> {
-    getListData();
+    getCompanyList();
   },[]);
 
   const [page, setPage] = useState(1);
@@ -14,8 +17,13 @@ const CopilotList = () => {
   const [company,setCompany] = useState('');
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
+  const [companyList, setCompanyList] = useState([{value: '', label: ''}]);
+  
+  useEffect(()=> {
+    getListData();
+  },[page, limit, company, round]);
 
-  const  getListData = async () => {
+  const getListData = async () => {
     const params = {
       page: page,
       limit: limit,
@@ -23,7 +31,6 @@ const CopilotList = () => {
       round: round
     };
     await getCopilotList(params).then((res) => {
-      console.log(res);
       if (res.status === 200) {
         setDataSource(res.data.data.record_list);
       }
@@ -31,6 +38,11 @@ const CopilotList = () => {
       console.log('err:', err);
       message.error('获取辅助面试列表失败');
     });
+  };
+
+  const getCompanyList = async () => {
+    const list = fetchCompanyList();
+    setCompanyList(list);
   };
   
   const columns = [
@@ -71,7 +83,23 @@ const CopilotList = () => {
     },
   ];
   return (
-    <Table dataSource={dataSource} columns={columns} />
+    <Content>
+      <div className="user-select-container">
+        <div className="user-select">
+          <div className="label">
+            公司
+          </div>
+          <Select key='company' size="large" options={companyList} onChange={(e)=>setCompany(e)}/>
+        </div>
+        <div className="user-select">
+          <div className="label">
+            轮数
+          </div>
+          <Select key='round'  size="large" options={ROUND_LIST} onChange={(e)=>setRound(e)}/>
+        </div>
+      </div>
+      <Table dataSource={dataSource} columns={columns} />
+    </Content>
   );
   
 };
