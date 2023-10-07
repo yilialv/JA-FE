@@ -4,7 +4,7 @@ import { SaveOutlined, PlusCircleOutlined, DeleteOutlined } from "@ant-design/ic
 import "./components.less";
 // import { updateUserInfo } from "../router";
 import store from "../../../store";
-import { DIRECTIONLIST } from '../../../constant';
+import { DIRECTION_LIST } from '../../../constant';
 
 const { TextArea } = Input;
 
@@ -77,7 +77,7 @@ const Information = ({userInfo, setUserInfo}) => {
           <Select
             className="info-input"
             placeholder='目标岗位'
-            options={DIRECTIONLIST}
+            options={DIRECTION_LIST}
             value={tempDirection}
             onChange={(value) => setDirection(value)}
             size="large" />
