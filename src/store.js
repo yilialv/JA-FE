@@ -19,6 +19,8 @@ class Store {
   isLoginModalOpen = false;
   isAssistantModalOpen = false;
 
+  companyList = [];
+
   //表单数据
   formCompany = '';
   formDirection = '';
