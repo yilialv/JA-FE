@@ -32,7 +32,11 @@ const CopilotList = () => {
     };
     await getCopilotList(params).then((res) => {
       if (res.status === 200) {
-        setDataSource(res.data.data.record_list);
+        const list = res.data.data.record_list;
+        list.forEach((item, index) => {
+          item.key = index;
+        });
+        setDataSource(list);
       }
     }).catch((err) => {
       console.log('err:', err);
@@ -65,7 +69,7 @@ const CopilotList = () => {
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.interview_time - b.interview_time,
       render: (timestamp) => 
-        moment(Number(timestamp)).format('YYYY-MM-DD HH:mm:ss'),
+        moment(Number(`${timestamp}000`)).format('YYYY-MM-DD HH:mm:ss'),
     },{
       title: '耗时（分钟）',
       dataIndex: 'minutes',
@@ -89,13 +93,23 @@ const CopilotList = () => {
           <div className="label">
             公司
           </div>
-          <Select key='company' size="large" options={companyList} onChange={(e)=>setCompany(e)}/>
+          <Select
+            allowClear
+            key='company'
+            size="large"
+            options={companyList}
+            onChange={(e)=>setCompany(e)}/>
         </div>
         <div className="user-select">
           <div className="label">
             轮数
           </div>
-          <Select key='round'  size="large" options={ROUND_LIST} onChange={(e)=>setRound(e)}/>
+          <Select 
+            allowClear
+            key='round'
+            size="large"
+            options={ROUND_LIST}
+            onChange={(e)=>setRound(e)}/>
         </div>
       </div>
       <Table dataSource={dataSource} columns={columns} />
