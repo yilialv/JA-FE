@@ -37,7 +37,7 @@ const App = observer(() => {
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
             <Route path="/experience/upload" element={<RecordUpload />} />
-            <Route path="/user/interviewDetail" element={<InterviewDetail />} />
+            <Route path="/user/interviewDetail/:id" element={<InterviewDetail />} />
           </Routes>
         </div>
       </Layout>

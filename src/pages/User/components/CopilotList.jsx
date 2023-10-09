@@ -2,6 +2,10 @@ import { useEffect, useState } from "react";
 import { Table, Badge, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
+import { Content } from "antd/es/layout/layout";
+import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
+import { fetchCompanyList } from "../../../router";
+import { useNavigate } from 'react-router-dom';
 
 
 const CopilotList = () => {
@@ -14,6 +18,13 @@ const CopilotList = () => {
   const [company,setCompany] = useState('');
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
+  const [companyList, setCompanyList] = useState([{value: '', label: ''}]);
+
+  const navigate = useNavigate();
+  
+  useEffect(()=> {
+    getListData();
+  },[page, limit, company, round]);
 
   const  getListData = async () => {
     const params = {
@@ -31,6 +42,15 @@ const CopilotList = () => {
       console.log('err:', err);
       message.error('获取辅助面试列表失败');
     });
+  };
+
+  const getCompanyList = async () => {
+    const list = fetchCompanyList();
+    setCompanyList(list);
+  };
+
+  const navigateToDetail = (id) => {
+    navigate(`/user/interviewDetail/${id}`);
   };
   
   const columns = [
@@ -67,7 +87,7 @@ const CopilotList = () => {
       title: '操作',
       dataIndex: '',
       key: 'x',
-      render: () => <a>编辑</a>,
+      render: (_, { id }) => <a onClick={() => navigateToDetail(id)}>编辑</a>,
     },
   ];
   return (

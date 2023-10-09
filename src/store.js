@@ -35,13 +35,6 @@ class Store {
   mockQuestionIndex = 0;
   settingFollowing = true;
 
-  // 辅助面试详情
-  interviewDetails = [];
-
-  setInterviewDetails(data) {
-    this.interviewDetails = data;
-  }
-
   setMockNewReply(id, type) {
     this.mockID = id;
     this.mockLastType = type;

@@ -82,3 +82,46 @@ export function uploadExperience(data) {
     store.isLogin = false;
   });
 }
+
+export function fetchCompanyList() {
+  if (!store.companyList.length)
+    axios.get(`${BASE_URL}/api/company/info`).then((res) => {
+      const { status } = res;
+      if (status === 200) {
+        const list = res.data.data.company_info;
+        list.forEach(e => {
+          e.value = e.name;
+          e.label = e.name;
+        });
+        store.companyList = list;
+        return list;
+      }
+    }).catch((err) => {
+      console.log('err:', err);
+      message.error('上传失败');
+    }).finally(() => {
+      store.isLogin = false;
+    });
+
+  return store.companyList;
+}
+
+export function getInterviewDetail(params) {
+  return axios.post(`${BASE_URL}/api/copilot/get_detail`, params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      const { code, data, message } = data0;
+      if (code === 0) {
+        return data;
+      } else if (code === 1) {
+        message.error(message);
+      } else if (code === 2) {
+        throw new Error(message);
+      }
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+    message.error('获取面试详情失败');
+    throw new Error(err);
+  });
+}
