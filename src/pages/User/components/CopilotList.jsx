@@ -2,8 +2,6 @@ import { useEffect, useState } from "react";
 import { Table, Badge, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
-import { Content } from "antd/es/layout/layout";
-import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
 import { fetchCompanyList } from "../../../router";
 import { useNavigate } from 'react-router-dom';
 

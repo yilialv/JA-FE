@@ -13,11 +13,11 @@ import {
 import { useState } from "react";
 import { observer } from "mobx-react";
 import { useEffect } from "react";
-import iconBag from "../../imgs/icon-bag.svg";
-import iconCalendar from "../../imgs/icon-calendar.svg";
-import { getInterviewDetail } from "../../router";
+import iconBag from "../../../imgs/icon-bag.svg";
+import iconCalendar from "../../../imgs/icon-calendar.svg";
+import { getInterviewDetail } from "../../../router";
 import { useParams } from 'react-router-dom';
-import { timestampToTime } from '../../utils'
+import { timestampToTime } from '../../../utils'
 
 const { Content } = Layout;
 
