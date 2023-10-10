@@ -105,3 +105,23 @@ export function fetchCompanyList() {
 
   return store.companyList;
 }
+
+export function getInterviewDetail(params) {
+  return axios.post(`${BASE_URL}/api/copilot/get_detail`, params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      const { code, data, message } = data0;
+      if (code === 0) {
+        return data;
+      } else if (code === 1) {
+        message.error(message);
+      } else if (code === 2) {
+        throw new Error(message);
+      }
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+    message.error('获取面试详情失败');
+    throw new Error(err);
+  });
+}

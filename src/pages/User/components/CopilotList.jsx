@@ -2,9 +2,10 @@ import { useEffect, useState } from "react";
 import { Table, Badge, Select, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
+import { fetchCompanyList } from "../../../router";
+import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
 import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
-import { fetchCompanyList } from "../../../router";
 
 
 const CopilotList = () => {
@@ -18,6 +19,8 @@ const CopilotList = () => {
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
   const [companyList, setCompanyList] = useState([{value: '', label: ''}]);
+
+  const navigate = useNavigate();
   
   useEffect(()=> {
     getListData();
@@ -47,6 +50,10 @@ const CopilotList = () => {
   const getCompanyList = async () => {
     const list = fetchCompanyList();
     setCompanyList(list);
+  };
+
+  const navigateToDetail = (id) => {
+    navigate(`/user/interviewDetail/${id}`);
   };
   
   const columns = [
@@ -83,7 +90,7 @@ const CopilotList = () => {
       title: '操作',
       dataIndex: '',
       key: 'x',
-      render: () => <a>编辑</a>,
+      render: (_, { id }) => <a onClick={() => navigateToDetail(id)}>编辑</a>,
     },
   ];
   return (
