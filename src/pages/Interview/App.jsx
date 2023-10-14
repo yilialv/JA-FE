@@ -539,7 +539,7 @@ const Interview = observer(() => {
                 </div>
                 <div className="state-item">
                   <img src={iconCalendar} />
-                  三面
+                  { store.formRound }面
                 </div>
               </div>
               <div className="drawer-check">

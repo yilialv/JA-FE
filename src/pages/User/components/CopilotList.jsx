@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
-import { Table, Badge, message } from "antd";
+import { Table, Badge, Select, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
+import { fetchCompanyList } from "../../../router";
+import { useNavigate } from 'react-router-dom';
+import { Content } from "antd/es/layout/layout";
+import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
 
 
 const CopilotList = () => {
   useEffect(()=> {
-    getListData();
+    getCompanyList();
   },[]);
 
   const [page, setPage] = useState(1);
@@ -14,8 +18,15 @@ const CopilotList = () => {
   const [company,setCompany] = useState('');
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
+  const [companyList, setCompanyList] = useState([{value: '', label: ''}]);
 
-  const  getListData = async () => {
+  const navigate = useNavigate();
+  
+  useEffect(()=> {
+    getListData();
+  },[page, limit, company, round]);
+
+  const getListData = async () => {
     const params = {
       page: page,
       limit: limit,
@@ -23,14 +34,26 @@ const CopilotList = () => {
       round: round
     };
     await getCopilotList(params).then((res) => {
-      console.log(res);
       if (res.status === 200) {
-        setDataSource(res.data.data.record_list);
+        const list = res.data.data.record_list;
+        list.forEach((item, index) => {
+          item.key = index;
+        });
+        setDataSource(list);
       }
     }).catch((err) => {
       console.log('err:', err);
       message.error('获取辅助面试列表失败');
     });
+  };
+
+  const getCompanyList = async () => {
+    const list = fetchCompanyList();
+    setCompanyList(list);
+  };
+
+  const navigateToDetail = (id) => {
+    navigate(`/user/interviewDetail/${id}`);
   };
   
   const columns = [
@@ -53,7 +76,7 @@ const CopilotList = () => {
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.interview_time - b.interview_time,
       render: (timestamp) => 
-        moment(Number(timestamp)).format('YYYY-MM-DD HH:mm:ss'),
+        moment(Number(`${timestamp}000`)).format('YYYY-MM-DD HH:mm:ss'),
     },{
       title: '耗时（分钟）',
       dataIndex: 'minutes',
@@ -67,11 +90,37 @@ const CopilotList = () => {
       title: '操作',
       dataIndex: '',
       key: 'x',
-      render: () => <a>编辑</a>,
+      render: (_, { id }) => <a onClick={() => navigateToDetail(id)}>编辑</a>,
     },
   ];
   return (
-    <Table dataSource={dataSource} columns={columns} />
+    <Content>
+      <div className="user-select-container">
+        <div className="user-select">
+          <div className="label">
+            公司
+          </div>
+          <Select
+            allowClear
+            key='company'
+            size="large"
+            options={companyList}
+            onChange={(e)=>setCompany(e)}/>
+        </div>
+        <div className="user-select">
+          <div className="label">
+            轮数
+          </div>
+          <Select 
+            allowClear
+            key='round'
+            size="large"
+            options={ROUND_LIST}
+            onChange={(e)=>setRound(e)}/>
+        </div>
+      </div>
+      <Table dataSource={dataSource} columns={columns} />
+    </Content>
   );
   
 };

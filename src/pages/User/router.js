@@ -1,7 +1,7 @@
 import axios from "axios";
 import { BASE_URL } from "../../constant";
 import { message } from "antd";
-
+import store from "../../store";
 
 const api = axios.create({
   baseURL: `${BASE_URL}/api`,
@@ -33,6 +33,26 @@ export function getMockList(params) {
   }).catch((err) => {
     console.log('err:', err);
     message.error('获取模拟面试列表失败');
+  });
+}
+
+export function getInterviewDetail(params) {
+  api.post('/copilot/get_detail', params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      const { code, data, message } = data0;
+      if (code === 0) {
+        const { id, records } = data;
+        store.setInterviewDetails(records);
+      } else if (code === 1) {
+        message.error(message);
+      } else if (code === 2) {
+        throw new Error(message);
+      }
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+    message.error('获取面试详情失败');
   });
 }
 

@@ -8,6 +8,7 @@ import MockInterviewHall from './pages/mockInterviewHall/App';
 import MockInterview from './pages/mockInterview/App';
 import MockInterviewDetail from './pages/mockInterview/MockInterviewDetail';
 import RecordUpload from './pages/User/RecordUpload';
+import InterviewDetail from './pages/User/components/InterviewDetail';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
@@ -36,6 +37,7 @@ const App = observer(() => {
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
             <Route path="/experience/upload" element={<RecordUpload />} />
+            <Route path="/user/interviewDetail/:id" element={<InterviewDetail />} />
           </Routes>
         </div>
       </Layout>
