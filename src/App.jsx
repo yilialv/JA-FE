@@ -31,7 +31,7 @@ const App = observer(() => {
             <Route path="/interview" element={<Interview />} /> : 
             <Route path="/interview" element={<Navigate to="/" />}/>
           } */}
-            <Route path='mockInterviewDetail' element={<MockInterviewDetail />} />
+            <Route path='/mockInterviewDetail' element={<MockInterviewDetail />} />
             <Route path="/mockInterviewHall" element={<MockInterviewHall />} />
             <Route path="/mockInterview" element={<MockInterview />} />
             <Route path="/interview" element={<Interview />} />

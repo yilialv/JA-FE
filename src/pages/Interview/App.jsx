@@ -64,10 +64,6 @@ const Interview = observer(() => {
     store.formDirection = localStorage.getItem("direction");
     store.formRound = localStorage.getItem("round");
 
-    const scrollBlock = document.getElementById("scrollBlock");
-    // 将内容自动滚动到底部
-    scrollBlock.scrollTop = scrollBlock.scrollHeight;
-
     const interval = setInterval(() => {
       setCount((counts) => counts + 1);
     }, 60000);
@@ -76,6 +72,16 @@ const Interview = observer(() => {
       clearInterval(interval);
     };
   }, []);
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [store.lastReply]);
+
+  const autoScroll = useRef(null);
+
+  const scrollToBottom = () => {
+    autoScroll.current.scrollIntoView({ behavior: 'instant' });
+  };
 
   /**
    * 发送开始帧
@@ -480,6 +486,7 @@ const Interview = observer(() => {
                   <div className="text">{store.lastReply}</div>
                 </div>
               )}
+              <div ref={autoScroll}></div>
             </div>
             <div
               onFocus={() => { setInputFocus(true); }}
