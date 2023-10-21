@@ -11,6 +11,7 @@ import {
   Space,
   Select,
   message,
+  Alert
 } from "antd";
 import {
   UserOutlined,
@@ -30,12 +31,6 @@ const MockInterview = observer(() => {
 
   const wsServer = useRef(null); // 和后端的连接
 
-  // useEffect(() => {
-  //   const scrollBlock = document.getElementById("scrollBlock");
-  //   // 将内容自动滚动到底部
-  //   scrollBlock.scrollTop = scrollBlock.scrollHeight;
-  // }, []);
-
   useEffect(() => {
     const interval = setInterval(() => {
       setCount((counts) => counts + 1);
@@ -44,12 +39,25 @@ const MockInterview = observer(() => {
     return () => {
       wsServer.current?.close();
       clearInterval(interval);
+      store.initializeMockInterview();
     };
   }, []);
 
   useEffect(() => {
     connectWebsocket();
   }, []);
+
+  //自动滚动
+  useEffect(() => {
+    scrollToBottom();
+  }, [store.mockLastContent]);
+
+  const autoScroll = useRef(null);
+
+  const scrollToBottom = () => {
+    autoScroll.current.scrollIntoView({ behavior: 'instant' });
+  };
+  //
 
   const followingQuestionFlag = useRef(0);
 
@@ -92,6 +100,7 @@ const MockInterview = observer(() => {
         }
         else if (type === 2) {
           if (id !== store.mockID) {
+            setInputValue('');
             store.setMockReplies();
             store.setMockNewReply(id ? id : 'skipEvaluation', 0);
             store.setMockAnswer();
@@ -99,11 +108,13 @@ const MockInterview = observer(() => {
           store.appendMockLastEvaluation(data);
         }
         else if (type === 4) {
+          store.conclusionCount++;
           store.setMockNewReply('conclusion', type);
           store.setMockReplies(type);
           setInputValue('');
+          setButtonState(true);
           store.appendMockLastContent(data);
-        }else if (type === 99) {
+        } else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
           setReplyState(true);
@@ -194,6 +205,8 @@ const MockInterview = observer(() => {
 
   const [settingTempo, setInterviewTempo] = useState('');
 
+  const [ButtonState, setButtonState] = useState(false);
+
   const [count, setCount] = useState(0);
 
   const handleDrawer = () => {
@@ -233,13 +246,13 @@ const MockInterview = observer(() => {
             </div>
           </div>
         </div>
-        <div className="container-body">
+        <div className="container-body"  >
           <div
             className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
           >
             <div className="answer-block" id="scrollBlock">
               {store.mockReplies.map((item, key) => {
-                const { content, evaluation } = item;
+                const { content, evaluation, name } = item;
                 return !!content && (
                   <div className="answer" key={key}>
                     <div className="answer-header">
@@ -247,7 +260,7 @@ const MockInterview = observer(() => {
                         style={{ backgroundColor: "#87d068", marginRight: "5px" }}
                         icon={<UserOutlined />}
                       />
-                      <div>{'replies'}</div>
+                      <div>{name}</div>
                     </div>
                     <div className="text">
                       {content}
@@ -274,7 +287,7 @@ const MockInterview = observer(() => {
                       }}
                       icon={<UserOutlined />}
                     />
-                    <div>{'用户名'}</div>
+                    <div>{store.mockLastEvaluation ? '用户' : '小助手'}</div>
                   </div>
                   <div className="text">
                     {store.mockLastContent}
@@ -290,6 +303,15 @@ const MockInterview = observer(() => {
                   }
                 </div>
               )}
+              {store.conclusionCount === 2 &&
+                <Alert
+                  type="success"
+                  message="模拟面试已结束"
+                  description="小助手正在总结，稍后可进入详情页查看结果"
+                  showIcon
+                />
+              }
+              <div ref={autoScroll}></div>
             </div>
             <div className="question">
               <Space.Compact
@@ -301,7 +323,7 @@ const MockInterview = observer(() => {
                   onChange={handleInput}
                   onKeyDown={(e) => { const { key } = e; if (key === 'Enter') { sendAnswer(); } }}
                 />
-                <Button className="send-button" type="default" onClick={sendAnswer}>
+                <Button className="send-button" disabled={ButtonState} type="default" onClick={sendAnswer}>
                   <img src={iconSend} />
                 </Button>
               </Space.Compact>

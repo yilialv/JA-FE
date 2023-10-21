@@ -36,6 +36,20 @@ class Store {
   mockInputCache = '';
   mockQuestionIndex = 0;
   settingFollowing = true;
+  conclusionCount = 0;
+
+  initializeMockInterview() {
+    this.mockConversations = [];
+    this.mockID = '';
+    this.mockLastContent = '';
+    this.mockReplies = [];
+    this.mockLastEvaluation = '';
+    this.mockLastType = 0;
+    this.mockInputCache = '';
+    this.mockQuestionIndex = 0;
+    this.settingFollowing = true;
+    this.conclusionCount = 0;
+  }
 
   setMockNewReply(id, type) {
     this.mockID = id;
@@ -64,6 +78,7 @@ class Store {
         content: this.mockLastContent
       });
       this.mockReplies.push({
+        name: this.mockLastType === 0 ? '用户' : '小助手',
         content: this.mockLastContent,
         evaluation: this.mockLastEvaluation,
         //type: this.mockLastType
