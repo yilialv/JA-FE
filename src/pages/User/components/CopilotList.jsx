@@ -13,8 +13,9 @@ const CopilotList = () => {
     getCompanyList();
   },[]);
 
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [pageSize, setPageSize] = useState(5);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [total, setTotal] = useState(0);
   const [company,setCompany] = useState('');
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
@@ -23,29 +24,26 @@ const CopilotList = () => {
   const navigate = useNavigate();
   
   useEffect(()=> {
-    getListData();
-  },[page, limit, company, round]);
-
-  const getListData = async () => {
     const params = {
-      page: page,
-      limit: limit,
+      page: currentPage,
+      limit: pageSize,
       company: company,
       round: round
     };
-    await getCopilotList(params).then((res) => {
+    getCopilotList(params).then((res) => {
       if (res.status === 200) {
         const list = res.data.data.record_list;
         list.forEach((item, index) => {
           item.key = index;
         });
         setDataSource(list);
+        setTotal(res.data.data.total);
       }
     }).catch((err) => {
       console.log('err:', err);
       message.error('获取辅助面试列表失败');
     });
-  };
+  },[currentPage, pageSize, company, round]);
 
   const getCompanyList = async () => {
     const list = fetchCompanyList();
@@ -54,6 +52,16 @@ const CopilotList = () => {
 
   const navigateToDetail = (id) => {
     navigate(`/user/interviewDetail/${id}`);
+  };
+
+  const handlePageChange = (page, pageSize) => {
+    setCurrentPage(page);
+    setPageSize(pageSize);
+  };
+
+  const handlePageSizeChange = (current, size) => {
+    setCurrentPage(current);
+    setPageSize(size);
   };
   
   const columns = [
@@ -76,12 +84,12 @@ const CopilotList = () => {
       defaultSortOrder: 'descend',
       sorter: (a, b) => a.interview_time - b.interview_time,
       render: (timestamp) => 
-        moment(Number(`${timestamp}000`)).format('YYYY-MM-DD HH:mm:ss'),
+        moment(Number(`${timestamp}000`)).format('YYYY-MM-DD HH:mm'),
     },{
-      title: '耗时（分钟）',
-      dataIndex: 'minutes',
-      key: 'minutes',
-    },{
+    //   title: '耗时（分钟）',
+    //   dataIndex: 'minutes',
+    //   key: 'minutes',
+    // },{
       title: '状态',
       dataIndex: 'status',
       key: 'status',
@@ -119,7 +127,20 @@ const CopilotList = () => {
             onChange={(e)=>setRound(e)}/>
         </div>
       </div>
-      <Table dataSource={dataSource} columns={columns} />
+      <Table
+        dataSource={dataSource}
+        columns={columns}
+        pagination={{
+          current: currentPage,
+          pageSize: pageSize,
+          total: total,
+          showSizeChanger: true,
+          pageSizeOptions: ['5', '10', '20', '50'],
+          onShowSizeChange: handlePageSizeChange,
+          onChange: handlePageChange,
+          showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条/总共 ${total} 条数据`,
+        }}
+      />
     </Content>
   );
   
