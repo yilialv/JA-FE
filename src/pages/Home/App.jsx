@@ -1,4 +1,4 @@
-import { Button, Layout, Divider } from 'antd';
+import { Button, Layout, Divider, message } from 'antd';
 import { Link } from 'react-router-dom';
 import logo1Url from '../../imgs/logo1.png';
 import aliyunUrl from '../../imgs/aliyun.jpg';
@@ -10,15 +10,10 @@ import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
 import { CaretRightOutlined, CaretLeftOutlined, SwapRightOutlined } from '@ant-design/icons';
 import SlideInOnMount from '../../components/SlideInOnMount'
+import { useEffect } from 'react';
+import axios from 'axios';
+import { BASE_URL } from '../../constant';
 const { Content } = Layout;
-
-const data = {
-  company: '阿里巴巴',
-  direction: '后端',
-  category: 2,
-  stared: true,
-  starNumber: 25,
-};
 
 const Home = () => {
   const openLogin = () => {
@@ -39,11 +34,35 @@ const Home = () => {
     let amount = scrollBox + delta;
     if (amount > 0) {
       amount = 0;
-    } else if (amount < -2800) {
+    } else if (amount < -280 * cardList.length) {
       amount = scrollBox;
     }
     setScrollBox(amount);
   };
+
+  const [cardList, setCardList] = useState([]);
+
+  useEffect(() => {
+    getCardList();
+  }, []);
+
+  function getCardList() {
+    const params = {
+      limit: 11,
+      page: 1,
+      sort_type: 0
+    };
+    axios.post(`${BASE_URL}/api/experience/mock_interview_hall`, params).then((res) => {
+      const { status, data: { data: { mock_interview_cards } }
+      } = res;
+      if (status === 200) {
+        setCardList(mock_interview_cards);
+      }
+    }).catch((err) => {
+      console.log('error:', err);
+      message.error('获取卡片列表失败');
+    });
+  }
 
   return (
     <>
@@ -87,17 +106,15 @@ const Home = () => {
           </div>
           <div className='records-subcontainer' ref={recordsContainerRef}>
             <div className='records' style={{ left: scrollBox + 'px' }}>
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
-              <RecordCard data={data} />
+              {
+                cardList.map((item, index) => {
+                  return (
+                    <>
+                      <RecordCard key={index} data={item} />
+                    </>
+                  );
+                })
+              }
               <Link className='find-more' to='/mockInterviewHall' >
                 <div>
                   查看更多

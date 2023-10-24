@@ -98,9 +98,9 @@ export function fetchCompanyList() {
       }
     }).catch((err) => {
       console.log('err:', err);
-      message.error('上传失败');
+      message.error('获取公司列表失败');
     }).finally(() => {
-      store.isLogin = false;
+      //store.isLogin = false;
     });
 
   return store.companyList;
