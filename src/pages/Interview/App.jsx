@@ -162,6 +162,69 @@ const Interview = observer(() => {
 
   const scrollToBottom = () => {
     autoScroll.current.scrollIntoView({ behavior: 'instant' });
+  }
+
+  
+  const task_id = crypto.randomUUID().replace(/-/g, "");
+
+  const ws = useRef(null); // 和百度的连接
+  const wsServer = useRef(null); // 和后端的连接
+
+  const recorder = useRef(null);
+  const mediaStreamRef = useRef(null);
+
+  const startRecording = () => {
+    connectWebSocket();
+    
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      const mediaRecorder = new MediaRecorder(stream);
+      recorder.current = mediaRecorder;
+      mediaStreamRef.current = stream;
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0 && ws.current.readyState === ws.current.OPEN) {
+          ws.current.send(new Int8Array(event.data));
+        }
+      };
+
+      mediaRecorder.onstop = () => {
+        stopMediaStream();
+      };
+
+      mediaRecorder.start();
+      handleButton(false);
+      handleAudioState(true);
+    })
+    .catch((error) => {
+      console.error('录音报错:', error);
+    });
+  };
+
+  const stopRecording = () => {
+    if (recorder.current && recorder.current.state === 'recording') {
+      recorder.current.stop();
+      sendFinish();
+      console.log('录音关闭')
+      handleButton(true);
+      handleAudioState(false);
+    }
+    ws.current?.close();
+    wsServer.current?.close();
+  };
+
+  const stopMediaStream = () => {
+    if (mediaStreamRef.current) {
+      const tracks = mediaStreamRef.current.getTracks();
+
+      tracks.forEach((track) => {
+        track.stop();
+      });
+
+      const audioTracks = mediaStreamRef.current.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = false;
+      });
+    }
   };
 
   /**
