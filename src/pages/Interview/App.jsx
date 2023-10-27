@@ -6,7 +6,7 @@ import {
   SERVER_URL,
 } from "../../constant";
 
-import { getToken } from "../../router";
+import { getToken, getHotWordID } from "../../router";
 import {
   Button,
   Spin,
@@ -164,26 +164,28 @@ const Interview = observer(() => {
    * 发送开始帧
    * @param {WebSocket} ws
    */
-  const sendStartParams = () => {
-    const req = {
-      header: {
-        appkey: APPKEY,
-        message_id: crypto.randomUUID().replace(/-/g, ""),
-        task_id: task_id,
-        namespace: "SpeechTranscriber",
-        name: "StartTranscription",
-      },
-      payload: {
-        enable_intermediate_result: true,
-        enable_punctuation_prediction: true,
-        disfluency: true,
-        //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
-        vocabulary_id: "6851f419a17a44969752070669b227c2", // 后端热词表 todo:根据行业方向更换热词id
-      },
-    };
-    const body = JSON.stringify(req);
-    ws.current.send(body);
-    console.log("发送开始帧:" + body);
+  const sendStartParams = async (direction) => {
+    await getHotWordID(direction).then((hotwordID) => {
+      const req = {
+        header: {
+          appkey: APPKEY,
+          message_id: crypto.randomUUID().replace(/-/g, ""),
+          task_id: task_id,
+          namespace: "SpeechTranscriber",
+          name: "StartTranscription",
+        },
+        payload: {
+          enable_intermediate_result: true,
+          enable_punctuation_prediction: true, // 是否在后处理中添加标点
+          // disfluency: true, // 过滤语气词，即声音顺滑
+          //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
+          vocabulary_id: hotwordID, // 后端热词表 todo:根据行业方向更换热词id
+        },
+      };
+      const body = JSON.stringify(req);
+      ws.current.send(body);
+      console.log("发送开始帧:" + body);
+    });
   };
 
   /**
@@ -254,7 +256,7 @@ const Interview = observer(() => {
     wsServer.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {
-      sendStartParams();
+      sendStartParams(convertDirection(localStorage.getItem("direction")));
       console.log("WebSocket开始连接");
     };
 
@@ -317,12 +319,12 @@ const Interview = observer(() => {
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
-              setInputValue('');
+              setInputValue("");
             } else {
               if (id !== store.id) {
                 store.setReply();
                 store.setId(id);
-                setInputValue('');
+                setInputValue("");
               }
               store.setLastReply(data);
             }
@@ -407,14 +409,16 @@ const Interview = observer(() => {
 
   const [ReplyState, setReplyState] = useState(true);
 
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   const [inputFocus, setInputFocus] = useState(false);
 
   const [count, setCount] = useState(0);
 
   const handleInput = (e) => {
-    const { target: { value } } = e;
+    const {
+      target: { value },
+    } = e;
     setInputValue(value);
   };
 
@@ -432,6 +436,23 @@ const Interview = observer(() => {
     setAudioState(flag);
   };
 
+  const convertDirection = (directionName) => {
+    switch (directionName) {
+      case "前端开发":
+        return "fe";
+      case "后端开发":
+        return "rd";
+      case "产品经理":
+        return "pm";
+      case "测试开发":
+        return "qa";
+      case "UI":
+        return "UI";
+      default:
+        return "rd";
+    }
+  };
+
   const sendManually = () => {
     if (!inputValue) {
       message.warning("请输入问题");
@@ -442,7 +463,7 @@ const Interview = observer(() => {
       type: 4,
       data: {
         conversations: store.conversations,
-        question: question
+        question: question,
       },
     };
     wsServer.current.send(JSON.stringify(req));
@@ -515,7 +536,9 @@ const Interview = observer(() => {
         </div>
         <div className="container-body">
           <div
-            className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
+            className={`body-left ${
+              DrawerState ? "body-compressed" : "body-fill"
+            }`}
           >
             <div className="answer-block" id="scrollBlock">
               <div className="answer">
@@ -564,30 +587,55 @@ const Interview = observer(() => {
               )}
             </div>
             <div
-              onFocus={() => { setInputFocus(true); }}
-              onBlur={() => { setInputFocus(false); }}
-              className="question">
+              onFocus={() => {
+                setInputFocus(true);
+              }}
+              onBlur={() => {
+                setInputFocus(false);
+              }}
+              className="question"
+            >
               <div className="question-history">
-                {store.conversations.toSpliced(0, store.conversations.length - 3).map((item, key) => {
-                  return (
-                    <div className="history-item" key={key} onClick={(item) => { setInputValue(item.target.innerText); }}>
-                      {item}
-                    </div>
-                  );
-                })}
+                {store.conversations
+                  .toSpliced(0, store.conversations.length - 3)
+                  .map((item, key) => {
+                    return (
+                      <div
+                        className="history-item"
+                        key={key}
+                        onClick={(item) => {
+                          setInputValue(item.target.innerText);
+                        }}
+                      >
+                        {item}
+                      </div>
+                    );
+                  })}
               </div>
-              <Space.Compact
-                className="question-input" size="large">
+              <Space.Compact className="question-input" size="large">
                 <Input
                   placeholder="input"
                   prefix={prefix}
                   className="input"
                   value={inputValue}
                   onChange={handleInput}
-                  onKeyDown={(e) => { const { key } = e; if (key === 'Enter' && !ButtonState) { sendManually(); } }}
+                  onKeyDown={(e) => {
+                    const { key } = e;
+                    if (key === "Enter" && !ButtonState) {
+                      sendManually();
+                    }
+                  }}
                 />
-                <Tooltip placement="top" title={ButtonState ? '请点击开始按钮' : '强制回答该问题'}>
-                  <Button className="send-button" onClick={sendManually} disabled={ButtonState} type="default">
+                <Tooltip
+                  placement="top"
+                  title={ButtonState ? "请点击开始按钮" : "强制回答该问题"}
+                >
+                  <Button
+                    className="send-button"
+                    onClick={sendManually}
+                    disabled={ButtonState}
+                    type="default"
+                  >
                     <img src={iconSend} />
                   </Button>
                 </Tooltip>
@@ -595,22 +643,25 @@ const Interview = observer(() => {
             </div>
           </div>
           <div
-            className={`drawer-button ${DrawerState ? "drawer-button-opening" : "drawer-button-closed"}`}
+            className={`drawer-button ${
+              DrawerState ? "drawer-button-opening" : "drawer-button-closed"
+            }`}
             onClick={handleDrawer}
           >
             {DrawerState ? <RightOutlined /> : <LeftOutlined />}
           </div>
           <div
-            className={`drawer ${DrawerState ? "drawer-opening" : "drawer-closed"}`}
+            className={`drawer ${
+              DrawerState ? "drawer-opening" : "drawer-closed"
+            }`}
           >
             <div className="drawer-info">
               <Avatar
                 icon={<UserOutlined />}
                 size={96}
-                className='drawer-avatar'
-              >
-              </Avatar>
-              <div className='drawer-name'>
+                className="drawer-avatar"
+              ></Avatar>
+              <div className="drawer-name">
                 <div>{store.formCompany}</div>
                 <div>@{store.formDirection}</div>
               </div>
@@ -621,7 +672,7 @@ const Interview = observer(() => {
                 </div>
                 <div className="state-item">
                   <img src={iconCalendar} />
-                  { store.formRound }面
+                  {store.formRound}面
                 </div>
               </div>
               <div className="drawer-check">
