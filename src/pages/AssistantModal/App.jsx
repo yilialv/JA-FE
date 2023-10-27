@@ -137,6 +137,18 @@ const AssistantModal = () => {
                   value: "后端开发",
                   label: "后端开发",
                 },
+                {
+                  value: "产品经理",
+                  label: "产品经理",
+                },
+                {
+                  value: "测试开发",
+                  label: "测试开发",
+                },
+                {
+                  value: "UI",
+                  label: "UI",
+                },
               ]}
             />
           </Form.Item>
