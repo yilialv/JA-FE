@@ -1,13 +1,14 @@
-import { Card, Avatar, Tag } from "antd";
-import aliyunUrl from '../imgs/aliyun.jpg';
+import { Card, Avatar, Tag, message } from "antd";
 import "./components.less";
-import bookmarkUser from '../imgs/bookmark-user.png';
 import bookmarkCopilot from '../imgs/bookmark.png';
+import { setStarCard, cancelStarCard } from "../router";
+import { useState } from "react";
+import { getTimestampToDate } from "../utils";
+import avatarUrl from "../imgs/avatar.jpg"
 
 const { Meta } = Card;
 
-
-const CategoryTag = (round) => {
+const renderRoundTag = (round) => {
 
   const chineseNumbers = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
   const tagColor = ['#3F9D13', '#3F9D13', '#60C9F4', '#F3661D'];
@@ -21,13 +22,12 @@ const CategoryTag = (round) => {
 };
 
 
-const RecordCard = (e) => {
+const RecordCard = (props) => {
   // TODO 统一接口格式，替换静态数据
   // const {category, company, department, direction, interview_time } = item;
   // type用于区分卡片展示内容: home/mine/favorite
-  const data = e.data;
-  const type = data.type;
-  const {company,date,category,direction,starNumber,fireNumber} = data;
+  const { data } = props;
+  const { avatar, brief, category, company, direction, favorites, id, interview_date, logo, nick_name, popularity_rating, round} = data;
   const customSvg = (name) => {
     switch(name) {
     case 'settings':
@@ -63,47 +63,83 @@ const RecordCard = (e) => {
     }
   };
 
-  const handleSetting = () => {
-    console.log('setting record ', data.id);
-  };
-  const handleDelete = () => {
-    console.log('delete record ', data.id);
-  };
+  const [isStared, setIsStared] = useState(false);
+  const [favoriteNum, setFavoriteNum] = useState(favorites);
+
+  const handleCard = () => {
+    if (isStared) {
+      cancelStarCard({
+        "experience_id": id
+      }).then(res => {
+        const { code, message } = res;
+        if (code === 0) {
+          setIsStared(false);
+          setFavoriteNum(favorites - 1);
+        } else if (code === 1) {
+          message.error(message);
+        } else if (code === 2) {
+          throw new Error(message);
+        }
+      }).catch(err => {
+        console.log('err:', err);
+        message.error('取消收藏面经失败');
+      });
+    } else {
+      setStarCard({
+        "experience_id": id
+      }).then(res => {
+        const { code, message } = res;
+        if (code === 0) {
+          setIsStared(true);
+          setFavoriteNum(favorites + 1);
+        } else if (code === 1) {
+          message.error(message);
+        } else if (code === 2) {
+          throw new Error(message);
+        }
+      }).catch(err => {
+        console.log('err:', err);
+        message.error('收藏面经失败');
+      });
+    };
+  }
 
   return (
     <Card
       className="record-card"
       hoverable
-      cover={<img alt="aliyun" src={aliyunUrl} />}
+      cover={logo && <img src={logo} />}
     >
-      <img className="bookmark" src={bookmarkCopilot}/>
+      { !category && <img className="bookmark" src={bookmarkCopilot}/> }
       <div className="interview-title">
         <span className="title-text">{company}</span>
-        {category ? CategoryTag(category) : <></>}
-        {type === "mine" ? 
+        {round && renderRoundTag(round)}
+        {/* {type === "mine" ? 
           <div className="setting-icon-container">
             <div className="setting-icon" onClick={handleSetting}>{customSvg('settings')} </div>
             <div className="setting-icon" onClick={handleDelete}>{customSvg('delete')} </div>
           </div>
-          : <></>}
+          : <></>} */}
       </div>
       <div className='interview-info'>
         <div className='info'>{direction}</div>
-        <div className='info'>{date}</div>
+        <div className='info'>{getTimestampToDate(interview_date)}</div>
       </div>
       <Meta
-        description="简单介绍一下MySQL的基本原理？是否了解MySQL索引呢？请你简单介绍一下什么场景..."
+        description={brief || ''}
       />
       <div className='interview-footer'>
         <div className='footer-left'>
-          {customSvg(type === "favorite" ? 'StarFilled' : 'StarOutlined')}
-          <div className="text-number">{starNumber ? starNumber : '99'}</div>
-          {customSvg('fire')}
-          <div className="text-number">{fireNumber ? fireNumber : '999'}</div>
+          {/* {customSvg(type === "favorite" ? 'StarFilled' : 'StarOutlined')} */}
+          <div onClick={handleCard}>{customSvg(isStared ? 'StarFilled' : 'StarOutlined')}</div>
+          <div className="text-number">{favoriteNum}</div>
+          {popularity_rating && customSvg('fire') &&
+            <div className="text-number">{popularity_rating}</div>
+          }
         </div>
         <div className='interview-footer-user'>
-          <Avatar src="https://xsgames.co/randomusers/avatar.php?g=pixel" />
-          <div>userName</div>
+          <Avatar src={avatar || avatarUrl} />
+          {nick_name && <div>{nick_name}</div>}
         </div>
       </div> 
     </Card>

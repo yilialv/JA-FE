@@ -25,8 +25,7 @@ export function getCopilotList(params) {
 }
 
 export function getMockList(params) {
-  api.post('/mock/get_list', params).then((res) => {
-    console.log(res);
+  return api.post('/mock/get_list', params).then((res) => {
     if (res.status === 200) {
       return res.data;
     }
@@ -56,3 +55,21 @@ export function getInterviewDetail(params) {
   });
 }
 
+export function getFavoriteList(params) {
+  return axios.post(`${BASE_URL}/api/experience/list_favorite`, params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      const { code, data, message } = data0;
+      if (code === 0) {
+        return data;
+      } else if (code === 1) {
+        message.error(message);
+      } else if (code === 2) {
+        throw new Error(message);
+      }
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+    message.error('获取收藏列表失败');
+  });
+}

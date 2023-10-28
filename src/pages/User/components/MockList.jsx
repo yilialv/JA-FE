@@ -15,14 +15,14 @@ const MockList = () => {
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
 
-  const  getListData = async () => {
+  const  getListData = () => {
     const params = {
       page: page,
       limit: limit,
       company: company,
       round: round
     };
-    await getMockList(params).then((data) => {
+    getMockList(params).then((data) => {
       setDataSource(data.data.record_list);
     });
   };
