@@ -1,12 +1,36 @@
 import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
 import { InfoCircleOutlined } from "@ant-design/icons";
-import { Button } from "antd";
+import { Button, Pagination } from "antd";
 import RecordCard from "../../../components/RecordCard";
 import "./components.less";
+import { useEffect, useState } from 'react';
+import { getFavoriteList } from '../router';
 
+const FavoriteRecords = () => {
 
-const MineRecords = ({list, setList}) => {
+  const [total, setTotal] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [list, setList] = useState([]);
+
+  useEffect(() => {
+    getList(currentPage)
+  }, []);
+
+  const getList = (page) => {
+    getFavoriteList({
+      "limit": 10,
+      "page": page
+    }).then((res) => {
+      const { experience_list, total } = res;
+      setList(experience_list);
+      setTotal(total);
+    });
+  };
+
+  const changePage = (page, pageSize) => {
+    getList(page);
+  };
 
   const navigate = useNavigate();
 
@@ -15,10 +39,9 @@ const MineRecords = ({list, setList}) => {
       {
         list.length ?
           <div className="records">
-            {list.map((item, key) => { 
-              item.type = 'favorite';
+            {list.map((item) => { 
               return (
-                <RecordCard key={key} data={item}/>
+                <RecordCard key={item?.id} data={item}/>
               );
             })}
           </div>
@@ -32,7 +55,12 @@ const MineRecords = ({list, setList}) => {
             >模拟面试大厅 &#10132;</Button>
           </div>
       }
+      <Pagination 
+        current={currentPage} 
+        total={total}
+        onChange={changePage}
+      />
     </Content>
   );
 };
-export default MineRecords;
+export default FavoriteRecords;
