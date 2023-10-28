@@ -82,27 +82,31 @@ const Interview = observer(() => {
    * @param {WebSocket} ws
    */
   const sendStartParams = (direction) => {
-    getHotWordID(direction).then((hotwordID) => {
-      const req = {
-        header: {
-          appkey: APPKEY,
-          message_id: crypto.randomUUID().replace(/-/g, ""),
-          task_id: task_id,
-          namespace: "SpeechTranscriber",
-          name: "StartTranscription",
-        },
-        payload: {
-          enable_intermediate_result: true,
-          enable_punctuation_prediction: true, // 是否在后处理中添加标点
-          // disfluency: true, // 过滤语气词，即声音顺滑
-          //enable_semantic_sentence_detection: true, // 语义分句开关，打开后速度会比较慢
-          vocabulary_id: hotwordID, // 后端热词表 todo:根据行业方向更换热词id
-        },
-      };
-      const body = JSON.stringify(req);
-      ws.current.send(body);
-      console.log("发送开始帧:" + body);
-    });
+    getHotWordID(direction)
+      .then((hotwordID) => {
+        const req = {
+          header: {
+            appkey: APPKEY,
+            message_id: crypto.randomUUID().replace(/-/g, ""),
+            task_id: task_id,
+            namespace: "SpeechTranscriber",
+            name: "StartTranscription",
+          },
+          payload: {
+            enable_intermediate_result: true,
+            enable_punctuation_prediction: true, // 是否在后处理中添加标点
+            // disfluency: true, // 过滤语气词，即声音顺滑
+            //enable_semantic_sentence_detection: true, // 语义分句开关，打开后速度会比较慢
+            vocabulary_id: hotwordID, // 后端热词表 todo:根据行业方向更换热词id
+          },
+        };
+        const body = JSON.stringify(req);
+        ws.current.send(body);
+        console.log("发送开始帧:" + body);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   };
 
   /**
