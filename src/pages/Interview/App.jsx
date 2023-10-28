@@ -77,6 +77,7 @@ const Interview = observer(() => {
 
   const recorder = useRef(null);
   const mediaStreamRef = useRef(null);
+  const audioDataRef = useRef(new Int8Array(0));
 
   const startRecording = () => {
     connectWebSocket();
@@ -86,9 +87,37 @@ const Interview = observer(() => {
       recorder.current = mediaRecorder;
       mediaStreamRef.current = stream;
 
+      mediaRecorder.start();
+
+      let audioChunks = [];
+
       mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0 && ws.current.readyState === ws.current.OPEN) {
-          ws.current.send(new Int8Array(event.data));
+        if (event.data.size > 0) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            const buffer = reader.result;
+            audioChunks.push(new Int8Array(buffer));
+
+            if (audioChunks.reduce((totalSize, chunk) => totalSize + chunk.length, 0) >= 5120) {
+              const combinedAudioData = new Int8Array(audioChunks.reduce((totalSize, chunk) => totalSize + chunk.length, 0));
+              let offset = 0;
+              audioChunks.forEach((chunk) => {
+                combinedAudioData.set(chunk, offset);
+                offset += chunk.length;
+              });
+
+              // 触发自定义事件，传递 Int8Array 数据
+              const customEvent = new CustomEvent('sendAudio', {
+                detail: combinedAudioData,
+              });
+              window.dispatchEvent(customEvent);
+
+              // 清空累积的数据块
+              audioChunks = [];
+            }
+          };
+
+          reader.readAsArrayBuffer(event.data);
         }
       };
 
@@ -96,7 +125,6 @@ const Interview = observer(() => {
         stopMediaStream();
       };
 
-      mediaRecorder.start();
       handleButton(false);
       handleAudioState(true);
     })
