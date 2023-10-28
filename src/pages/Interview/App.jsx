@@ -164,8 +164,8 @@ const Interview = observer(() => {
    * 发送开始帧
    * @param {WebSocket} ws
    */
-  const sendStartParams = async (direction) => {
-    await getHotWordID(direction).then((hotwordID) => {
+  const sendStartParams = (direction) => {
+    getHotWordID(direction).then((hotwordID) => {
       const req = {
         header: {
           appkey: APPKEY,
@@ -178,7 +178,7 @@ const Interview = observer(() => {
           enable_intermediate_result: true,
           enable_punctuation_prediction: true, // 是否在后处理中添加标点
           // disfluency: true, // 过滤语气词，即声音顺滑
-          //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
+          //enable_semantic_sentence_detection: true, // 语义分句开关，打开后速度会比较慢
           vocabulary_id: hotwordID, // 后端热词表 todo:根据行业方向更换热词id
         },
       };
