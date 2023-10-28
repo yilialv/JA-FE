@@ -526,7 +526,7 @@ const Interview = observer(() => {
                         className="history-item"
                         key={key}
                         onClick={(item) => {
-                          setInputValue(item.target.innerText);
+                          setInputValue(item?.target?.innerText || "");
                         }}
                       >
                         {item}
