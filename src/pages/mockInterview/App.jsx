@@ -11,6 +11,7 @@ import {
   Space,
   Select,
   message,
+  Alert
 } from "antd";
 import {
   UserOutlined,
@@ -19,7 +20,7 @@ import {
   LeftOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import store from "../../store";
+import utils from "./mockUtils";
 import { observer } from "mobx-react";
 import iconSend from "../../imgs/icon-send.svg";
 import iconWaiting from "../../imgs/icon-waiting.svg";
@@ -31,12 +32,6 @@ const MockInterview = observer(() => {
   const wsServer = useRef(null); // 和后端的连接
 
   useEffect(() => {
-    const scrollBlock = document.getElementById("scrollBlock");
-    // 将内容自动滚动到底部
-    scrollBlock.scrollTop = scrollBlock.scrollHeight;
-  }, []);
-
-  useEffect(() => {
     const interval = setInterval(() => {
       setCount((counts) => counts + 1);
     }, 60000);
@@ -44,12 +39,25 @@ const MockInterview = observer(() => {
     return () => {
       wsServer.current?.close();
       clearInterval(interval);
+      utils.initializeMockInterview();
     };
   }, []);
 
   useEffect(() => {
     connectWebsocket();
   }, []);
+
+  //自动滚动
+  useEffect(() => {
+    scrollToBottom();
+  }, [utils.mockLastContent]);
+
+  const autoScroll = useRef(null);
+
+  const scrollToBottom = () => {
+    autoScroll.current.scrollIntoView({ behavior: 'instant' });
+  };
+  //
 
   const followingQuestionFlag = useRef(0);
 
@@ -75,37 +83,44 @@ const MockInterview = observer(() => {
         const result = JSON.parse(msg.data);
         const { type, data, id } = result;
         console.log(type, data, id);
+        setReplyState(false);
         if (type === 1 || type === 3) {
-          setReplyState(false);
           // 第一次拿到数据
-          if (!store.mockID) {
-            store.setMockNewReply(id, type);
+          if (!utils.mockID) {
+            utils.setMockNewReply(id, type);
+            utils.addMockIndex();
             followingQuestionFlag.value = 1;
             setInputValue('');
-          } else if (id !== store.mockID) {
-            if (type === 1) { store.addMockIndex(); followingQuestionFlag.value = 1; }
-            store.setMockReplies();
-            store.setMockNewReply(id, 1);
+          } else if (id !== utils.mockID) {
+            if (type === 1) { utils.addMockIndex(); followingQuestionFlag.value = 1; }
+            utils.setMockNewReply(id, 1);
             setInputValue('');
           }
-          store.appendMockLastContent(data);
+          utils.appendMockLastContent(data);
         }
         else if (type === 2) {
-          if (id !== store.mockID) {
-            store.setMockReplies();
-            store.setMockNewReply(id ? id : 'skipEvaluation', 2);
-            store.setMockAnswer();
+          if (id !== utils.mockID) {
             setInputValue('');
+            utils.setMockReplies();
+            utils.setMockNewReply(id ? id : 'skipEvaluation', 0);
+            utils.setMockAnswer();
           }
-          store.appendMockLastEvaluation(data);
+          utils.appendMockLastEvaluation(data);
         }
-        else if (type === 99) {
+        else if (type === 4) {
+          utils.conclusionCount++;
+          utils.setMockNewReply('conclusion', type);
+          utils.setMockReplies(type);
+          setInputValue('');
+          setButtonState(true);
+          utils.appendMockLastContent(data);
+        } else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
           setReplyState(true);
-          if (store.mockLastType === 2) {
-            requestQuestion(store.settingFollowing);
-            store.mockLastType = 0;
+          if (utils.mockLastType === 0) {
+            utils.setMockReplies();
+            requestQuestion(utils.settingFollowing);
           }
         }
       } catch (error) {
@@ -133,19 +148,20 @@ const MockInterview = observer(() => {
     const following = {
       type: 4,
       data: {
-        interactions: store.mockConversations
+        interactions: utils.mockConversations
       }
     };
     const req = {
       type: 2,
       data: {
-        question_index: store.mockQuestionIndex,
-        interactions: store.mockConversations,
+        question_index: utils.mockQuestionIndex,
+        interactions: utils.mockConversations,
         style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    console.log(isFollowing);
+    console.log('interaction', Array.from(utils.mockConversations));
+    console.log('index', utils.mockQuestionIndex);
     wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.value) ? following : req));
     followingQuestionFlag.value = 0;
   };
@@ -159,14 +175,14 @@ const MockInterview = observer(() => {
     const req = {
       type: 3,
       data: {
-        interactions: store.mockConversations,
+        interactions: utils.mockConversations,
         answer: answer,
-        question_id: store.mockID,
+        question_id: utils.mockID,
         evaluation: settingEvaluation,
         toleration: settingTempo, // 时间容忍度-高-中-低 
       },
     };
-    store.mockInputCache = answer;
+    utils.mockInputCache = answer;
     wsServer.current.send(JSON.stringify(req));
   };
 
@@ -188,6 +204,8 @@ const MockInterview = observer(() => {
   const [settingStyle, setInterviewStyle] = useState('');
 
   const [settingTempo, setInterviewTempo] = useState('');
+
+  const [ButtonState, setButtonState] = useState(false);
 
   const [count, setCount] = useState(0);
 
@@ -228,21 +246,21 @@ const MockInterview = observer(() => {
             </div>
           </div>
         </div>
-        <div className="container-body">
+        <div className="container-body"  >
           <div
             className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
           >
             <div className="answer-block" id="scrollBlock">
-              {store.mockReplies.map((item, key) => {
-                const { content, evaluation } = item;
-                return (
+              {utils.mockReplies.map((item, key) => {
+                const { content, evaluation, name } = item;
+                return !!content && (
                   <div className="answer" key={key}>
                     <div className="answer-header">
                       <Avatar
                         style={{ backgroundColor: "#87d068", marginRight: "5px" }}
                         icon={<UserOutlined />}
                       />
-                      <div>{'replies'}</div>
+                      <div>{name}</div>
                     </div>
                     <div className="text">
                       {content}
@@ -259,7 +277,7 @@ const MockInterview = observer(() => {
                   </div>
                 );
               })}
-              {!!store.mockLastContent && (
+              {!!utils.mockLastContent && (
                 <div className="answer animation">
                   <div className="answer-header">
                     <Avatar
@@ -269,22 +287,31 @@ const MockInterview = observer(() => {
                       }}
                       icon={<UserOutlined />}
                     />
-                    <div>{'用户名'}</div>
+                    <div>{utils.mockLastEvaluation ? '用户' : '小助手'}</div>
                   </div>
                   <div className="text">
-                    {store.mockLastContent}
+                    {utils.mockLastContent}
                   </div>
-                  {!!store.mockLastEvaluation && (
+                  {!!utils.mockLastEvaluation && (
                     <>
                       <div className="answer-divider"></div>
                       <div className="answer-comment">
-                        {store.mockLastEvaluation}
+                        {utils.mockLastEvaluation}
                       </div>
                     </>
                   )
                   }
                 </div>
               )}
+              {utils.conclusionCount === 2 &&
+                <Alert
+                  type="success"
+                  message="模拟面试已结束"
+                  description="小助手正在总结，稍后可进入详情页查看结果"
+                  showIcon
+                />
+              }
+              <div ref={autoScroll}></div>
             </div>
             <div className="question">
               <Space.Compact
@@ -296,7 +323,7 @@ const MockInterview = observer(() => {
                   onChange={handleInput}
                   onKeyDown={(e) => { const { key } = e; if (key === 'Enter') { sendAnswer(); } }}
                 />
-                <Button className="send-button" type="default" onClick={sendAnswer}>
+                <Button className="send-button" disabled={ButtonState} type="default" onClick={sendAnswer}>
                   <img src={iconSend} />
                 </Button>
               </Space.Compact>
@@ -366,7 +393,7 @@ const MockInterview = observer(() => {
                 <div className="check-item">
                   <Checkbox
                     checked={settingEvaluation}
-                    onClick={() => { setSettingEvaluation(!settingEvaluation);}}
+                    onClick={() => { setSettingEvaluation(!settingEvaluation); }}
                   >
                     开启回答评价
                   </Checkbox>
@@ -374,8 +401,8 @@ const MockInterview = observer(() => {
                 </div>
                 <div className="check-item">
                   <Checkbox
-                    checked={store.settingFollowing}
-                    onClick={() => { store.settingFollowing=!store.settingFollowing;}}
+                    checked={utils.settingFollowing}
+                    onClick={() => { utils.settingFollowing = !utils.settingFollowing; }}
                   >
                     开启回答追问
                   </Checkbox>
