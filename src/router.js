@@ -142,3 +142,25 @@ export function getInterviewDetail(params) {
     throw new Error(err);
   });
 }
+
+export function setStarCard(params) {
+  return axios.post(`${BASE_URL}/api/experience/set_favorite`, params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      return data0;
+    }
+  }).catch((err) => {
+    throw err;
+  });
+}
+
+export function cancelStarCard(params) {
+  return axios.post(`${BASE_URL}/api/experience/cancel_favorite`, params).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      return data0;
+    }
+  }).catch((err) => {
+    throw err;
+  });
+}

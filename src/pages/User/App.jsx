@@ -15,7 +15,6 @@ const User = () => {
 
   const [currentMenu, setCurrentMenu] = useState('information');
   const [mineRecordList, setMineRecordList] = useState([]);
-  const [favoriteList, setFavoriteList] = useState([]);
   const [userInfo, setUserInfo] = useState({
     "avatar": "",
     "create_time": 0,
@@ -59,7 +58,7 @@ const User = () => {
     case 'mock':
       return <MockList />;
     case 'star':
-      return <FavoriteRecords list={favoriteList} setList={setFavoriteList}/>;
+      return <FavoriteRecords/>;
     default:
       return <MineRecords list={mineRecordList} setList={setMineRecordList} />;
     }

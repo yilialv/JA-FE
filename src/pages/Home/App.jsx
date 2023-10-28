@@ -107,11 +107,9 @@ const Home = () => {
           <div className='records-subcontainer' ref={recordsContainerRef}>
             <div className='records' style={{ left: scrollBox + 'px' }}>
               {
-                cardList.map((item, index) => {
+                cardList.map((item) => {
                   return (
-                    <>
-                      <RecordCard key={index} data={item} />
-                    </>
+                      <RecordCard key={item?.id} data={item} />
                   );
                 })
               }
