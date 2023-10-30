@@ -29,6 +29,7 @@ const FavoriteRecords = () => {
   };
 
   const changePage = (page, pageSize) => {
+    setCurrentPage(page);
     getList(page);
   };
 

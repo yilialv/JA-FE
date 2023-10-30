@@ -8,10 +8,14 @@ import { observer } from "mobx-react";
 import store from "../../store";
 import './App.less';
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { setLocalStorage } from "../../utils";
+import { fetchCompanyList } from "../../router";
 
 const AssistantModal = () => {
+  useEffect(()=> {
+    fetchCompanyList();
+  },[]);
 
   const handleCancel = () => {
     store.isAssistantModalOpen = false;
@@ -41,7 +45,8 @@ const AssistantModal = () => {
     });
   };
 
-  const handleChange = (value) => {
+  const handleChange = (value, options) => {
+    console.log(options)
     if (value === '其他') {
       setIsOtherCompany(true);
     } else {
@@ -81,36 +86,12 @@ const AssistantModal = () => {
               onChange={handleChange}
               // onSearch={onSearch}
               // filterOption={filterOption}
-              options={[
-                {
-                  value: "字节跳动",
-                  label: "字节跳动",
-                },
-                {
-                  value: "百度",
-                  label: "百度",
-                },
-                {
-                  value: "阿里",
-                  label: "阿里",
-                },
-                {
-                  value: "腾讯",
-                  label: "腾讯",
-                },
-                {
-                  value: "京东",
-                  label: "京东",
-                },
-                {
-                  value: "美团",
-                  label: "美团",
-                },
-                {
-                  value: "其他",
-                  label: "其他"
+              options={ store.companyList.map(item => {
+                return {
+                  label: item?.Name,
+                  value: item?.Name,
                 }
-              ]}
+              }) }
             />
           </Form.Item>
           {

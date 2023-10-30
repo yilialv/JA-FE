@@ -47,7 +47,7 @@ export function timestampToTime(timestamp) {
 }
 
 export function getTimestampToDate(timestamp) {
-  const date = new Date(timestamp);
+  const date = new Date(timestamp * 1000);
 
   const year = date.getFullYear();
   const month = date.getMonth() + 1;
