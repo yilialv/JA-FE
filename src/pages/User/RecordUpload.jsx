@@ -1,12 +1,17 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Input, Button, Select } from "antd";
 import { MinusCircleOutlined, PlusCircleOutlined, SaveOutlined,
   CheckCircleFilled, ArrowLeftOutlined } from "@ant-design/icons";
 import { Content } from "antd/es/layout/layout";
-import { uploadExperience } from '../../router';
+import { uploadExperience, fetchCompanyList } from '../../router';
+import store from '../../store';
+import { observer } from 'mobx-react';
 
-const RecordUpload = () => {
+const RecordUpload = observer(() => {
+  useEffect(() => {
+    fetchCompanyList();
+  }, []);
 
   const navigate = useNavigate();
   const [conversations, setConversations] = useState([{
@@ -89,9 +94,12 @@ const RecordUpload = () => {
           <div className='text-bold'>公司</div>
           <Select size='large'
             onChange={(e) => handleChangeRight(e,'company')}
-            options={[
-              {value: "字节跳动",label: "字节跳动"},
-            ]}
+            options={store.companyList.map(item => {
+              return {
+                label: item?.Name,
+                value: item?.Name,
+              }
+            })}
           />
         </div>
         <div className='flex-col right-unit'>
@@ -156,6 +164,6 @@ const RecordUpload = () => {
       </div>
     </Content>
   );
-};
+});
 
 export default RecordUpload;

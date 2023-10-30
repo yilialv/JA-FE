@@ -27,7 +27,7 @@ const RecordCard = (props) => {
   // const {category, company, department, direction, interview_time } = item;
   // type用于区分卡片展示内容: home/mine/favorite
   const { data } = props;
-  const { avatar, brief, category, company, direction, favorites, id, interview_date, logo, nick_name, popularity_rating, round} = data;
+  const { avatar, brief, category, company, direction, favorites, id, interview_date, logo, nick_name, popularity_rating, round, is_favorite} = data;
   const customSvg = (name) => {
     switch(name) {
     case 'settings':
@@ -63,7 +63,7 @@ const RecordCard = (props) => {
     }
   };
 
-  const [isStared, setIsStared] = useState(false);
+  const [isStared, setIsStared] = useState(is_favorite);
   const [favoriteNum, setFavoriteNum] = useState(favorites);
 
   const handleCard = () => {
@@ -74,7 +74,7 @@ const RecordCard = (props) => {
         const { code, message } = res;
         if (code === 0) {
           setIsStared(false);
-          setFavoriteNum(favorites - 1);
+          setFavoriteNum(favoriteNum - 1);
         } else if (code === 1) {
           message.error(message);
         } else if (code === 2) {
@@ -91,7 +91,7 @@ const RecordCard = (props) => {
         const { code, message } = res;
         if (code === 0) {
           setIsStared(true);
-          setFavoriteNum(favorites + 1);
+          setFavoriteNum(favoriteNum + 1);
         } else if (code === 1) {
           message.error(message);
         } else if (code === 2) {
@@ -133,9 +133,8 @@ const RecordCard = (props) => {
           {/* {customSvg(type === "favorite" ? 'StarFilled' : 'StarOutlined')} */}
           <div onClick={handleCard}>{customSvg(isStared ? 'StarFilled' : 'StarOutlined')}</div>
           <div className="text-number">{favoriteNum}</div>
-          {popularity_rating && customSvg('fire') &&
+            { customSvg('fire') }
             <div className="text-number">{popularity_rating}</div>
-          }
         </div>
         <div className='interview-footer-user'>
           <Avatar src={avatar || avatarUrl} />

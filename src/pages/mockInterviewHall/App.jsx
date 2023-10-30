@@ -8,6 +8,9 @@ import iconOrder from '../../imgs/icon-order.svg';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
+import store from "../../store";
+import { observer } from 'mobx-react';
+import { fetchCompanyList } from "../../router";
 
 const sort_type = [
   {
@@ -17,21 +20,6 @@ const sort_type = [
   {
     value: 0,
     label: '最新',
-  }
-];
-
-const company = [
-  {
-    value: '',
-    label: '不限',
-  },
-  {
-    value: '字节跳动',
-    label: '字节跳动',
-  },
-  {
-    value: '百度',
-    label: '百度',
   }
 ];
 
@@ -65,7 +53,11 @@ const round = [
   },
 ];
 
-const MockInterviewHall = () => {
+const MockInterviewHall = observer(() => {
+
+  useEffect(()=> {
+    fetchCompanyList();
+  },[]);
 
   const [options, setOptions] = useState({
     company: '',
@@ -83,7 +75,6 @@ const MockInterviewHall = () => {
   }, [options]);
 
   function getCardList() {
-    console.log(options)
     axios.post(`${BASE_URL}/api/experience/mock_interview_hall`, options).then((res) => {
       const { status, data: { data: { mock_interview_cards } }
       } = res;
@@ -123,7 +114,12 @@ const MockInterviewHall = () => {
           <Select
             className="select"
             defaultValue=''
-            options={company}
+            options={ store.companyList.map(item => {
+              return {
+                label: item?.Name,
+                value: item?.Name,
+              }
+            }) }
             onChange={(value) => {
               setOptions(options => ({
                 ...options,
@@ -178,6 +174,6 @@ const MockInterviewHall = () => {
       </div>
     </div>
   );
-};
+});
 
 export default MockInterviewHall;
