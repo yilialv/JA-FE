@@ -2,15 +2,17 @@ import { useEffect, useState } from "react";
 import { Table, Badge, Select, message } from "antd";
 import moment from 'moment';
 import { getCopilotList} from "../router";
-import { fetchCompanyList } from "../../../router";
 import { useNavigate } from 'react-router-dom';
 import { Content } from "antd/es/layout/layout";
 import { DIRECTION_LIST, ROUND_LIST } from "../../../constant";
+import { observer } from 'mobx-react';
+import store from "../../../store";
+import { fetchCompanyList } from "../../../router";
 
 
-const CopilotList = () => {
+const CopilotList = observer(() => {
   useEffect(()=> {
-    getCompanyList();
+    fetchCompanyList();
   },[]);
 
   const [pageSize, setPageSize] = useState(5);
@@ -19,7 +21,6 @@ const CopilotList = () => {
   const [company,setCompany] = useState('');
   const [round, setRound] = useState('');
   const [dataSource, setDataSource] = useState([]);
-  const [companyList, setCompanyList] = useState([{value: '', label: ''}]);
 
   const navigate = useNavigate();
   
@@ -44,11 +45,6 @@ const CopilotList = () => {
       message.error('获取辅助面试列表失败');
     });
   },[currentPage, pageSize, company, round]);
-
-  const getCompanyList = async () => {
-    const list = fetchCompanyList();
-    setCompanyList(list);
-  };
 
   const navigateToDetail = (id) => {
     navigate(`/user/interviewDetail/${id}`);
@@ -101,6 +97,7 @@ const CopilotList = () => {
       render: (_, { id }) => <a onClick={() => navigateToDetail(id)}>编辑</a>,
     },
   ];
+
   return (
     <Content>
       <div className="user-select-container">
@@ -112,7 +109,12 @@ const CopilotList = () => {
             allowClear
             key='company'
             size="large"
-            options={companyList}
+            options={ store.companyList.map(item => {
+              return {
+                label: item?.Name,
+                value: item?.Name,
+              }
+            }) }
             onChange={(e)=>setCompany(e)}/>
         </div>
         <div className="user-select">
@@ -144,5 +146,5 @@ const CopilotList = () => {
     </Content>
   );
   
-};
+});
 export default CopilotList;

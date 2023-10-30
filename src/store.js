@@ -93,6 +93,10 @@ class Store {
     deleteCookie("nickName");
     this.isLogin = false;
   }
+
+  setCompanyList(list) {
+    this.companyList = list;
+  }
 }
 
 const store = new Store();

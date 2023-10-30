@@ -101,26 +101,15 @@ export function uploadExperience(data) {
 }
 
 export function fetchCompanyList() {
-  if (!store.companyList.length)
-    axios.get(`${BASE_URL}/api/company/info`).then((res) => {
-      const { status } = res;
-      if (status === 200) {
-        const list = res.data.data.company_info;
-        list.forEach(e => {
-          e.value = e.name;
-          e.label = e.name;
-        });
-        store.companyList = list;
-        return list;
-      }
-    }).catch((err) => {
-      console.log('err:', err);
-      message.error('获取公司列表失败');
-    }).finally(() => {
-      //store.isLogin = false;
-    });
-
-  return store.companyList;
+  axios.get(`${BASE_URL}/api/company/info`).then((res) => {
+    const { status, data: data0 } = res;
+    if (status === 200) {
+      const {data: {company_info}} = data0;
+      store.setCompanyList(company_info);
+    }
+  }).catch((err) => {
+    console.log('err:', err);
+  });
 }
 
 export function getInterviewDetail(params) {
@@ -164,3 +153,4 @@ export function cancelStarCard(params) {
     throw err;
   });
 }
+
