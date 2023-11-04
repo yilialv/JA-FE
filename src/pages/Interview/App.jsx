@@ -73,51 +73,35 @@ const Interview = observer(() => {
 
   const recorder = useRef(null);
   const mediaStreamRef = useRef(null);
-  const audioDataRef = useRef(new Int8Array(0));
+  const mediaRecorder = useRef(null);
+  const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
 
   const startRecording = () => {
     connectWebSocket();
     
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      const mediaRecorder = new MediaRecorder(stream);
-      recorder.current = mediaRecorder;
+      mediaRecorder.current = new MediaRecorder(stream);
+      recorder.current = new RecorderManager("/recorder_manager");
       mediaStreamRef.current = stream;
 
-      mediaRecorder.start();
+      mediaRecorder.current.start();
 
-      let audioChunks = [];
+      recorder.current.start({
+        sampleRate: 16000,
+        frameSize: frameSize,
+      });
 
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            const buffer = reader.result;
-            audioChunks.push(new Int8Array(buffer));
-
-            if (audioChunks.reduce((totalSize, chunk) => totalSize + chunk.length, 0) >= 5120) {
-              const combinedAudioData = new Int8Array(audioChunks.reduce((totalSize, chunk) => totalSize + chunk.length, 0));
-              let offset = 0;
-              audioChunks.forEach((chunk) => {
-                combinedAudioData.set(chunk, offset);
-                offset += chunk.length;
-              });
-
-              // 触发自定义事件，传递 Int8Array 数据
-              const customEvent = new CustomEvent('sendAudio', {
-                detail: combinedAudioData,
-              });
-              window.dispatchEvent(customEvent);
-
-              // 清空累积的数据块
-              audioChunks = [];
-            }
-          };
-
-          reader.readAsArrayBuffer(event.data);
+      // 接收音频数据帧
+      recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+        if (ws.current.readyState === ws.current.OPEN) {
+          ws.current.send(new Int8Array(frameBuffer));
+          if (isLastFrame) {
+            console.log("接收最后一个音频帧");
+          }
         }
       };
 
-      mediaRecorder.onstop = () => {
+      mediaRecorder.current.onstop = () => {
         stopMediaStream();
       };
 
@@ -130,13 +114,12 @@ const Interview = observer(() => {
   };
 
   const stopRecording = () => {
-    if (recorder.current && recorder.current.state === 'recording') {
-      recorder.current.stop();
-      sendFinish();
-      console.log('录音关闭')
-      handleButton(true);
-      handleAudioState(false);
-    }
+    recorder.current.stop();
+    sendFinish();
+    mediaRecorder.current.stop();
+    console.log('录音关闭')
+    handleButton(true);
+    handleAudioState(false);
     ws.current?.close();
     wsServer.current?.close();
   };
@@ -277,45 +260,6 @@ const Interview = observer(() => {
     ws.current.send(body);
     console.log("发送语音结束帧");
   };
-
-  // 开始录音
-  // const startRecording = () => {
-  //   connectWebSocket();
-  //   recorder.current.start({
-  //     sampleRate: 16000,
-  //     frameSize: frameSize,
-  //   });
-  //   handleButton(false);
-  //   handleAudioState(true);
-  // };
-
-  // 停止录音
-  // const stopRecording = () => {
-  //   recorder.current.stop();
-  //   ws.current?.close();
-  //   wsServer.current?.close();
-  //   handleButton(true);
-  //   handleAudioState(false);
-  // };
-
-  // recorder.current.onStart = () => {
-  //   console.log("录音开始")
-  // };
-
-  // recorder.current.onStop = () => {
-  //   sendFinish();
-  //   console.log("录音结束");
-  // };
-
-  // 接收音频数据帧
-  // recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-  //   if (ws.current.readyState === ws.current.OPEN) {
-  //     ws.current.send(new Int8Array(frameBuffer));
-  //     if (isLastFrame) {
-  //       console.log("接收最后一个音频帧");
-  //     }
-  //   }
-  // };
 
   // 建立连接
   const connectWebSocket = async () => {
