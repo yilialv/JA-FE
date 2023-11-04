@@ -52,13 +52,6 @@ const { Content } = Layout;
 */
 
 const Interview = observer(() => {
-  const recorder = new RecorderManager("/recorder_manager");
-  const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
-  const task_id = crypto.randomUUID().replace(/-/g, "");
-
-  const ws = useRef(null); // 和百度的连接
-  const wsServer = useRef(null); // 和后端的连接
-
   useEffect(() => {
     store.formCompany = localStorage.getItem("company");
     store.formDirection = localStorage.getItem("direction");
@@ -83,36 +76,103 @@ const Interview = observer(() => {
     autoScroll.current.scrollIntoView({ behavior: 'instant' });
   };
 
+  const task_id = crypto.randomUUID().replace(/-/g, "");
+
+  const ws = useRef(null); // 和百度的连接
+  const wsServer = useRef(null); // 和后端的连接
+
+  const recorder = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const mediaRecorder = useRef(null);
+  const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
+
+  const startRecording = () => {
+    connectWebSocket();
+    
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      mediaRecorder.current = new MediaRecorder(stream);
+      recorder.current = new RecorderManager("/recorder_manager");
+      mediaStreamRef.current = stream;
+
+      mediaRecorder.current.start();
+
+      recorder.current.start({
+        sampleRate: 16000,
+        frameSize: frameSize,
+      });
+
+      // 接收音频数据帧
+      recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+        if (ws.current.readyState === ws.current.OPEN) {
+          ws.current.send(new Int8Array(frameBuffer));
+          if (isLastFrame) {
+            console.log("接收最后一个音频帧");
+          }
+        }
+      };
+
+      mediaRecorder.current.onstop = () => {
+        stopMediaStream();
+      };
+
+      handleButton(false);
+      handleAudioState(true);
+    })
+    .catch((error) => {
+      console.error('录音报错:', error);
+    });
+  };
+
+  const stopRecording = () => {
+    recorder.current.stop();
+    sendFinish();
+    mediaRecorder.current.stop();
+    console.log('录音关闭')
+    handleButton(true);
+    handleAudioState(false);
+    ws.current?.close();
+    wsServer.current?.close();
+  };
+
+  const stopMediaStream = () => {
+    if (mediaStreamRef.current) {
+      const tracks = mediaStreamRef.current.getTracks();
+
+      tracks.forEach((track) => {
+        track.stop();
+      });
+
+      const audioTracks = mediaStreamRef.current.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = false;
+      });
+    }
+  };
+
   /**
    * 发送开始帧
    * @param {WebSocket} ws
    */
-  const sendStartParams = (direction) => {
-    getHotWordID(direction)
-      .then((hotwordID) => {
-        const req = {
-          header: {
-            appkey: APPKEY,
-            message_id: crypto.randomUUID().replace(/-/g, ""),
-            task_id: task_id,
-            namespace: "SpeechTranscriber",
-            name: "StartTranscription",
-          },
-          payload: {
-            enable_intermediate_result: true,
-            enable_punctuation_prediction: true, // 是否在后处理中添加标点
-            // disfluency: true, // 过滤语气词，即声音顺滑
-            //enable_semantic_sentence_detection: true, // 语义分句开关，打开后速度会比较慢
-            vocabulary_id: hotwordID, // 后端热词表 todo:根据行业方向更换热词id
-          },
-        };
-        const body = JSON.stringify(req);
-        ws.current.send(body);
-        console.log("发送开始帧:" + body);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+  const sendStartParams = () => {
+    const req = {
+      header: {
+        appkey: APPKEY,
+        message_id: crypto.randomUUID().replace(/-/g, ""),
+        task_id: task_id,
+        namespace: "SpeechTranscriber",
+        name: "StartTranscription",
+      },
+      payload: {
+        enable_intermediate_result: true,
+        enable_punctuation_prediction: true,
+        disfluency: true,
+        //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
+        vocabulary_id: "6851f419a17a44969752070669b227c2", // 后端热词表 todo:根据行业方向更换热词id
+      },
+    };
+    const body = JSON.stringify(req);
+    ws.current.send(body);
+    console.log("发送开始帧:" + body);
   };
 
   /**
@@ -131,47 +191,7 @@ const Interview = observer(() => {
     };
     const body = JSON.stringify(req);
     ws.current.send(body);
-    console.log("发送结束帧");
-  };
-
-  // 开始录音
-  const startRecording = () => {
-    connectWebSocket();
-    recorder.start({
-      sampleRate: 16000,
-      frameSize: frameSize,
-    });
-    handleButton(false);
-    handleAudioState(true);
-  };
-
-  // 停止录音
-  const stopRecording = () => {
-    recorder.stop();
-    ws.current?.close();
-    wsServer.current?.close();
-    handleButton(true);
-    handleAudioState(false);
-    window.history.back();
-  };
-
-  recorder.onStart = () => {
-    // console.log("recorder.onStart")
-  };
-
-  recorder.onStop = function () {
-    sendFinish();
-    console.log("录音结束");
-  };
-
-  // 接收音频数据帧
-  recorder.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-    if (ws.current.readyState === ws.current.OPEN) {
-      ws.current.send(new Int8Array(frameBuffer));
-      if (isLastFrame) {
-        console.log("接收最后一个音频帧");
-      }
-    }
+    console.log("发送语音结束帧");
   };
 
   // 建立连接
@@ -184,7 +204,7 @@ const Interview = observer(() => {
     wsServer.current = new WebSocket(SERVER_URL);
 
     ws.current.onopen = () => {
-      sendStartParams(convertDirection(localStorage.getItem("direction")));
+      sendStartParams();
       console.log("WebSocket开始连接");
     };
 
@@ -216,7 +236,7 @@ const Interview = observer(() => {
     };
 
     ws.current.onerror = (error) => {
-      recorder.stop();
+      recorder.current.stop();
       console.log("error:", error);
     };
 
@@ -247,12 +267,12 @@ const Interview = observer(() => {
             if (!store.id) {
               store.setId(id);
               store.setLastReply(data);
-              setInputValue("");
+              setInputValue('');
             } else {
               if (id !== store.id) {
                 store.setReply();
                 store.setId(id);
-                setInputValue("");
+                setInputValue('');
               }
               store.setLastReply(data);
             }
