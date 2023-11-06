@@ -3,8 +3,8 @@
 cd /root/JA-FE
 branch=${1:-main}
 #更新仓库
+git reset --hard HEAD
 git checkout $branch
-#git reset --hard HEAD
 git pull
 #安装包
 npm install
