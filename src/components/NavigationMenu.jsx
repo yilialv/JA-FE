@@ -16,6 +16,7 @@ const NavigationMenu = () => {
   const showModal = () => {
     store.isLoginModalOpen = true;
   };
+  const [menuAcitveIndex] = useState(0)
 
   const location = useLocation();
 
@@ -103,7 +104,7 @@ const NavigationMenu = () => {
                 return (
                   <li key={index} className='pt-2 px-4 '>
                     <span
-                      className='text-black text-base xl:text-[18px] p-1 hover:border-b-2 hover:border-solid hover:border-[#5844CE]'
+                      className={`text-black text-base xl:text-[18px] p-1 ${menuAcitveIndex == index ? 'border-b-[3px] border-solid border-[#5844CE]' : ''}  hover:border-b-[3px] hover:border-solid hover:border-[#5844CE]`}
                       onClick={() => { NavigateTo(item); }}
                       key={key}
                     >
