@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../constant';
 import Slider from "react-slick";
+import Marquee from "react-fast-marquee";
 
 const { Content } = Layout;
 const carouselList = [
@@ -176,7 +177,7 @@ const carouselList = [
     "avatar": "0",
     "is_favorite": false
   }
-]
+];
 const bulletList1 = [
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
@@ -190,8 +191,8 @@ const bulletList1 = [
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-]
-const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800']
+];
+const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800'];
 
 function SampleNextArrow(props) {
   let { className, style, onClick } = props;
@@ -257,7 +258,7 @@ const Home = () => {
           <h3 className='text-[40px] font-bold text-center pb-1'>来自网页体验的面经分享</h3>
           <p className='text-[24px] text-center'>各个大厂面试经验等你来发现</p>
           <div className='flex justify-center w-full h-[45px] mt-8'>
-            <input type="text" placeholder=' 输入部门岗位或者方向进行搜索' className='w-[300px] rounded-l' />
+            <input type="text" placeholder='输入部门岗位或者方向进行搜索' className='w-[300px] indent-3 rounded-l' />
             <button className='bg-blue-500 text-white px-5 rounded-r'>
               搜索
             </button>
@@ -279,31 +280,30 @@ const Home = () => {
             {
               [1, 2, 3].map(time => {
                 return (
-                  <marquee behavior="" id={'marquee' + time}  scrollamount="10" direction="" scrolldelay={50 * time} key={time} className="flex mb-3">
+                  <Marquee className="flex mb-3" pauseOnHover={true} delay={time / 2 }>
                     <div 
                       className='flex py-1'  
                       onMouseOut={e => {
-                        const currentMarquee = document.querySelector("#marquee" + time)
-                        console.log(currentMarquee,'currnet')
-                        currentMarquee?.start()
+                        const currentMarquee = document.querySelector("#marquee" + time);
+                        console.log(currentMarquee,'currnet');
+                        currentMarquee?.start();
                       }} 
                       onMouseOver={(e) => {
-
-                        const currentMarquee = document.querySelector("#marquee" + time)
-                        console.log(e,'currnet')
-                        currentMarquee?.stop()
+                        const currentMarquee = document.querySelector("#marquee" + time);
+                        console.log(e,'currnet');
+                        currentMarquee?.stop();
                       }}>
-                        {
-                          bulletList1.map((item, index) => {
+                      {
+                        bulletList1.map((item, index) => {
                             
-                            return (
-                              <CommentCard key={index} dataSource={item} shadowColor={color[index % 3]}/>
-                            )
-                          })
-                        }
+                          return (
+                            <CommentCard key={index} dataSource={item} shadowColor={color[index % 3]}/>
+                          );
+                        })
+                      }
                     </div>
-                 </marquee>
-                )
+                  </Marquee>
+                );
               })
             }
            
