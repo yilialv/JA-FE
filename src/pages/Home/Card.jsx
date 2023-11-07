@@ -14,7 +14,7 @@ export const ShareCard = (props) => {
             </div>
           </div>
           <div className='text-neutral-600'>
-            {'2023.5.7'}
+            {new Date(item.interview_date).toLocaleDateString().replaceAll("/",'-')}
           </div>
         </div>
         <p className='mt-4 mb-2'><span className='font-bold text-md'>面试风格</span> <span className="bg-yellow-500 rounded text-white px-1 font-[10px]">人际关系</span></p>
