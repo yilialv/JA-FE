@@ -37,8 +37,8 @@ export const ShareCard = (props) => {
 export const CommentCard = (props) => {
   const item = props.dataSource
   return (
-    <div className={`mr-4 bg-white py-3 px-2 w-[420px] h-[80] rounded-lg shadow-sm ${props.shadowColor}`} >
-      <div className='w-full mb-1 flex items-center'>
+    <div className={`mr-4 bg-white py-3 px-2 mx-1 w-[420px] h-[80] rounded-lg shadow ${props.shadowColor}`} >
+      <div className='w-full mb-1 flex items-center bg-wh'>
         <img src={item.avatar} className='w-[70px] h-[70px] rounded-[50%] mr-2' alt="" />
         <div>
           <p className="w-full mb-1 flex items-center justify-between">
@@ -50,11 +50,7 @@ export const CommentCard = (props) => {
             {item.desc}
           </p>
         </div>
-
-
       </div>
-
-
     </div>
   )
 

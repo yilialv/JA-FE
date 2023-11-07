@@ -276,11 +276,11 @@ const Home = () => {
           <h3 className='text-[40px] font-bold text-center  pb-1'>真实的用户反馈</h3>
           <p className='text-[24px] text-center'>成功帮助123456名用户取得大厂offer</p>
 
-          <div className='w-full px-10 mt-10'>
+          <div className='w-full  mt-10'>
             {
               [1, 2, 3].map(time => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} delay={time / 2 }>
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={time * 10 }>
                     <div 
                       className='flex py-1'  
                       onMouseOut={e => {
