@@ -1,9 +1,9 @@
-import { HeartOutlined, FastForwardOutlined, WarningOutlined, LikeOutlined } from "@ant-design/icons"
+import { HeartOutlined, LoginOutlined, WarningOutlined, LikeOutlined } from "@ant-design/icons"
 //---
 export const ShareCard = (props) => {
   const item = props.dataSource
   return (
-    <div className='px-2'>
+    <div className='px-2 w-[408px] mx-2'>
       <div className='bg-white p-2 rounded-lg'>
         <div className='flex items-center justify-between'>
           <div className='flex items-center '>
@@ -17,11 +17,11 @@ export const ShareCard = (props) => {
             {'2023.5.7'}
           </div>
         </div>
-        <p className='mt-4 mb-2'><span className='font-bold text-md'>面试风格</span> <span className="bg-yellow-500 rounded text-white px-1 font-[12px]">人际关系</span></p>
-        <p className='text-neutral-600'>昨天上午参加了腾讯面试二面，是专业面试，考官很nice，所以应该不用那么紧张。。。</p>
+        <p className='mt-4 mb-2'><span className='font-bold text-md'>面试风格</span> <span className="bg-yellow-500 rounded text-white px-1 font-[10px]">人际关系</span></p>
+        <p className='text-neutral-600'>{}</p>
         <div className='flex justify-between mt-4'>
           <p>
-            <span className='text-[#333] '><FastForwardOutlined  /> 进入模拟面试</span>
+            <span className='text-[#333] '><LoginOutlined  /> 进入模拟面试</span>
           </p>
           <p>
             <span className='text-[#333] ml-2'><LikeOutlined /> 123</span>

@@ -11,173 +11,7 @@ import Slider from "react-slick";
 import Marquee from "react-fast-marquee";
 
 const { Content } = Layout;
-const carouselList = [
-  {
-    "id": 112,
-    "brief": "",
-    "company": "百度",
-    "logo": "https://www.job581.cn/img/logo/baidu.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 886,
-    "favorites": 1,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 284,
-    "brief": "",
-    "company": "京东",
-    "logo": "https://www.job581.cn/img/logo/jd.png",
-    "direction": "UI",
-    "round": "2",
-    "category": 0,
-    "interview_date": 1698492170,
-    "popularity_rating": 0,
-    "favorites": 3,
-    "nick_name": "面试达人3257",
-    "avatar": "https://www.job581.cn/img/user_icon.jpg",
-    "is_favorite": false
-  },
-  {
-    "id": 285,
-    "brief": "",
-    "company": "京东",
-    "logo": "https://www.job581.cn/img/logo/jd.png",
-    "direction": "产品经理",
-    "round": "5",
-    "category": 0,
-    "interview_date": 1698496635,
-    "popularity_rating": 0,
-    "favorites": 8,
-    "nick_name": "面试达人3257",
-    "avatar": "https://www.job581.cn/img/user_icon.jpg",
-    "is_favorite": false
-  },
-  {
-    "id": 286,
-    "brief": "",
-    "company": "美团",
-    "logo": "https://www.job581.cn/img/logo/meituan.png",
-    "direction": "测试开发",
-    "round": "5",
-    "category": 0,
-    "interview_date": 1698496731,
-    "popularity_rating": 0,
-    "favorites": 1,
-    "nick_name": "面试达人3257",
-    "avatar": "https://www.job581.cn/img/user_icon.jpg",
-    "is_favorite": false
-  },
-  {
-    "id": 287,
-    "brief": "",
-    "company": "阿里巴巴",
-    "logo": "https://www.job581.cn/img/logo/alibaba.png",
-    "direction": "前端开发",
-    "round": "4",
-    "category": 0,
-    "interview_date": 1698497108,
-    "popularity_rating": 0,
-    "favorites": 0,
-    "nick_name": "面试达人3257",
-    "avatar": "https://www.job581.cn/img/user_icon.jpg",
-    "is_favorite": false
-  },
-  {
-    "id": 38,
-    "brief": "",
-    "company": "阿里巴巴",
-    "logo": "https://www.job581.cn/img/logo/alibaba.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 1,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 67,
-    "brief": "",
-    "company": "百度",
-    "logo": "https://www.job581.cn/img/logo/baidu.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 0,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 68,
-    "brief": "",
-    "company": "百度",
-    "logo": "https://www.job581.cn/img/logo/baidu.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 1,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 70,
-    "brief": "",
-    "company": "京东",
-    "logo": "https://www.job581.cn/img/logo/jd.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 0,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 72,
-    "brief": "",
-    "company": "阿里巴巴",
-    "logo": "https://www.job581.cn/img/logo/alibaba.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 0,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  },
-  {
-    "id": 100,
-    "brief": "",
-    "company": "百度",
-    "logo": "https://www.job581.cn/img/logo/baidu.png",
-    "direction": "后端开发",
-    "round": "0",
-    "category": 0,
-    "interview_date": -62135596800,
-    "popularity_rating": 0,
-    "favorites": 1,
-    "nick_name": "面试达人1345",
-    "avatar": "0",
-    "is_favorite": false
-  }
-];
+
 const bulletList1 = [
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
   { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
@@ -194,17 +28,6 @@ const bulletList1 = [
 ];
 const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800'];
 
-function SampleNextArrow(props) {
-  let { className, style, onClick } = props;
-  return (
-    <div
-      className={className}
-      style={{ ...style }}
-      onClick={onClick}
-    >
-    </div>
-  );
-}
 
 const settings = {
   dots: false,
@@ -212,7 +35,7 @@ const settings = {
   speed: 500,
   slidesToShow: 3,
   slidesToScroll: 3,
-  centerPadding: "60px",
+  centerPadding: "40px",
 };
 
 const Home = () => {
@@ -263,10 +86,10 @@ const Home = () => {
               搜索
             </button>
           </div>
-          <div className='w-full px-20 '>
+          <div className='w-full px-16 '>
             <Slider className='my-8' {...settings}>
               {
-                carouselList.map(item => <ShareCard key={item.id} dataSource={item}/>)
+                cardList.map(item => <ShareCard key={item.id} dataSource={item}/>)
               }
             </Slider>
             <button type='primary' className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
@@ -280,7 +103,7 @@ const Home = () => {
             {
               [1, 2, 3].map(time => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={time * 10 }>
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,40,50][time]}>
                     <div 
                       className='flex py-1'  
                       onMouseOut={e => {
