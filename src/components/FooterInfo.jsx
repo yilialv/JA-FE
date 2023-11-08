@@ -5,8 +5,8 @@ const { Footer } = Layout;
 
 const FooterInfo = () => {
   return (
-    <Footer className='footer bg-[#EDEDFB]'>
-      <div className='flex ='>
+    <Footer className='footer bg-[#EDEDFB] flex justify-center'>
+      <div className='flex w-[1330px]'>
         <div className='footer-desc ' style={{width:'25%'}}>
           <h2 className='text-lg font-bold'>关于我们</h2>
           <h3 className='text-base font-bold my-1'>JObGPT</h3>

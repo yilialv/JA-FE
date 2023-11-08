@@ -86,13 +86,18 @@ const Home = () => {
               搜索
             </button>
           </div>
-          <div className='w-full px-16 '>
-            <Slider className='my-8' {...settings}>
-              {
-                cardList.map(item => <ShareCard key={item.id} dataSource={item}/>)
-              }
-            </Slider>
-            <button type='primary' className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
+          <div className='w-full px-16 flex justify-center flex-wrap'>
+            <div  className='w-[1200px]'>
+              <Slider className='my-8' {...settings}>
+                {
+                  cardList.map(item => <ShareCard key={item.id} dataSource={item}/>)
+                }
+              </Slider>
+            </div>
+          
+           <div className='w-full'>
+              <button type='primary' className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
+           </div>
           </div>
         </div>
         <div className='bg-slate-100 w-full py-8'>
@@ -103,7 +108,7 @@ const Home = () => {
             {
               [1, 2, 3].map(time => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,40,50][time]}>
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,40,50][time-1]}>
                     <div 
                       className='flex py-1'  
                       onMouseOut={e => {
