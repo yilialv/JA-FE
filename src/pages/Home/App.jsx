@@ -47,7 +47,7 @@ const Home = () => {
 
   function getCardList() {
     const params = {
-      limit: 11,
+      limit: 30,
       page: 1,
       sort_type: 0
     };
@@ -60,6 +60,16 @@ const Home = () => {
     }).catch((err) => {
       console.log('error:', err);
       message.error('获取卡片列表失败');
+    });
+  }
+  
+  const like = (item) => {
+    axios.post(`${BASE_URL}/api/experience/set_favorite`, {experience_id:item.id}).then((res) => {
+      if(res.code !== 200){
+        getCardList()
+      }
+    }).catch((err) => {
+    
     });
   }
 
@@ -90,7 +100,7 @@ const Home = () => {
             <div  className='w-[1200px]'>
               <Slider className='my-8' {...settings}>
                 {
-                  cardList.map(item => <ShareCard key={item.id} dataSource={item}/>)
+                  cardList.map(item => <ShareCard key={item.id} like={like} dataSource={item}/>)
                 }
               </Slider>
             </div>
