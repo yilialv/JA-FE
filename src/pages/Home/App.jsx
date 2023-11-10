@@ -1,5 +1,5 @@
-import { Input, Layout, message} from 'antd';
-import {ShareCard, CommentCard} from './Card';
+import { Input, Layout, message } from 'antd';
+import { ShareCard, CommentCard } from './Card';
 import { observer } from 'mobx-react';
 import React, { useState, useRef } from 'react';
 import AssistantModal from '../AssistantModal/App';
@@ -12,8 +12,8 @@ import Marquee from "react-fast-marquee";
 
 
 
-const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item+1}.jpeg`))
-console.log(imgs,'imgs')
+const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item + 1}.jpeg`))
+console.log(imgs, 'imgs')
 
 
 
@@ -57,7 +57,7 @@ const bulletList1 = [
   { avatar: cm_img_5, nickName: '夏日柠檬', time: '2023.11.5', desc: '我用这款小助手准备面试，真的是事半功倍！它的模拟面试功能让我提前熟悉了面试环节，让我心里有底了。' },
   { avatar: cm_img_6, nickName: '红茶猫', time: '2023.8.18', desc: '我用过很多面试工具，但是这款小助手无疑是我最爱的一个❤️。它的功能强大，操作简单，真的很赞！' },
 ];
-const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800'];
+const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800', 'shadow-green-800'];
 
 
 const settings = {
@@ -93,14 +93,14 @@ const Home = () => {
       message.error('获取卡片列表失败');
     });
   }
-  
+
   const like = (item) => {
-    axios.post(`${BASE_URL}/api/experience/set_favorite`, {experience_id:item.id}).then((res) => {
-      if(res.code !== 200){
+    axios.post(`${BASE_URL}/api/experience/set_favorite`, { experience_id: item.id }).then((res) => {
+      if (res.code !== 200) {
         getCardList()
       }
     }).catch((err) => {
-    
+
     });
   }
 
@@ -128,17 +128,17 @@ const Home = () => {
             </button>
           </div>
           <div className='w-full px-16 flex justify-center flex-wrap'>
-            <div  className='w-[1200px]'>
+            <div className='w-[1200px]'>
               <Slider className='my-8' {...settings}>
                 {
-                  cardList.map(item => <ShareCard key={item.id} like={like} dataSource={item}/>)
+                  cardList.map(item => <ShareCard key={item.id} like={like} dataSource={item} />)
                 }
               </Slider>
             </div>
-          
-           <div className='w-full'>
+
+            <div className='w-full'>
               <button type='primary' className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
-           </div>
+            </div>
           </div>
         </div>
         <div className='bg-slate-100 w-full py-8'>
@@ -147,26 +147,26 @@ const Home = () => {
 
           <div className='w-full  mt-10'>
             {
-              [1, 2, 3].map((time,timeIndex) => {
+              [1, 2, 3].map((time, timeIndex) => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,35,40][time-1]}>
-                    <div 
-                      className='flex py-1'  
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30, 35, 40][time - 1]}>
+                    <div
+                      className='flex py-1'
                       onMouseOut={e => {
                         const currentMarquee = document.querySelector("#marquee" + time);
-                        console.log(currentMarquee,'currnet');
+                        console.log(currentMarquee, 'currnet');
                         currentMarquee?.start();
-                      }} 
+                      }}
                       onMouseOver={(e) => {
                         const currentMarquee = document.querySelector("#marquee" + time);
-                        console.log(e,'currnet');
+                        console.log(e, 'currnet');
                         currentMarquee?.stop();
                       }}>
                       {
-                        bulletList1.slice(timeIndex*3).map((item, index) => {
-                            
+                        bulletList1.slice(timeIndex * 3).map((item, index) => {
+
                           return (
-                            <CommentCard key={index}  dataSource={item} shadowColor={color[index % 3]}/>
+                            <CommentCard key={index} dataSource={item} shadowColor={color[index % 4]} />
                           );
                         })
                       }
@@ -175,7 +175,7 @@ const Home = () => {
                 );
               })
             }
-           
+
           </div>
         </div>
         {/* <CommentCard dataSource={bulletList1[0]} shadowColor={''}/> */}
