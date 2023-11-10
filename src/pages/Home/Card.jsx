@@ -66,7 +66,7 @@ export const ShareCard = (props) => {
 export const CommentCard = (props) => {
   const item = props.dataSource
   return (
-    <div className={`mr-4 bg-white py-3 px-2 mx-1 w-[420px] h-[80] rounded-lg shadow-2xl ${props.shadowColor}`} >
+    <div className={`mr-4 bg-white py-3 px-2 mx-1 w-[420px] h-[80] rounded-lg shadow-md ${props.shadowColor}`} >
       <div className='w-full mb-1 flex items-center bg-wh'>
         <img src={item.avatar} className='w-[70px] h-[70px] rounded-[50%] mr-2' alt="" />
         <div>
