@@ -10,21 +10,52 @@ import { BASE_URL } from '../../constant';
 import Slider from "react-slick";
 import Marquee from "react-fast-marquee";
 
+
+
+const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item+1}.png`))
+console.log(imgs,'imgs')
+
+
+
+import cm_img_1 from "../../imgs/cm-1.png"
+import cm_img_2 from "../../imgs/cm-2.png"
+import cm_img_3 from "../../imgs/cm-3.png"
+import cm_img_4 from "../../imgs/cm-4.png"
+import cm_img_5 from "../../imgs/cm-5.png"
+import cm_img_6 from "../../imgs/cm-6.png"
+import cm_img_7 from "../../imgs/cm-7.png"
+import cm_img_8 from "../../imgs/cm-8.png"
+import cm_img_9 from "../../imgs/cm-9.png"
+import cm_img_10 from "../../imgs/cm-10.png"
+import cm_img_11 from "../../imgs/cm-11.png"
+import cm_img_12 from "../../imgs/cm-12.png"
+
+
+
+
+
+
 const { Content } = Layout;
 
 const bulletList1 = [
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
-  { avatar: 'https://www.job581.cn/img/user_icon.jpg', nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_1, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_2, nickName: '精神小伙', time: '2023.7.3', desc: '这款产品太棒了，面试小助手的功能超级实用👍！' },
+  { avatar: cm_img_3, nickName: '未来冲冲冲', time: '2023.7.3', desc: '这个小助手帮我解答了无数问题，让我在面试中得心应手，真的太感谢了🙏！' },
+  { avatar: cm_img_4, nickName: '一起加油鸭', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_5, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_6, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_7, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_8, nickName: '未来冲冲冲', time: '2023.7.3', desc: '这款产品太棒了，面试小助手的功能超级实用👍' },
+  { avatar: cm_img_9, nickName: '未来冲冲冲', time: '2023.7.3', desc: '这个小助手帮我解答了无数问题，让我在面试中得心应手，真的太感谢了🙏！' },
+  { avatar: cm_img_10, nickName: '未来冲冲冲', time: '2023.7.3', desc: '我已经成功收到了几个大厂的Offer，开心到飞起~~~' },
+  { avatar: cm_img_11, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_12, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_1, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_2, nickName: '未来冲冲冲', time: '2023.7.3', desc: '这款产品太棒了，面试小助手的功能超级实用👍' },
+  { avatar: cm_img_3, nickName: '未来冲冲冲', time: '2023.7.3', desc: '这个小助手帮我解答了无数问题，让我在面试中得心应手，真的太感谢了🙏！' },
+  { avatar: cm_img_4, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_5, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
+  { avatar: cm_img_6, nickName: '未来冲冲冲', time: '2023.7.3', desc: 'The real-time transcription feature is brilliant! It allows me to focus more on the conversation during the interview without worrying about taking n' },
 ];
 const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800'];
 
@@ -116,7 +147,7 @@ const Home = () => {
 
           <div className='w-full  mt-10'>
             {
-              [1, 2, 3].map(time => {
+              [1, 2, 3].map((time,timeIndex) => {
                 return (
                   <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,40,50][time-1]}>
                     <div 
@@ -132,10 +163,10 @@ const Home = () => {
                         currentMarquee?.stop();
                       }}>
                       {
-                        bulletList1.map((item, index) => {
+                        bulletList1.slice(timeIndex*3).map((item, index) => {
                             
                           return (
-                            <CommentCard key={index} dataSource={item} shadowColor={color[index % 3]}/>
+                            <CommentCard key={index}  dataSource={item} shadowColor={color[index % 3]}/>
                           );
                         })
                       }

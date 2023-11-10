@@ -1,5 +1,12 @@
 import { HeartOutlined, LoginOutlined, WarningOutlined, LikeOutlined } from "@ant-design/icons"
 import heart_img from "../../imgs/icon_heart.png"
+
+
+
+
+
+
+
 const style = {
   轻松:{
     bg:"bg-yellow-500",
@@ -19,7 +26,7 @@ const style = {
 export const ShareCard = (props) => {
 
   const item = props.dataSource
-  
+
 
   return (
     <div className='px-2 w-[400px] mx-2'>
