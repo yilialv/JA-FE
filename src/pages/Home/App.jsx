@@ -57,7 +57,7 @@ const bulletList1 = [
   { avatar: cm_img_5, nickName: '夏日柠檬', time: '2023.11.5', desc: '我用这款小助手准备面试，真的是事半功倍！它的模拟面试功能让我提前熟悉了面试环节，让我心里有底了。' },
   { avatar: cm_img_6, nickName: '红茶猫', time: '2023.8.18', desc: '我用过很多面试工具，但是这款小助手无疑是我最爱的一个❤️。它的功能强大，操作简单，真的很赞！' },
 ];
-const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800', 'shadow-purple-1600'];
+const color = ['shadow-red-800', 'shadow-blue-800', 'shadow-yellow-800', 'shadow-purple-800'];
 
 
 const settings = {
@@ -149,7 +149,7 @@ const Home = () => {
             {
               [1, 2, 3].map((time, timeIndex) => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30, 35, 40][time - 1]}>
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30, 25, 20][time - 1]}>
                     <div
                       className='flex py-1'
                       onMouseOut={e => {
