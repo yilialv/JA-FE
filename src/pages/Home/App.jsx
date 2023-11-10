@@ -12,23 +12,23 @@ import Marquee from "react-fast-marquee";
 
 
 
-const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item+1}.png`))
+const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item+1}.jpeg`))
 console.log(imgs,'imgs')
 
 
 
-import cm_img_1 from "../../imgs/cm-1.png"
-import cm_img_2 from "../../imgs/cm-2.png"
-import cm_img_3 from "../../imgs/cm-3.png"
-import cm_img_4 from "../../imgs/cm-4.png"
-import cm_img_5 from "../../imgs/cm-5.png"
-import cm_img_6 from "../../imgs/cm-6.png"
-import cm_img_7 from "../../imgs/cm-7.png"
-import cm_img_8 from "../../imgs/cm-8.png"
-import cm_img_9 from "../../imgs/cm-9.png"
-import cm_img_10 from "../../imgs/cm-10.png"
-import cm_img_11 from "../../imgs/cm-11.png"
-import cm_img_12 from "../../imgs/cm-12.png"
+import cm_img_1 from "../../imgs/cm-1.jpeg"
+import cm_img_2 from "../../imgs/cm-2.jpeg"
+import cm_img_3 from "../../imgs/cm-3.jpeg"
+import cm_img_4 from "../../imgs/cm-4.jpeg"
+import cm_img_5 from "../../imgs/cm-5.jpeg"
+import cm_img_6 from "../../imgs/cm-6.jpeg"
+import cm_img_7 from "../../imgs/cm-7.jpeg"
+import cm_img_8 from "../../imgs/cm-8.jpeg"
+import cm_img_9 from "../../imgs/cm-9.jpeg"
+import cm_img_10 from "../../imgs/cm-10.jpeg"
+import cm_img_11 from "../../imgs/cm-11.jpeg"
+import cm_img_12 from "../../imgs/cm-12.jpeg"
 
 
 
