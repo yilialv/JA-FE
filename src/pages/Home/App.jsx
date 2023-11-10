@@ -149,7 +149,7 @@ const Home = () => {
             {
               [1, 2, 3].map((time,timeIndex) => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,40,50][time-1]}>
+                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30,35,40][time-1]}>
                     <div 
                       className='flex py-1'  
                       onMouseOut={e => {
