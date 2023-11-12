@@ -13,6 +13,7 @@ import SlideInOnMount from '../../components/SlideInOnMount'
 import { useEffect } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../constant';
+import { getCardList } from '../../router';
 const { Content } = Layout;
 
 const Home = () => {
@@ -43,26 +44,14 @@ const Home = () => {
   const [cardList, setCardList] = useState([]);
 
   useEffect(() => {
-    getCardList();
-  }, []);
-
-  function getCardList() {
-    const params = {
+    getCardList({
       limit: 11,
       page: 1,
       sort_type: 0
-    };
-    axios.post(`${BASE_URL}/api/experience/mock_interview_hall`, params).then((res) => {
-      const { status, data: { data: { mock_interview_cards } }
-      } = res;
-      if (status === 200) {
-        setCardList(mock_interview_cards);
-      }
-    }).catch((err) => {
-      console.log('error:', err);
-      message.error('获取卡片列表失败');
+    }).then(res => {
+      setCardList(res);
     });
-  }
+  }, []);
 
   return (
     <>
@@ -84,7 +73,7 @@ const Home = () => {
         <div className='btn-container'>
           {
             store.isLogin ?
-              <Link to="/mockInterview"><Button type='default' className='btn'>模拟面试</Button></Link>
+              <Link to="/mockInterview/112"><Button type='default' className='btn'>模拟面试</Button></Link>
               :
               <Button type='default' className='btn' onClick={openLogin}>模拟面试</Button>
           }
@@ -109,7 +98,7 @@ const Home = () => {
               {
                 cardList.map((item) => {
                   return (
-                      <RecordCard key={item?.id} data={item} />
+                    <RecordCard key={item?.id} data={item} />
                   );
                 })
               }
