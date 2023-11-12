@@ -1,10 +1,10 @@
 #!/bin/bash
 
 cd /root/JA-FE
-
+branch=${1:-main}
 #更新仓库
-git checkout main
 git reset --hard HEAD
+git checkout $branch
 git pull
 #安装包
 npm install

@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { UserOutlined, BarsOutlined } from '@ant-design/icons';
+import { UserOutlined, GlobalOutlined } from '@ant-design/icons';
 import { Divider, Layout, Button, Avatar, Dropdown } from 'antd';
 import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
@@ -16,6 +16,7 @@ const NavigationMenu = () => {
   const showModal = () => {
     store.isLoginModalOpen = true;
   };
+  const [menuAcitveIndex] = useState(0)
 
   const location = useLocation();
 
@@ -90,45 +91,30 @@ const NavigationMenu = () => {
   };
 
   return (
-    <Header
-      style={{
-        padding: 0,
-        position: 'absolute',
-        width: '100%',
-        height: '64px',
-        top: 0,
-        zIndex: 1,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-        borderBottom: '1px solid rgba(5, 5, 5, 0.06)',
-        userSelect: 'none'
-      }
-      }
-    >
+    <Header className='flex justify-between items-center bg-slate-100 h-full pt-3'>
       <Login />
       <AssistantModal />
-      <Link to="/"><div className='page-title'>JobGPT</div></Link>
-      <div className='hide'>
-        <div className='page-menu'>
-          <div className='page-menu-list'>
+      <Link to="/"><div className='text-black font-bold text-[38px] sm:w-2/5 lg:w-1/3'>JobGPT</div></Link>
+      <div className='hide w-3/5 lg:w-2/3'>
+        <div className='flex items-center justify-between w-full'>
+          <ul className='flex items-center justify-between '>
             {
               menuItems.map((item, index) => {
                 const { key, link, label } = item;
-                return <React.Fragment key={index}>
-                  {index !== 0 && <span>|</span>}
-                  <div
-                    className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
-                    onClick={() => { NavigateTo(item); }}
-                    key={key}
-                  >
-                    {label}
-                  </div>
-                </React.Fragment>;
+                return (
+                  <li key={index} className='pt-2 px-4 '>
+                    <span
+                      className={`text-black text-base xl:text-[18px] p-1 ${menuAcitveIndex == index ? 'border-b-[3px] border-solid border-[#5844CE]' : ''}  hover:border-b-[3px] hover:border-solid hover:border-[#5844CE]`}
+                      onClick={() => { NavigateTo(item); }}
+                      key={key}
+                    >
+                      {label}
+                    </span>
+                  </li>
+                )
               })
             }
-          </div>
+          </ul>
           {
             store.isLogin ?
               <>
@@ -145,13 +131,15 @@ const NavigationMenu = () => {
                 </Dropdown>
               </>
               :
-              <>
-                <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
-              </>
+              <div className='flex items-center'>
+                <button  onClick={showModal}  className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
+                <GlobalOutlined className="text-[25px] ml-2"/>
+                {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
+              </div>
           }
         </div>
       </div>
-      <div className='mobile-menu'>
+      {/* <div className='mobile-menu'>
         {
           store.isLogin
             ?
@@ -199,7 +187,7 @@ const NavigationMenu = () => {
             :
             <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
         }
-      </div>
+      </div> */}
     </Header >
   );
 };
