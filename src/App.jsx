@@ -33,7 +33,7 @@ const App = observer(() => {
           } */}
             <Route path='/mockInterviewDetail' element={<MockInterviewDetail />} />
             <Route path="/mockInterviewHall" element={<MockInterviewHall />} />
-            <Route path="/mockInterview" element={<MockInterview />} />
+            <Route path="/mockInterview/:experience_id" element={<MockInterview />} />
             <Route path="/interview" element={<Interview />} />
             <Route path="/user" element={<User />} />
             <Route path="/experience/upload" element={<RecordUpload />} />
