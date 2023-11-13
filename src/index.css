@@ -1,3 +1,41 @@
-body {
-    margin: 0;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+
+.footer-links{
+  @apply text-neutral-600 font-[15px] my-2;
+}
+.footer-title {
+  @apply font-bold text-[18px];
+}
+.footer-desc{
+  @apply w-[20%] pr-[30px]
+  
+}
+
+/* 重写轮播箭头 */
+.slick-prev:before, .slick-next:before{
+  font-size: 30px !important;
+  font-family: inherit !important;
+  background-color: #D9D9F2;
+  color: #666;
+  display: block;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  text-align: center;
+  line-height: 45px !important;
+}
+.slick-prev{
+  left: -60px !important;
+}
+.slick-next{
+  right: -50px !important;
 }
