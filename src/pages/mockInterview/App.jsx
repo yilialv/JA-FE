@@ -1,27 +1,16 @@
 import {
   APPKEY,
+  MIN_WORDS,
   MOCK_SERVER_URL,
+  URI,
 } from "../../constant";
 
 import {
-  Button,
-  Spin,
-  Input,
   Avatar,
-  Checkbox,
-  Space,
-  Select,
   message,
-  Alert,
-  Divider,
   Popover
 } from "antd";
 import {
-  UserOutlined,
-  ClockCircleOutlined,
-  RightOutlined,
-  LeftOutlined,
-  QuestionCircleOutlined,
   CloseOutlined,
   StarOutlined,
   ShareAltOutlined,
@@ -30,19 +19,20 @@ import {
 import { observer } from "mobx-react";
 import { getToken, getHotWordID } from "../../router";
 import GradientBackground from "../../background/gradientBackground";
-import iconSend from "../../imgs/icon-send.svg";
+import LoadingAnimation from "../../components/loadingAnimation";
 import iconEvaluation from "../../imgs/icon-evaluation.svg";
 import iconRight from "../../imgs/icon-right.svg";
-import iconWaiting from "../../imgs/icon-waiting.svg";
-import iconProgressBar from "../../imgs/icon-progressBar.svg";
 import iconClock from "../../imgs/icon-clock.svg";
 import iconMic from "../../imgs/icon-mic.svg";
+import iconMicReverse from "../../imgs/icon-mic-reverse.svg";
 import './mockInterview.less';
 import { useEffect, useRef, useState } from "react";
 
 const MockInterview = observer(() => {
 
   const wsServer = useRef(null); // 和后端的连接
+
+  const ws = useRef(null); // 和百度的连接
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -51,44 +41,47 @@ const MockInterview = observer(() => {
 
     return () => {
       wsServer.current?.close();
+      ws.current?.close();
       clearInterval(interval);
+      setMockLastContent('');
+      setMockLastEvaluation('');
       //utils.initializeMockInterview();
     };
   }, []);
 
-  const [mockConversations, setMockConversations] = useState([]);
+  const mockConversations = useRef([]);
   const mockID = useRef('');
   const [mockLastContent, setMockLastContent] = useState('');
-  const [mockReplies, setMockReplies] = useState([]);
+  const mockLastContentData = useRef('');
+  const mockReplies = useRef([]);
   const [mockLastEvaluation, setMockLastEvaluation] = useState('');
-  const mockLastType = useRef(0); //question:1,answer:0,finish:4
-  const [mockInputCache, setMockInputCache] = useState('');
+  const mockLastEvaluationData = useRef('');
+  const mockLastType = useRef(0); //question:1,answer:0,evaluation:2,finish:4
   const mockQuestionIndex = useRef(0);
-  const [settingFollowing, setSettingFollowing] = useState(true);
   const conclusionCount = useRef(0);
+  const connectFlag = useRef(true); //防止重复连接
+  const request = useRef(''); //语音识别缓存
+  const nextRequest = useRef(''); //语音识别
+  const setNextRequest = (val) => {
+    nextRequest.current = val;
+  };
+  const setRequest = () => {
+    request.current += nextRequest.current;
+  };
 
   const task_id = crypto.randomUUID().replace(/-/g, "");
-
-  const ws = useRef(null); // 和百度的连接
 
   const recorder = useRef(null);
   const mediaStreamRef = useRef(null);
   const mediaRecorder = useRef(null);
   const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
 
-  const startRecording = () => {
+  const initRecording = () => {
 
     navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
       mediaRecorder.current = new MediaRecorder(stream);
       recorder.current = new RecorderManager("/recorder_manager");
       mediaStreamRef.current = stream;
-
-      mediaRecorder.current.start();
-
-      recorder.current.start({
-        sampleRate: 16000,
-        frameSize: frameSize,
-      });
 
       // 接收音频数据帧
       recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
@@ -103,20 +96,27 @@ const MockInterview = observer(() => {
       mediaRecorder.current.onstop = () => {
         stopMediaStream();
       };
-
     })
       .catch((error) => {
         console.error('录音报错:', error);
       });
   };
 
+  const startRecording = () => {
+    console.log("开始录音");
+    mediaRecorder.current.start();
+    recorder.current.start({
+      sampleRate: 16000,
+      frameSize: frameSize,
+    });
+  };
+
   const stopRecording = () => {
-    recorder.current.stop();
-    sendFinish();
+    //recorder.current.stop();
+    //sendFinish();
     mediaRecorder.current.stop();
     console.log('录音关闭');
-    ws.current?.close();
-    wsServer.current?.close();
+    sendAnswer(request.current);
   };
 
   const stopMediaStream = () => {
@@ -157,7 +157,7 @@ const MockInterview = observer(() => {
     };
     const body = JSON.stringify(req);
     ws.current.send(body);
-    console.log("发送开始帧:" + body);
+    console.log("语音识别发送开始帧");
   };
 
   /**
@@ -188,46 +188,166 @@ const MockInterview = observer(() => {
     mockQuestionIndex.current++;
   };
 
-  const setMockAnswer = () => {
-    setMockLastContent(() => mockInputCache);
-  };
-
   const addMockConversations = (val) => {
-    if (mockConversations.length === 6) {
-      setMockConversations(pre => pre.shift());
+    if (mockConversations.current.length === 6) {
+      mockConversations.current.shift();
     }
-    setMockConversations(pre => pre.concat(val));
+    mockConversations.current.push(val);
   };
 
   const addMockReplies = (type) => {
-    if (mockLastContent) {
+    if (mockLastContentData.current && mockLastType.current !== 2) {
       addMockConversations({
         type: mockLastType.current,
-        content: mockLastContent
+        content: mockLastContentData.current
       });
-      setMockReplies(pre => pre.concat({
+      mockReplies.current.push({
         name: mockLastType.current === 0 ? '用户' : '小助手',
-        content: mockLastContent,
-        evaluation: mockLastEvaluation,
+        content: mockLastContentData.current,
+        evaluation: mockLastEvaluationData.current,
         //type: this.mockLastType
-      }));
+      });
     }
-    console.log(mockReplies);
-    setMockLastContent(() => '');
-    setMockLastEvaluation(() => '');
+    console.log('mockReplies', mockReplies);
+    mockLastContentData.current = '';
+    mockLastEvaluationData.current = '';
     mockLastType.current = type ? type : 0;
   };
 
   const appendMockLastContent = (content) => {
     setMockLastContent(pre => pre + content);
+    mockLastContentData.current += content;
   };
 
   const appendMockLastEvaluation = (content) => {
     setMockLastEvaluation(pre => pre + content);
+    mockLastEvaluationData.current += content;
+  };
+
+  const connectWebsocket = async () => {
+    if (!connectFlag.current) {
+      return;
+    }
+    connectFlag.current = false;
+
+    //语音识别
+    await getToken().then((fetchedToken) => {
+      const uri = URI + "?token=" + fetchedToken;
+      ws.current = new WebSocket(uri);
+    });
+
+    wsServer.current = new WebSocket(MOCK_SERVER_URL);
+
+    ws.current.onopen = () => {
+      sendStartParams();
+      console.log("语音识别WebSocket开始连接");
+    };
+
+    ws.current.onmessage = (message) => {
+      try {
+        const res = JSON.parse(message.data);
+        const { payload, header } = res;
+        const { name, status, status_message } = header;
+        const { result } = payload;
+        if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
+          if (status === 20000000) {
+            setNextRequest(result);
+            setRequest();
+            console.log(request.current);
+          } else {
+            throw Error(status_message);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      recorder.current.stop();
+      console.log("error:", error);
+    };
+
+    ws.current.onclose = (res) => {
+      console.log("语音识别WebSocket关闭连接：", res);
+    };
+
+    //jobGPT后端
+    wsServer.current.onopen = () => {
+      console.log("Server WebSocket打开连接");
+      const req = {
+        type: 1,
+        data: {
+          experience_id: 112
+        },
+      };
+      const body = JSON.stringify(req);
+      wsServer.current.send(body);
+      console.log("jobGPT发送开始帧:" + body);
+      requestQuestion();
+    };
+
+    wsServer.current.onmessage = (msg) => {
+      try {
+        const result = JSON.parse(msg.data);
+        const { type, data, id } = result;
+        console.log(type, data, id);
+        if (type === 1 || type === 3) {
+          // 第一次拿到数据
+          if (!mockID.current) {
+            setMockNewReply(id, type);
+            addMockIndex();
+            followingQuestionFlag.current = 1;
+          } else if (id !== mockID.current) {
+            if (type === 1) { addMockIndex(); followingQuestionFlag.current = 1; }
+            setMockNewReply(id, 1);
+          }
+          appendMockLastContent(data);
+        }
+        else if (type === 2) {
+          if (id !== mockID.current) {
+            addMockReplies();
+            setMockNewReply(id ? id : 'skipEvaluation', type);
+          }
+          appendMockLastEvaluation(data);
+        }
+        else if (type === 4) {
+          conclusionCount.current++;
+          setMockNewReply('conclusion', type);
+          addMockReplies(type);
+          appendMockLastContent(data);
+        } else if (type === 99) {
+          message.error(data);
+        } else if (type === 9) {
+          if (mockLastType.current === 2) {
+            console.log('check');
+            setNextQuestionFlag(true);
+          }
+        }
+      } catch (error) {
+        console.log("后端返回解析出错!");
+      }
+    };
+
+    wsServer.current.onclose = () => {
+      const req = {
+        type: 9,
+        data: {},
+      };
+      wsServer.current.send(JSON.stringify(req));
+      console.log("发送结束帧：", JSON.stringify(req));
+      console.log("Server WebSocket关闭连接");
+    };
+
+    wsServer.current.onerror = (error) => {
+      console.log("error:", error);
+    };
+
+    initRecording();
   };
 
   useEffect(() => {
-    //connectWebsocket();
+    connectWebsocket();
   }, []);
 
   const followingQuestionFlag = useRef(0);
@@ -236,42 +356,57 @@ const MockInterview = observer(() => {
     const following = {
       type: 4,
       data: {
-        interactions: mockConversations
+        interactions: mockConversations.current
       }
     };
     const req = {
       type: 2,
       data: {
         question_index: mockQuestionIndex.current,
-        interactions: mockConversations,
+        interactions: mockConversations.current,
         style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    console.log('interaction', Array.from(mockConversations));
-    console.log('index', mockQuestionIndex.current);
     wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.current) ? following : req));
     followingQuestionFlag.current = 0;
   };
 
-  const sendAnswer = () => {
-    if (!inputValue) {
-      message.warning("请输入回答");
-      return;
+  const sendAnswer = (answer) => {
+    if (answer.length < MIN_WORDS) {
+      // message.error('文字过短');
+      // setMicActive(false);
+      // return;
+      answer = '我不知道';
     }
-    const answer = inputValue;
+    console.log('answer', answer);
     const req = {
       type: 3,
       data: {
-        interactions: mockConversations,
+        interactions: mockConversations.current,
         answer: answer,
         question_id: mockID.current,
         evaluation: settingEvaluation,
         toleration: settingTempo, // 时间容忍度-高-中-低 
       },
     };
-    setMockInputCache(() => answer);
     wsServer.current.send(JSON.stringify(req));
+    setEvaluationWindow(true);
+    setMicActive(false);
+  };
+
+  const nextQuestion = () => {
+    if (!nextQuestionFlag) {
+      return;
+    }
+    setEvaluationWindow(!evaluationWindow);
+    addMockReplies();
+    setMockLastContent(() => '');
+    setMockLastEvaluation(() => '');
+    mockLastContentData.current = '';
+    mockLastEvaluationData.current = '';
+    requestQuestion();
+    setNextQuestionFlag(() => false);
   };
 
   const [settingPersonalise, setSettingPersonalise] = useState(false);
@@ -291,6 +426,8 @@ const MockInterview = observer(() => {
   const [openFeedbackWindow, setFeedbackWindow] = useState(false);
 
   const [micActive, setMicActive] = useState(false);
+
+  const [nextQuestionFlag, setNextQuestionFlag] = useState(false);
 
   const feedbackWindow = (
     <div className="feedback-window">
@@ -335,9 +472,9 @@ const MockInterview = observer(() => {
                 <img src={iconClock} />
                 {count}min
               </div>
-              <div className={`contents-interview ${!evaluationWindow && "contents-interview-hide"}`}>
+              <div className={`contents-interview ${!evaluationWindow ? "contents-interview-hide" : ''}`}>
                 <div className="interview-question">
-                  我是问题我是问题
+                  {mockLastContent ? mockLastContent : <LoadingAnimation />}
                 </div>
                 {
                   evaluationWindow
@@ -348,10 +485,10 @@ const MockInterview = observer(() => {
                         <span>智能评价</span>
                       </div>
                       <div className="evaluation-text">
-                        我是评价我是评价我是评价
+                        {mockLastEvaluation ? mockLastEvaluation : <LoadingAnimation />}
                       </div>
-                      <div className="evaluation-bottom">
-                        <button onClick={() => { setEvaluationWindow(!evaluationWindow); }}>
+                      <div className={`evaluation-bottom `}>
+                        <button className={`${!nextQuestionFlag ? "button-disabled" : ''}`} onClick={() => { nextQuestion(); }}>
                           下一题
                           <img src={iconRight} />
                         </button>
@@ -360,14 +497,24 @@ const MockInterview = observer(() => {
                     :
                     <div className="interview-answer">
                       <div className="answer-background">
-                        <div className="answer-button">
-                          <img src={iconMic} onClick={() => { setMicActive(!micActive); }} />
-                          <span>{micActive ? '结束' : '开始'}</span>
-                        </div>
+                        {
+                          micActive
+                            ?
+                            <div className="answer-button mic-active" onClick={() => { stopRecording(); }}>
+                              <div className="mic-active-animation"></div>
+                              <img src={iconMicReverse} />
+                              <span>结束</span>
+                            </div>
+                            :
+                            <div className="answer-button" onClick={() => { setMicActive(true); startRecording(); }}>
+                              <img src={iconMic} />
+                              <span>开始</span>
+                            </div>
+                        }
                       </div>
                       <div className="answer-switch">
                         <div className="switch-background">
-                          <div className="switch" onClick={() => { setShowEvaluation(!showEvaluation) }}>
+                          <div className="switch" onClick={() => { setShowEvaluation(!showEvaluation); }}>
                             <div className={`${showEvaluation ? "switch-active" : "switch-inactive"}`}>
                               查看评价
                             </div>

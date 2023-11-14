@@ -4,7 +4,8 @@
 @dialog-box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 @screen-width: 90vw;
 @screen-height: 83vh;
-@theme-color: #3F9D13;
+@theme-color1: #5844CE;
+@theme-color2: #EE6F84;
 @theme-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 @theme-gradient: linear-gradient(90deg, rgba(120, 103, 215, 1) 0%, rgba(238, 111, 132, 1) 100%);
 
@@ -68,9 +69,8 @@
                 grid-template-rows: 1fr 11fr;
                 transition: 300ms;
 
-
-
                 .container-body-header {
+                    min-height: 62px;
                     position: relative;
                     display: flex;
                     align-items: center;
@@ -114,7 +114,6 @@
                     .menu-item:hover {
                         scale: 1.1;
                     }
-
                 }
 
                 .container-body-contents {
@@ -122,6 +121,8 @@
                     grid-template-rows: 1fr 12fr 2fr;
 
                     .interview-timer {
+                        display: flex;
+                        align-items: flex-end;
                         margin-top: auto;
                         margin-left: auto;
                         margin-right: 20px;
@@ -130,7 +131,7 @@
                         font-size: 16px;
 
                         img {
-                            height: 24px;
+                            height: 30px;
                         }
                     }
 
@@ -148,6 +149,9 @@
                             background-color: #F5F6FD;
                             border-radius: 10px;
                             padding: 20px 30px 0 30px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
                         }
 
                         .interview-answer {
@@ -206,6 +210,7 @@
                                 grid-area: 1/2/2/3;
                                 align-self: center;
                                 justify-self: center;
+                                pointer-events: none;
                                 display: flex;
                                 align-items: center;
                                 justify-content: center;
@@ -214,13 +219,18 @@
                                 border-radius: 50%;
                                 background-color: #F0F0F0;
                                 user-select: none;
+                                transition: 300ms;
 
                                 .answer-button {
+                                    position: relative;
                                     width: 85px;
+                                    pointer-events: auto;
                                     height: 85px;
                                     display: grid;
                                     cursor: pointer;
                                     align-content: center;
+                                    justify-items: center;
+                                    align-items: center;
                                     justify-content: center;
                                     background: #fff;
                                     border-radius: 50%;
@@ -232,18 +242,32 @@
                                         font-size: 16px;
                                         text-align: center;
                                     }
+
+                                    .mic-active-animation {
+                                        position: absolute;
+                                        transform: translate(-50%, -50%);
+                                        width: 100px;
+                                        height: 100px;
+                                        border-radius: 50%;
+                                        animation: outline-keys 1500ms ease-in-out infinite;
+                                    }
                                 }
 
-                                .answer-button:hover{
+                                .mic-active {
+                                    color: #fff;
+                                    background: @theme-color2;
                                 }
+                            }
 
+                            .answer-background:hover {
+                                box-shadow: 0px 0px 0px 12px rgba(255, 255, 255, 0.8) inset, 0px 0px 0px 30px rgba(135, 135, 135, 0.2) inset;
                             }
                         }
 
                         .interview-evaluation {
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
+                            display: grid;
+                            height: 100%;
+                            grid-template-rows: 1fr 2fr 1fr;
 
                             .evaluation-title {
                                 user-select: none;
@@ -272,6 +296,9 @@
 
                             .evaluation-text {
                                 font-size: 16px;
+                                display: flex;
+                                align-items: center;
+                                justify-content: center;
                             }
 
                             .evaluation-bottom {
@@ -280,6 +307,7 @@
                                 margin-bottom: 20px;
 
                                 button {
+                                    height: 36px;
                                     cursor: pointer;
                                     padding: 10px;
                                     display: flex;
@@ -290,14 +318,18 @@
                                     border-radius: 5px;
                                     box-shadow: 0 4px 8px 0 #7867D7;
 
-
                                     img {
                                         margin-left: 5px;
                                     }
 
                                     transition: 300ms;
                                 }
+
+                                .button-disabled {
+                                    cursor: not-allowed;
+                                }
                             }
+
                         }
                     }
 
@@ -351,9 +383,27 @@
     }
 }
 
-.animation {
-    -webkit-animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
-    animation: scale-in-tl 0.3s cubic-bezier(0.250, 0.460, 0.450, 0.940) both;
+@keyframes outline-keys {
+    0% {
+        transform: scale(1);
+        outline: solid 5px @theme-color2;
+        outline-offset: 0;
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.4);
+        outline: solid 0 transparent;
+        outline-offset: 20px;
+        opacity: 0;
+    }
+
+    100% {
+        transform: scale(1);
+        outline: solid 5px @theme-color2;
+        outline-offset: 0;
+        opacity: 0.8;
+    }
 }
 
 @-webkit-keyframes scale-in-tl {
