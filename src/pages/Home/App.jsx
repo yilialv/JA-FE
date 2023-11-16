@@ -186,4 +186,3 @@ const Home = () => {
 };
 
 export default observer(Home);
-

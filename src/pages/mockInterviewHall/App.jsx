@@ -11,6 +11,7 @@ import { BASE_URL } from "../../constant";
 import store from "../../store";
 import { observer } from 'mobx-react';
 import { fetchCompanyList } from "../../router";
+import { getCardList } from "../../router";
 
 const sort_type = [
   {
@@ -55,9 +56,9 @@ const round = [
 
 const MockInterviewHall = observer(() => {
 
-  useEffect(()=> {
+  useEffect(() => {
     fetchCompanyList();
-  },[]);
+  }, []);
 
   const [options, setOptions] = useState({
     company: '',
@@ -71,21 +72,10 @@ const MockInterviewHall = observer(() => {
   const [cardList, setCardList] = useState([]);
 
   useEffect(() => {
-    getCardList();
-  }, [options]);
-
-  function getCardList() {
-    axios.post(`${BASE_URL}/api/experience/mock_interview_hall`, options).then((res) => {
-      const { status, data: { data: { mock_interview_cards } }
-      } = res;
-      if (status === 200) {
-        setCardList(mock_interview_cards);
-      }
-    }).catch((err) => {
-      console.log('error:', err);
-      message.error('获取卡片列表失败');
+    getCardList(options).then(res => {
+      setCardList(res);
     });
-  }
+  }, [options]);
 
   return (
     <div className="mock-interview-hall">
@@ -114,12 +104,22 @@ const MockInterviewHall = observer(() => {
           <Select
             className="select"
             defaultValue=''
-            options={ store.companyList.map(item => {
-              return {
-                label: item?.Name,
-                value: item?.Name,
-              }
-            }) }
+            options={
+              store.companyList
+                .filter(item => item?.Name !== '默认Logo')
+                .map(item => {
+                  return {
+                    label: item?.Name,
+                    value: item?.Name,
+                  };
+                })
+                .reverse()
+                .concat({
+                  value: '',
+                  label: '不限'
+                })
+                .reverse()
+            }
             onChange={(value) => {
               setOptions(options => ({
                 ...options,
@@ -163,11 +163,9 @@ const MockInterviewHall = observer(() => {
       <Divider></Divider>
       <div className="hall-body">
         {
-          cardList.map((item, index) => {
+          cardList.map((item) => {
             return (
-              <>
-                <RecordCard key={index} data={item} />
-              </>
+              <RecordCard key={item?.id} data={item} />
             );
           })
         }

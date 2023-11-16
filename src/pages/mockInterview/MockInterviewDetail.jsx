@@ -1,4 +1,5 @@
 import {
+  BASE_URL,
   MOCK_SERVER_URL,
 } from "../../constant";
 
@@ -19,23 +20,15 @@ import {
   LeftOutlined,
   QuestionCircleOutlined,
 } from "@ant-design/icons";
-import store from "../../store";
+import utils from "./mockUtils";
 import { observer } from "mobx-react";
 import iconSend from "../../imgs/icon-send.svg";
 import iconWaiting from "../../imgs/icon-waiting.svg";
 import '../Interview/App.less';
 import { useEffect, useState } from "react";
+import axios from "axios";
 
 const MockInterview = observer(() => {
-
-  useEffect(() => {
-
-    const scrollBlock = document.getElementById("scrollBlock");
-    // 将内容自动滚动到底部
-    scrollBlock.scrollTop = scrollBlock.scrollHeight;
-
-  }, []);
-
   const handleInput = (e) => {
     const { target: { value } } = e;
     setInputValue(value);
@@ -54,6 +47,29 @@ const MockInterview = observer(() => {
   const handleDrawer = () => {
     setDrawerState(!DrawerState);
   };
+
+  useEffect(() => {
+    getDetail();
+  }, []);
+
+  //未完成
+
+  // function getDetail() {
+  //   const params = {
+  //     record_id: 2
+  //   };
+  //   axios.post(`${BASE_URL}/api/mock/get_detail`, params).then((res) => {
+  //     const { status, data: { data: { records } } } = res;
+  //     if (status === 200) {
+  //       console.log(records);
+  //       //type1:问题,type2:回答,type3:评价
+        
+  //     }
+  //   }).catch((err) => {
+  //     console.log('error:', err);
+  //     message.error('获取模拟面试详情失败');
+  //   });
+  // }
 
   return (
     <div className="interview-detail">
@@ -76,7 +92,7 @@ const MockInterview = observer(() => {
             className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
           >
             <div className="answer-block" id="scrollBlock">
-              {store.mockReplies.map((item, key) => {
+              {utils.mockReplies.map((item, key) => {
                 const { content, evaluation } = item;
                 return (
                   <div className="answer" key={key}>
@@ -102,7 +118,7 @@ const MockInterview = observer(() => {
                   </div>
                 );
               })}
-              {!!store.mockLastContent && (
+              {!!utils.mockLastContent && (
                 <div className="answer animation">
                   <div className="answer-header">
                     <Avatar
@@ -115,13 +131,13 @@ const MockInterview = observer(() => {
                     <div>{'用户名'}</div>
                   </div>
                   <div className="text">
-                    {store.mockLastContent}
+                    {utils.mockLastContent}
                   </div>
-                  {!!store.mockLastEvaluation && (
+                  {!!utils.mockLastEvaluation && (
                     <>
                       <div className="answer-divider"></div>
                       <div className="answer-comment">
-                        {store.mockLastEvaluation}
+                        {utils.mockLastEvaluation}
                       </div>
                     </>
                   )
