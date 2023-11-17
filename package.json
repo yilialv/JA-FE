@@ -17,6 +17,8 @@
     "mobx": "^6.10.0",
     "mobx-react": "^9.0.0",
     "moment": "^2.29.4",
+    "pinyin-pro": "^3.18.1",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-fast-marquee": "^1.6.2",

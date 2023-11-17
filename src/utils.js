@@ -22,10 +22,11 @@ export function deleteCookie(name) {
 }
 
 export function setLocalStorage(values) {
-  const { company, direction, round } = values;
+  const { company, direction, round, img} = values;
   localStorage.setItem('company', company);
   localStorage.setItem('direction', direction);
   localStorage.setItem('round', round);
+  localStorage.setItem('img', img);
 }
 
 export function timestampToTime(timestamp) {

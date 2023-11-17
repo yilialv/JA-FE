@@ -91,7 +91,7 @@ const NavigationMenu = () => {
   };
 
   return (
-    <Header className='flex justify-between items-center bg-slate-100 h-full pt-3'>
+    <Header className='flex justify-between items-center bg-slate-100  h-[80px]'>
       <Login />
       <AssistantModal />
       <Link to="/"><div className='text-black font-bold text-[38px] sm:w-2/5 lg:w-1/3'>JobGPT</div></Link>
@@ -115,28 +115,11 @@ const NavigationMenu = () => {
               })
             }
           </ul>
-          {
-            store.isLogin ?
-              <>
-                <Dropdown menu={{ items }}
-                  placement='bottomRight'
-                  overlayStyle={{ textAlign: 'center' }}
-                >
-                  <Avatar
-                    icon={<UserOutlined />}
-                    size='large'
-                    className='login-icon'
-                  >
-                  </Avatar>
-                </Dropdown>
-              </>
-              :
-              <div className='flex items-center'>
-                <button  onClick={showModal}  className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
-                <GlobalOutlined className="text-[25px] ml-2"/>
-                {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
-              </div>
-          }
+          <div className='flex items-center'>
+            <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
+            <GlobalOutlined className="text-[25px] ml-2" />
+            {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
+          </div>
         </div>
       </div>
       {/* <div className='mobile-menu'>

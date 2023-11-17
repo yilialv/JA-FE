@@ -1,0 +1,63 @@
+.input-box {
+  position: relative;
+  height: 42px;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+.input-box > input:hover .input-box > div {
+  display: block;
+}
+.input-box > input {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  text-indent: 20px;
+  line-height: 45px;
+  outline: none;
+  width: 100px;
+  background: #EDBC42;
+  border-radius: 4px !important;
+}
+.input-box > div {
+  position: absolute;
+  z-index: 999 !important;
+  background-color: white;
+  padding: 15px;
+  left: -30px;
+  height: 444px;
+  width: 180px;
+  text-align: center;
+  border-radius: 8px;
+}
+.input-box .indicator {
+  overflow-y: scroll;
+  font-family: '微软雅黑';
+  font-size: 12px;
+  height: 100%;
+  background-color: #ededfb;
+  border-radius: 20px;
+  overflow: hidden;
+}
+.input-box .indicator li {
+  font-size: 12px;
+  padding: 0px 2px;
+  cursor: pointer;
+  color: #b281c3;
+}
+.input-box .indicator::-webkit-scrollbar {
+  display: none;
+}
+.input-box .company-box {
+  width: 100%;
+  overflow-y: scroll;
+  position: relative;
+}
+.input-box .company-box::-webkit-scrollbar {
+  display: none;
+}
+.input-box .company-box li {
+  font-size: 14px;
+  cursor: pointer;
+  padding: 4px 0;
+  font-weight: bold;
+}
