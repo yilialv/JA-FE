@@ -12,7 +12,7 @@ import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
 
-import InterviewAid from '@/pages/interviewAid/App';
+import InterviewAid from '@/pages/interviewAid/app';
 
 const router = () => {
   const element = useRoutes([
