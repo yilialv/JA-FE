@@ -1,35 +1,38 @@
 import {
+  APPKEY,
+  MIN_WORDS,
   MOCK_SERVER_URL,
+  URI,
 } from "../../constant";
 
 import {
-  Button,
-  Spin,
-  Input,
   Avatar,
-  Checkbox,
-  Space,
-  Select,
   message,
-  Alert
+  Popover
 } from "antd";
 import {
-  UserOutlined,
-  ClockCircleOutlined,
-  RightOutlined,
-  LeftOutlined,
-  QuestionCircleOutlined,
+  CloseOutlined,
+  StarOutlined,
+  ShareAltOutlined,
+  EllipsisOutlined,
 } from "@ant-design/icons";
-import utils from "./mockUtils";
 import { observer } from "mobx-react";
-import iconSend from "../../imgs/icon-send.svg";
-import iconWaiting from "../../imgs/icon-waiting.svg";
-import '../Interview/App.less';
+import { getToken, getHotWordID } from "../../router";
+import GradientBackground from "../../background/gradientBackground";
+import LoadingAnimation from "../../components/loadingAnimation";
+import iconEvaluation from "../../imgs/icon-evaluation.svg";
+import iconRight from "../../imgs/icon-right.svg";
+import iconClock from "../../imgs/icon-clock.svg";
+import iconMic from "../../imgs/icon-mic.svg";
+import iconMicReverse from "../../imgs/icon-mic-reverse.svg";
+import './mockInterview.less';
 import { useEffect, useRef, useState } from "react";
 
 const MockInterview = observer(() => {
 
   const wsServer = useRef(null); // 和后端的连接
+
+  const ws = useRef(null); // 和百度的连接
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -38,32 +41,238 @@ const MockInterview = observer(() => {
 
     return () => {
       wsServer.current?.close();
+      ws.current?.close();
       clearInterval(interval);
-      utils.initializeMockInterview();
+      setMockLastContent('');
+      setMockLastEvaluation('');
+      //utils.initializeMockInterview();
     };
   }, []);
 
-  useEffect(() => {
-    connectWebsocket();
-  }, []);
-
-  //自动滚动
-  useEffect(() => {
-    scrollToBottom();
-  }, [utils.mockLastContent]);
-
-  const autoScroll = useRef(null);
-
-  const scrollToBottom = () => {
-    autoScroll.current.scrollIntoView({ behavior: 'instant' });
+  const mockConversations = useRef([]);
+  const mockID = useRef('');
+  const [mockLastContent, setMockLastContent] = useState('');
+  const mockLastContentData = useRef('');
+  const mockReplies = useRef([]);
+  const [mockLastEvaluation, setMockLastEvaluation] = useState('');
+  const mockLastEvaluationData = useRef('');
+  const mockLastType = useRef(0); //question:1,answer:0,evaluation:2,finish:4
+  const mockQuestionIndex = useRef(0);
+  const conclusionCount = useRef(0);
+  const connectFlag = useRef(true); //防止重复连接
+  const request = useRef(''); //语音识别缓存
+  const nextRequest = useRef(''); //语音识别
+  const setNextRequest = (val) => {
+    nextRequest.current = val;
   };
-  //
+  const setRequest = () => {
+    request.current += nextRequest.current;
+  };
 
-  const followingQuestionFlag = useRef(0);
+  const task_id = crypto.randomUUID().replace(/-/g, "");
+
+  const recorder = useRef(null);
+  const mediaStreamRef = useRef(null);
+  const mediaRecorder = useRef(null);
+  const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
+
+  const initRecording = () => {
+
+    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
+      mediaRecorder.current = new MediaRecorder(stream);
+      recorder.current = new RecorderManager("/recorder_manager");
+      mediaStreamRef.current = stream;
+
+      // 接收音频数据帧
+      recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+        if (ws.current.readyState === ws.current.OPEN) {
+          ws.current.send(new Int8Array(frameBuffer));
+          if (isLastFrame) {
+            console.log("接收最后一个音频帧");
+          }
+        }
+      };
+
+      mediaRecorder.current.onstop = () => {
+        stopMediaStream();
+      };
+    })
+      .catch((error) => {
+        console.error('录音报错:', error);
+      });
+  };
+
+  const startRecording = () => {
+    console.log("开始录音");
+    mediaRecorder.current.start();
+    recorder.current.start({
+      sampleRate: 16000,
+      frameSize: frameSize,
+    });
+  };
+
+  const stopRecording = () => {
+    //recorder.current.stop();
+    //sendFinish();
+    mediaRecorder.current.stop();
+    console.log('录音关闭');
+    sendAnswer(request.current);
+  };
+
+  const stopMediaStream = () => {
+    if (mediaStreamRef.current) {
+      const tracks = mediaStreamRef.current.getTracks();
+
+      tracks.forEach((track) => {
+        track.stop();
+      });
+
+      const audioTracks = mediaStreamRef.current.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = false;
+      });
+    }
+  };
+
+  /**
+   * 发送开始帧
+   * @param {WebSocket} ws
+   */
+  const sendStartParams = () => {
+    const req = {
+      header: {
+        appkey: APPKEY,
+        message_id: crypto.randomUUID().replace(/-/g, ""),
+        task_id: task_id,
+        namespace: "SpeechTranscriber",
+        name: "StartTranscription",
+      },
+      payload: {
+        enable_intermediate_result: true,
+        enable_punctuation_prediction: true,
+        disfluency: true,
+        //enable_semantic_sentence_detection: true, 语义分句开关，打开后速度会比较慢
+        vocabulary_id: "6851f419a17a44969752070669b227c2", // 后端热词表 todo:根据行业方向更换热词id
+      },
+    };
+    const body = JSON.stringify(req);
+    ws.current.send(body);
+    console.log("语音识别发送开始帧");
+  };
+
+  /**
+   * 发送结束帧
+   * @param {WebSocket} ws
+   */
+  const sendFinish = () => {
+    const req = {
+      header: {
+        appkey: APPKEY,
+        message_id: crypto.randomUUID().replace(/-/g, ""),
+        task_id: task_id,
+        namespace: "SpeechTranscriber",
+        name: "StopTranscription",
+      },
+    };
+    const body = JSON.stringify(req);
+    ws.current.send(body);
+    console.log("发送语音结束帧");
+  };
+
+  const setMockNewReply = (id, type) => {
+    mockID.current = id;
+    mockLastType.current = type;
+  };
+
+  const addMockIndex = () => {
+    mockQuestionIndex.current++;
+  };
+
+  const addMockConversations = (val) => {
+    if (mockConversations.current.length === 6) {
+      mockConversations.current.shift();
+    }
+    mockConversations.current.push(val);
+  };
+
+  const addMockReplies = (type) => {
+    if (mockLastContentData.current && mockLastType.current !== 2) {
+      addMockConversations({
+        type: mockLastType.current,
+        content: mockLastContentData.current
+      });
+      mockReplies.current.push({
+        name: mockLastType.current === 0 ? '用户' : '小助手',
+        content: mockLastContentData.current,
+        evaluation: mockLastEvaluationData.current,
+        //type: this.mockLastType
+      });
+    }
+    console.log('mockReplies', mockReplies);
+    mockLastContentData.current = '';
+    mockLastEvaluationData.current = '';
+    mockLastType.current = type ? type : 0;
+  };
+
+  const appendMockLastContent = (content) => {
+    setMockLastContent(pre => pre + content);
+    mockLastContentData.current += content;
+  };
+
+  const appendMockLastEvaluation = (content) => {
+    setMockLastEvaluation(pre => pre + content);
+    mockLastEvaluationData.current += content;
+  };
 
   const connectWebsocket = async () => {
+    if (!connectFlag.current) {
+      return;
+    }
+    connectFlag.current = false;
+
+    //语音识别
+    await getToken().then((fetchedToken) => {
+      const uri = URI + "?token=" + fetchedToken;
+      ws.current = new WebSocket(uri);
+    });
+
     wsServer.current = new WebSocket(MOCK_SERVER_URL);
 
+    ws.current.onopen = () => {
+      sendStartParams();
+      console.log("语音识别WebSocket开始连接");
+    };
+
+    ws.current.onmessage = (message) => {
+      try {
+        const res = JSON.parse(message.data);
+        const { payload, header } = res;
+        const { name, status, status_message } = header;
+        const { result } = payload;
+        if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
+          if (status === 20000000) {
+            setNextRequest(result);
+            setRequest();
+            console.log(request.current);
+          } else {
+            throw Error(status_message);
+          }
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      recorder.current.stop();
+      console.log("error:", error);
+    };
+
+    ws.current.onclose = (res) => {
+      console.log("语音识别WebSocket关闭连接：", res);
+    };
+
+    //jobGPT后端
     wsServer.current.onopen = () => {
       console.log("Server WebSocket打开连接");
       const req = {
@@ -74,7 +283,7 @@ const MockInterview = observer(() => {
       };
       const body = JSON.stringify(req);
       wsServer.current.send(body);
-      console.log("发送开始帧:" + body);
+      console.log("jobGPT发送开始帧:" + body);
       requestQuestion();
     };
 
@@ -83,44 +292,36 @@ const MockInterview = observer(() => {
         const result = JSON.parse(msg.data);
         const { type, data, id } = result;
         console.log(type, data, id);
-        setReplyState(false);
         if (type === 1 || type === 3) {
           // 第一次拿到数据
-          if (!utils.mockID) {
-            utils.setMockNewReply(id, type);
-            utils.addMockIndex();
-            followingQuestionFlag.value = 1;
-            setInputValue('');
-          } else if (id !== utils.mockID) {
-            if (type === 1) { utils.addMockIndex(); followingQuestionFlag.value = 1; }
-            utils.setMockNewReply(id, 1);
-            setInputValue('');
+          if (!mockID.current) {
+            setMockNewReply(id, type);
+            addMockIndex();
+            followingQuestionFlag.current = 1;
+          } else if (id !== mockID.current) {
+            if (type === 1) { addMockIndex(); followingQuestionFlag.current = 1; }
+            setMockNewReply(id, 1);
           }
-          utils.appendMockLastContent(data);
+          appendMockLastContent(data);
         }
         else if (type === 2) {
-          if (id !== utils.mockID) {
-            setInputValue('');
-            utils.setMockReplies();
-            utils.setMockNewReply(id ? id : 'skipEvaluation', 0);
-            utils.setMockAnswer();
+          if (id !== mockID.current) {
+            addMockReplies();
+            setMockNewReply(id ? id : 'skipEvaluation', type);
           }
-          utils.appendMockLastEvaluation(data);
+          appendMockLastEvaluation(data);
         }
         else if (type === 4) {
-          utils.conclusionCount++;
-          utils.setMockNewReply('conclusion', type);
-          utils.setMockReplies(type);
-          setInputValue('');
-          setButtonState(true);
-          utils.appendMockLastContent(data);
+          conclusionCount.current++;
+          setMockNewReply('conclusion', type);
+          addMockReplies(type);
+          appendMockLastContent(data);
         } else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
-          setReplyState(true);
-          if (utils.mockLastType === 0) {
-            utils.setMockReplies();
-            requestQuestion(utils.settingFollowing);
+          if (mockLastType.current === 2) {
+            console.log('check');
+            setNextQuestionFlag(true);
           }
         }
       } catch (error) {
@@ -142,60 +343,71 @@ const MockInterview = observer(() => {
       console.log("error:", error);
     };
 
+    initRecording();
   };
+
+  useEffect(() => {
+    connectWebsocket();
+  }, []);
+
+  const followingQuestionFlag = useRef(0);
 
   const requestQuestion = (isFollowing) => {
     const following = {
       type: 4,
       data: {
-        interactions: utils.mockConversations
+        interactions: mockConversations.current
       }
     };
     const req = {
       type: 2,
       data: {
-        question_index: utils.mockQuestionIndex,
-        interactions: utils.mockConversations,
+        question_index: mockQuestionIndex.current,
+        interactions: mockConversations.current,
         style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    console.log('interaction', Array.from(utils.mockConversations));
-    console.log('index', utils.mockQuestionIndex);
-    wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.value) ? following : req));
-    followingQuestionFlag.value = 0;
+    wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.current) ? following : req));
+    followingQuestionFlag.current = 0;
   };
 
-  const sendAnswer = () => {
-    if (!inputValue) {
-      message.warning("请输入回答");
-      return;
+  const sendAnswer = (answer) => {
+    if (answer.length < MIN_WORDS) {
+      // message.error('文字过短');
+      // setMicActive(false);
+      // return;
+      answer = '我不知道';
     }
-    const answer = inputValue;
+    console.log('answer', answer);
     const req = {
       type: 3,
       data: {
-        interactions: utils.mockConversations,
+        interactions: mockConversations.current,
         answer: answer,
-        question_id: utils.mockID,
+        question_id: mockID.current,
         evaluation: settingEvaluation,
         toleration: settingTempo, // 时间容忍度-高-中-低 
       },
     };
-    utils.mockInputCache = answer;
     wsServer.current.send(JSON.stringify(req));
+    setEvaluationWindow(true);
+    setMicActive(false);
   };
 
-  const handleInput = (e) => {
-    const { target: { value } } = e;
-    setInputValue(value);
+  const nextQuestion = () => {
+    if (!nextQuestionFlag) {
+      return;
+    }
+    setEvaluationWindow(!evaluationWindow);
+    addMockReplies();
+    setMockLastContent(() => '');
+    setMockLastEvaluation(() => '');
+    mockLastContentData.current = '';
+    mockLastEvaluationData.current = '';
+    requestQuestion();
+    setNextQuestionFlag(() => false);
   };
-
-  const [DrawerState, setDrawerState] = useState(true);
-
-  const [ReplyState, setReplyState] = useState(true);
-
-  const [inputValue, setInputValue] = useState('');
 
   const [settingPersonalise, setSettingPersonalise] = useState(false);
 
@@ -205,208 +417,121 @@ const MockInterview = observer(() => {
 
   const [settingTempo, setInterviewTempo] = useState('');
 
-  const [ButtonState, setButtonState] = useState(false);
+  const [showEvaluation, setShowEvaluation] = useState(true);
 
   const [count, setCount] = useState(0);
 
-  const handleDrawer = () => {
-    setDrawerState(!DrawerState);
-  };
+  const [evaluationWindow, setEvaluationWindow] = useState(false);
+
+  const [openFeedbackWindow, setFeedbackWindow] = useState(false);
+
+  const [micActive, setMicActive] = useState(false);
+
+  const [nextQuestionFlag, setNextQuestionFlag] = useState(false);
+
+  const feedbackWindow = (
+    <div className="feedback-window">
+      <div className="feedback-title">题目反馈</div>
+      <div>
+
+      </div>
+      <div className="feedback-title">请选择您反馈的问题类型</div>
+      <div>
+
+      </div>
+      <div className="feedback-title">其他原因</div>
+      <div></div>
+      <button>提交反馈</button>
+    </div>
+  );
 
   return (
-    <div className="interview-detail">
+    <div className="mock-interview-detail">
+      <GradientBackground />
       <div className="container">
-        <div className="container-header">
-          <div className="header-left">
-            <div className="return">
-              <LeftOutlined
-                onClick={() => {
-                  window.history.back();
-                }}
-              />
+        <div className="container-body">
+          <div className="body-left">
+            <div className="container-body-header">
+              <div className="header-title"><CloseOutlined className="menu-item" /></div>
+              <div className="header-info">
+                <Avatar size={'large'} style={{ marginRight: '10px' }} />
+                腾讯（北京）
+                <div className="info-tab" style={{ backgroundColor: 'rgba(88, 68, 206, 1)' }}>产品研发岗</div>
+                <div className="info-tab" style={{ backgroundColor: '#EE6F84' }}>三面</div>
+              </div>
+              <div className="header-menu">
+                <StarOutlined className="menu-item" />
+                <ShareAltOutlined className="menu-item" />
+                <Popover content={feedbackWindow} trigger="click" placement="bottomRight" arrow={false}>
+                  <EllipsisOutlined className="menu-item" onClick={() => { setFeedbackWindow(!openFeedbackWindow); }} />
+                </Popover>
+              </div>
             </div>
-            <div className="time">
-              <ClockCircleOutlined
-                style={{ color: "#3F9D13", fontSize: "20px" }}
-              />
-              &nbsp;{count}min
-            </div>
-            <div className="states">
-              {ReplyState ? (
-                <div className="state">
-                  <img src={iconWaiting} />
-                  <span>等待面试者回答</span>
+            <div className="container-body-contents">
+              <div className="interview-timer">
+                <img src={iconClock} />
+                {count}min
+              </div>
+              <div className={`contents-interview ${!evaluationWindow ? "contents-interview-hide" : ''}`}>
+                <div className="interview-question">
+                  {mockLastContent ? mockLastContent : <LoadingAnimation />}
                 </div>
-              ) : (
-                <div className="state">
-                  <Spin />
-                  <span>生成中</span>
-                </div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="container-body"  >
-          <div
-            className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
-          >
-            <div className="answer-block" id="scrollBlock">
-              {utils.mockReplies.map((item, key) => {
-                const { content, evaluation, name } = item;
-                return !!content && (
-                  <div className="answer" key={key}>
-                    <div className="answer-header">
-                      <Avatar
-                        style={{ backgroundColor: "#87d068", marginRight: "5px" }}
-                        icon={<UserOutlined />}
-                      />
-                      <div>{name}</div>
-                    </div>
-                    <div className="text">
-                      {content}
-                    </div>
-                    {!!evaluation && (
-                      <>
-                        <div className="answer-divider"></div>
-                        <div className="answer-comment">
-                          {evaluation}
-                        </div>
-                      </>
-                    )
-                    }
-                  </div>
-                );
-              })}
-              {!!utils.mockLastContent && (
-                <div className="answer animation">
-                  <div className="answer-header">
-                    <Avatar
-                      style={{
-                        backgroundColor: "#87d068",
-                        marginRight: "5px"
-                      }}
-                      icon={<UserOutlined />}
-                    />
-                    <div>{utils.mockLastEvaluation ? '用户' : '小助手'}</div>
-                  </div>
-                  <div className="text">
-                    {utils.mockLastContent}
-                  </div>
-                  {!!utils.mockLastEvaluation && (
-                    <>
-                      <div className="answer-divider"></div>
-                      <div className="answer-comment">
-                        {utils.mockLastEvaluation}
+                {
+                  evaluationWindow
+                    ?
+                    <div className="interview-evaluation">
+                      <div className="evaluation-title">
+                        <img src={iconEvaluation} />
+                        <span>智能评价</span>
                       </div>
-                    </>
-                  )
-                  }
-                </div>
-              )}
-              {utils.conclusionCount === 2 &&
-                <Alert
-                  type="success"
-                  message="模拟面试已结束"
-                  description="小助手正在总结，稍后可进入详情页查看结果"
-                  showIcon
-                />
-              }
-              <div ref={autoScroll}></div>
-            </div>
-            <div className="question">
-              <Space.Compact
-                className="question-input" size="large">
-                <Input
-                  placeholder="input"
-                  className="input"
-                  value={inputValue}
-                  onChange={handleInput}
-                  onKeyDown={(e) => { const { key } = e; if (key === 'Enter') { sendAnswer(); } }}
-                />
-                <Button className="send-button" disabled={ButtonState} type="default" onClick={sendAnswer}>
-                  <img src={iconSend} />
-                </Button>
-              </Space.Compact>
-            </div>
-          </div>
-          <div
-            className={`drawer-button ${DrawerState ? "drawer-button-opening" : "drawer-button-closed"}`}
-            onClick={handleDrawer}
-          >
-            {DrawerState ? <RightOutlined /> : <LeftOutlined />}
-          </div>
-          <div
-            className={`drawer ${DrawerState ? "drawer-opening" : "drawer-closed"}`}
-          >
-            <div className="drawer-info">
-              <Avatar
-                icon={<UserOutlined />}
-                size={96}
-                className='drawer-avatar'
-              >
-              </Avatar>
-              <div className='drawer-name'>
-                <div>百度</div>
-                <div>@前端开发</div>
+                      <div className="evaluation-text">
+                        {mockLastEvaluation ? mockLastEvaluation : <LoadingAnimation />}
+                      </div>
+                      <div className={`evaluation-bottom `}>
+                        <button className={`${!nextQuestionFlag ? "button-disabled" : ''}`} onClick={() => { nextQuestion(); }}>
+                          下一题
+                          <img src={iconRight} />
+                        </button>
+                      </div>
+                    </div>
+                    :
+                    <div className="interview-answer">
+                      <div className="answer-background">
+                        {
+                          micActive
+                            ?
+                            <div className="answer-button mic-active" onClick={() => { stopRecording(); }}>
+                              <div className="mic-active-animation"></div>
+                              <img src={iconMicReverse} />
+                              <span>结束</span>
+                            </div>
+                            :
+                            <div className="answer-button" onClick={() => { setMicActive(true); startRecording(); }}>
+                              <img src={iconMic} />
+                              <span>开始</span>
+                            </div>
+                        }
+                      </div>
+                      <div className="answer-switch">
+                        <div className="switch-background">
+                          <div className="switch" onClick={() => { setShowEvaluation(!showEvaluation); }}>
+                            <div className={`${showEvaluation ? "switch-active" : "switch-inactive"}`}>
+                              查看评价
+                            </div>
+                            <div className={`${!showEvaluation ? "switch-active" : "switch-inactive"}`}>
+                              直接跳转
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                }
               </div>
-              <div className="drawer-setting">
-                <div className="setting-item">
-                  <p>面试风格
-                    <QuestionCircleOutlined className="help" />
-                  </p>
-                  <Select
-                    className="setting-select"
-                    defaultValue="活泼"
-                    options={[
-                      { value: '活泼', label: '活泼' },
-                      { value: '严肃', label: '严肃' }
-                    ]}
-                    onChange={(value) => { setInterviewStyle(value); }}
-                  />
+              <div className="contents-progress">
+                <div className="progress-title">面试进度</div>
+                <div className="progress-back">
                 </div>
-                <div className="setting-item">
-                  <p>时间容忍度
-                    <QuestionCircleOutlined className="help" />
-                  </p>
-                  <Select
-                    className="setting-select"
-                    defaultValue="高"
-                    options={[
-                      { value: '高', label: '高' },
-                      { value: '中', label: '中' },
-                      { value: '低', label: '低' }
-                    ]}
-                    onChange={(value) => { setInterviewTempo(value); }}
-                  />
-                </div>
-              </div>
-              <div className="drawer-check">
-                <div className="check-item">
-                  <Checkbox
-                    checked={settingPersonalise}
-                    onClick={() => { setSettingPersonalise(!settingPersonalise); }}
-                  >
-                    提问个人项目
-                  </Checkbox>
-                  <QuestionCircleOutlined className="help" />
-                </div>
-                <div className="check-item">
-                  <Checkbox
-                    checked={settingEvaluation}
-                    onClick={() => { setSettingEvaluation(!settingEvaluation); }}
-                  >
-                    开启回答评价
-                  </Checkbox>
-                  <QuestionCircleOutlined className="help" />
-                </div>
-                <div className="check-item">
-                  <Checkbox
-                    checked={utils.settingFollowing}
-                    onClick={() => { utils.settingFollowing = !utils.settingFollowing; }}
-                  >
-                    开启回答追问
-                  </Checkbox>
-                  <QuestionCircleOutlined className="help" />
+                <div className="progress-front">
                 </div>
               </div>
             </div>

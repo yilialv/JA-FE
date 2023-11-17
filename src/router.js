@@ -70,7 +70,7 @@ export function getToken() {
 }
 
 export function getHotWordID(direction) {
-  return axios.get(`${BASE_URL}/api/alibaba/hot_word`,{params:{"direction": direction}})
+  return axios.get(`${BASE_URL}/api/alibaba/hot_word`, { params: { "direction": direction } })
     .then((res) => {
       const { status } = res;
       if (status === 200) {
@@ -87,16 +87,26 @@ export function getHotWordID(direction) {
 }
 
 export function uploadExperience(data) {
-  axios.post(`${BASE_URL}/api/experience/upload`, data).then((res) => {
+  return axios.post(`${BASE_URL}/api/experience/upload`, data).then((res) => {
     const { status } = res;
     if (status === 200) {
-      message.info('上传成功');
+      message.success('上传成功');
     }
   }).catch((err) => {
     console.log('err:', err);
     message.error('上传失败');
-  }).finally(() => {
-    store.isLogin = false;
+  });
+}
+
+export function updateExperience(params) {
+  return axios.post(`${BASE_URL}/api/experience/update`, params).then(res => {
+    const { status } = res;
+    if (status === 200) {
+      message.success('面经已更新');
+    }
+  }).catch(err => {
+    console.log('err:', err);
+    message.error('面经更新失败');
   });
 }
 
@@ -104,7 +114,7 @@ export function fetchCompanyList() {
   axios.get(`${BASE_URL}/api/company/info`).then((res) => {
     const { status, data: data0 } = res;
     if (status === 200) {
-      const {data: {company_info}} = data0;
+      const { data: { company_info } } = data0;
       store.setCompanyList(company_info);
     }
   }).catch((err) => {
@@ -151,6 +161,20 @@ export function cancelStarCard(params) {
     }
   }).catch((err) => {
     throw err;
+  });
+}
+
+//模拟面试大厅&首页获取卡片接口，返回卡片列表
+export function getCardList(params) {
+  return axios.post(`${BASE_URL}/api/experience/mock_interview_hall`, params).then((res) => {
+    const { status, data: { data: { mock_interview_cards } }
+    } = res;
+    if (status === 200) {
+      return mock_interview_cards;
+    }
+  }).catch((err) => {
+    console.log('error:', err);
+    message.error('获取卡片列表失败');
   });
 }
 

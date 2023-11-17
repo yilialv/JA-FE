@@ -1,0 +1,14 @@
+<svg width="86" height="51" viewBox="0 0 86 51" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect x="43" y="5.31445" width="10.4595" height="8.69663" rx="1" fill="#E36E8B" fill-opacity="0.7"/>
+<rect x="43" y="16.9102" width="10.4595" height="8.69663" rx="1" fill="#E36E8B" fill-opacity="0.7"/>
+<rect x="43" y="28.9888" width="10.4595" height="8.69663" rx="1" fill="#E36E8B" fill-opacity="0.7"/>
+<rect x="72.6351" width="13.3649" height="11.1124" rx="1" fill="#EB6F87" fill-opacity="0.7"/>
+<rect x="72.6351" y="15.9438" width="13.3649" height="11.1124" rx="1" fill="#EB6F87" fill-opacity="0.7"/>
+<rect x="72.6351" y="31.8877" width="13.3649" height="11.1124" rx="1" fill="#EB6F87" fill-opacity="0.7"/>
+<rect x="56.9459" y="3.38184" width="11.6216" height="9.66292" rx="1" fill="#5844CE" fill-opacity="0.7"/>
+<rect x="56.9459" y="17.3931" width="11.6216" height="9.66292" rx="1" fill="#5844CE" fill-opacity="0.7"/>
+<rect x="56.9459" y="31.4043" width="11.6216" height="9.66292" rx="1" fill="#5844CE" fill-opacity="0.7"/>
+<g style="mix-blend-mode:plus-darker">
+<path d="M14.3438 19.2656H30.7812V35.8594L26.6406 40H23.875V23.7812H14.3438V19.2656ZM19 35.8594H22.7812V40H15.9844L11.8281 35.8594V31.3125H19V35.8594ZM52.5469 35.8594L48.4062 40H43.7812V36.125H45.5V27.5469H43.7812V23.4062H48.4062L52.5469 27.5469V35.8594ZM40.8906 36.125H42.6875V40H38.0469L33.9062 35.8594V27.5469L38.0469 23.4062H42.6875V27.5469H40.8906V36.125ZM62.5781 17.0781V40H55.6719V17.0781H62.5781ZM66.7656 27.5469H63.6719V25.4531L65.7031 23.4062H69.4844L73.6406 27.5469V35.8594L69.4844 40H63.6719V36.125H66.7656V27.5469Z" fill="black"/>
+</g>
+</svg>
