@@ -22,6 +22,7 @@ const Input = (props) => {
    
   };
   const setValue = (value) => {
+    console.log(value,'value')
     setInputValue(value.Name);
     box.current.style.display = 'none';
     props.callback && props.callback(value);
@@ -31,7 +32,7 @@ const Input = (props) => {
     <div className='input-box' onMouseEnter={() => {selectModel.current.style.display = 'flex';}} onMouseLeave={() => {selectModel.current.style.display = 'none';}}>
       <input  value={inputValue}/>
       <div ref={selectModel}>
-        <div className='company-box' ref={BoxPlotFilled}>
+        <div className='company-box' ref={box}>
           {
             props.dataList.map((item,itemIndex) => {
               return (
