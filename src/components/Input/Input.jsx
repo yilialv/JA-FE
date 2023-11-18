@@ -60,7 +60,7 @@ const Input = (props) => {
                     {
                       item.children.map((c,ci) => {
                         return (
-                          <li key={ci} onClick={() => {setValue(c);}}>
+                          <li key={ci} onClick={( ) => {setInputValue(c.Name);}}>
                             {c.Name}
                           </li>
                         );
