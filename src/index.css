@@ -39,3 +39,6 @@
 .slick-next{
   right: -50px !important;
 }
+.card-item:hover{
+  background: linear-gradient(203deg, rgba(234, 72, 106, 0.81) 2.53%, rgba(88, 68, 206, 0.60) 12.8%, white 34.65%);
+}

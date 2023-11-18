@@ -26,8 +26,10 @@ export function login(params) {
     const { status } = res;
     if (status === 200) {
       message.info('登录成功');
-      const { jwt_token, nick_name } = res.data.data;
-      store.setUserInfo(jwt_token, nick_name);
+
+      const { jwt_token, nick_name, avatar } = res.data.data;
+      localStorage.setItem('userinfo', JSON.stringify({avatar, nick_name, jwt_token}))
+      store.setUserInfo(jwt_token, nick_name, avatar);
     }
   }).catch((err) => {
     console.log('err:', err);

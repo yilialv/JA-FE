@@ -117,12 +117,13 @@ function InterviewAidModel() {
                 value: "UI",
                 label: "UI",
               },
+
             ]}
           />
         </Form.Item>
         <Form.Item name='round' label={<Label text="面试轮数"></Label>}>
           <Radio.Group
-            options={[1, 2, 3, 4, 5]}
+            options={[1, 2, 3, 4, 5, 'HR']}
             optionType='button'
             size='small'
             style={{ width: "100%" }}

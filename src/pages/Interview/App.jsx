@@ -20,7 +20,7 @@ import {
 } from "antd";
 import {
   UserOutlined,
-
+  TableOutlined
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useEffect, useRef, useState } from "react";
@@ -210,9 +210,10 @@ const Interview = observer(() => {
     ws.current.onmessage = (message) => {
       try {
         const res = JSON.parse(message.data);
+        
         const { payload, header } = res;
         const { name, status, status_message } = header;
-        const { result } = payload;
+        const { result } = payload || {};
         if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
           if (status === 20000000) {
             store.setNextRequest(result);
@@ -224,6 +225,7 @@ const Interview = observer(() => {
             throw Error(status_message);
           }
         }
+        // debugger
         handleMessage(name, result);
       } catch (err) {
         console.error(err);
@@ -265,12 +267,13 @@ const Interview = observer(() => {
             if (!store.id) {
               store.setId(id);
               console.log('第一次', messageList)
+              messageList.push({ type: 1, message:store.conversations[store.conversations.length - 1]})
               messageList.push({ type: 2, message: data, id: id })
+
               store.setLastReply(data);
               setInputValue('');
             } else {
               if (id !== store.id) {
-
                 console.log(1,'11')
                 store.setReply();
                 store.setId(id);
@@ -278,7 +281,9 @@ const Interview = observer(() => {
               }
               store.setLastReply(data);
               const index = messageList.findIndex((item) => item.id === id);
+             
               if(index == -1){
+                messageList.push({ type: 1, message:store.conversations[store.conversations.length - 1]})
                 messageList.push({ type: 2, message: data, id: id })
               }else{
                 messageList[index].message += data
@@ -286,6 +291,7 @@ const Interview = observer(() => {
             
             }
           } else {
+            messageList.pop()
             message.warning("无效提问或问题长度低于8，请重新尝试～");
           }
         } else if (type === 99) {
@@ -315,22 +321,23 @@ const Interview = observer(() => {
   };
 
   const handleMessage = async (type, result) => {
-    console.log(result,'result')
+    console.log(111)
     if (type !== "SentenceEnd") {
       return;
     }
+    console.log(222, result.length < MIN_WORDS,'22')
     // 文字不能太短
     if (result.length < MIN_WORDS) {
       return;
     }
-
+    console.log(333,'22')
     store.addToConversation(result);
 
     // 只保留最近20条对话
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {
       store.removeFromConversation();
     }
-
+    console.log(444,'22')
 
     // 要发送的数据
     const req = {
@@ -340,8 +347,7 @@ const Interview = observer(() => {
         conversations: store.conversations,
       },
     };
-    
-    messageList.push({ type: 1, message: result })
+    console.log(111)
     wsServer.current.send(JSON.stringify(req));
 
   };
@@ -396,7 +402,7 @@ const Interview = observer(() => {
         question: question,
       },
     };
-    messageList.push({ type: 1, message: question })
+    
     wsServer.current.send(JSON.stringify(req));
     store.addToConversation(question);
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {
@@ -406,11 +412,11 @@ const Interview = observer(() => {
 
   const prefix = (
     <div className="audio-display">
-      {/* <AudioOutlined
+      {/* <TableOutlined
         className={`audio ${AudioState ? "audio-activated" : "audio-default"}`}
       /> */}
-
-      <img style={{ width: '15px' }} src={iconLeft} alt="" />
+        <TableOutlined className="text-[22px] text-slate-500"/>
+      {/* <img style={{ width: '15px' }} src={iconLeft} alt="" /> */}
     </div>
   );
 
@@ -443,22 +449,22 @@ const Interview = observer(() => {
             </div>
             <div>
               {ButtonState ? (
-                <Button
-                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold'
+                <button
+                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded'
                   type="primary"
                   onClick={startRecording}
                 >
 
                   <span >开始</span>
-                </Button>
+                </button>
               ) : (
-                <Button
-                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold'
+                <button
+                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded'
                   onClick={stopRecording}
                 >
 
                   结束
-                </Button>
+                </button>
               )}
             </div>
 
@@ -499,7 +505,7 @@ const Interview = observer(() => {
                                 <img style={{ width: '35px', borderRadius: "50%", marginRight: '10px' }} src={store.formImg} alt="" />
                               </div>
                               <div className="request-content">
-                                <div className="xzs">面试官</div>
+                                <div className="xzs">{store.formCompany}面试官</div>
                                 <div className="text">
                                   {item.message}
                                 </div>

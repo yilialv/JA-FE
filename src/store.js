@@ -15,6 +15,7 @@ class Store {
 
   jwtToken = '';
   nickName = '';
+  avatar = ''
   isLogin = false;
 
   isLoginModalOpen = false;
@@ -71,9 +72,10 @@ class Store {
     this.nickName = nickName;
   }
 
-  setUserInfo(token, nickName) {
+  setUserInfo(token, nickName, avatar) {
     // this.jwtToken = token;
     this.nickName = nickName;
+    this.avatar = avatar
     this.isLogin = true;
     // setCookie("jwtToken", this.jwtToken, EXPIRES);
     // setCookie("nickName", this.nickName, EXPIRES);

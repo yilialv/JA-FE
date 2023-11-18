@@ -3,15 +3,24 @@ import ProTypes from 'prop-types';
 import { PropTypes, observer } from "mobx-react";
 import { useRef, useState } from 'react';
 import "./input.less";
-import { BoxPlotFilled } from '@ant-design/icons';
+import { RightOutlined } from '@ant-design/icons';
+import { useEffect } from 'react';
 
 
-const Input = (props) => {
+const Input = (props) => {  
+  console.log(props,'xx')
 
+  useEffect(() => {
+    if(props.dataList[0]){
+
+      setInputValue(props.dataList[0].children[0].Name)
+    }
+  },[props.dataList])
   const selectModel = useRef(null);
   const english = props.dataList.map(item => item.key);
   const [inputValue, setInputValue] = useState();
   const box = useRef(null);
+
   const toTarget = (letter) => {
     const targetDOM = document.getElementById(letter);
 
@@ -21,16 +30,25 @@ const Input = (props) => {
     });
    
   };
+  
   const setValue = (value) => {
-    console.log(value,'value')
     setInputValue(value.Name);
     box.current.style.display = 'none';
     props.callback && props.callback(value);
    
   };
+  const inputMouseEnter = () => {
+    selectModel.current.style.display = 'flex'; 
+    document.querySelector(".input-icon").style.transform = 'rotate(90deg)'
+  }
+  const inputMouseLeave = () => {
+    selectModel.current.style.display = 'none';
+    document.querySelector(".input-icon").style.transform = 'rotate(0deg)'
+  }
   return (
-    <div className='input-box' onMouseEnter={() => {selectModel.current.style.display = 'flex';}} onMouseLeave={() => {selectModel.current.style.display = 'none';}}>
+    <div className='input-box' onMouseEnter={inputMouseEnter} onMouseLeave={inputMouseLeave}>
       <input  value={inputValue}/>
+      <RightOutlined className='input-icon' style={{position:'absolute', top:'15px', right: '10px', transformOrigin:'center', transition:"all 200ms"}}/>
       <div ref={selectModel}>
         <div className='company-box' ref={box}>
           {
