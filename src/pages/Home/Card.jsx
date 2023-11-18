@@ -31,7 +31,7 @@ export const ShareCard = (props) => {
   return (
     <div className='px-2 w-[400px] mx-2'>
       <div className='bg-white p-2 rounded-lg h-full card-item group'>
-        <div className='flex items-center justify-between'>
+        <div className='flex items-center justify-between py-2'>
           <div className='flex items-center '>
             <img src={item.logo} className="w-[55px] h-[55px] rounded-[50%] mr-2" alt="" />
             <div>
@@ -40,7 +40,7 @@ export const ShareCard = (props) => {
             </div>
           </div>
           <div className='text-neutral-600'>
-             <span className='text-[#333] group-hover:text-white'><LoginOutlined  /> 进入模拟面试</span>
+             <span className='text-[#333] group-hover:text-white group-hover:block '><LoginOutlined  /> 进入模拟面试</span>
             
           </div>
         </div>
