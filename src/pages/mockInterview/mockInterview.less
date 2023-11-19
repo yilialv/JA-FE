@@ -163,47 +163,6 @@
                                 justify-self: flex-end;
                                 margin-right: 20px;
 
-                                .switch-background {
-                                    width: 150px;
-                                    user-select: none;
-                                    cursor: pointer;
-                                    background: @theme-gradient;
-                                    margin-top: 10px;
-                                    display: grid;
-                                    padding: 2px;
-                                    border-radius: 30px;
-                                    font-weight: 600;
-
-                                }
-
-                                .switch {
-                                    border-radius: 30px;
-                                    background: #fff;
-                                    display: grid;
-                                    grid-template-columns: 1fr 1fr;
-                                    text-align: center;
-
-                                    .switch-active {
-                                        margin: -2px;
-                                        transition: 300ms;
-                                        padding: 5px 0 5px 0;
-                                        background: @theme-gradient;
-                                        color: #fff;
-                                        border-radius: 20px;
-                                    }
-
-                                    .switch-inactive {
-                                        margin: -2px;
-                                        border-radius: 20px;
-                                        transition: 300ms;
-                                        padding: 5px 0 5px 0;
-                                        color: transparent;
-                                        background: @theme-gradient;
-                                        background-clip: text;
-                                        -webkit-background-clip: text;
-                                    }
-                                }
-
                             }
 
                             .answer-background {
@@ -383,6 +342,164 @@
     }
 }
 
+.mock-interview-config {
+    height: calc(100vh - 64px);
+    width: 100%;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+
+    .mock-interview-card {
+        user-select: none;
+        z-index: 1;
+        grid-area: 1/1/1/1;
+        height: 320px;
+        background-color: #fff;
+        width: 460px;
+        border-radius: 10px;
+        box-shadow: @dialog-box-shadow;
+        display: grid;
+        grid-template-rows: 1fr 3fr 1fr;
+        justify-items: center;
+        align-items: center;
+
+        .card-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+
+        .card-bottom{
+            height: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .start-button{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 60%;
+                font-size: 18px;
+                width: 150px;
+                cursor: pointer;
+                font-weight: 600;
+                border-radius: 5px;
+                color: #fff;
+                background:@theme-gradient;
+            }
+        }
+
+        .card-body {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            grid-template-columns: 1fr 4fr 1fr;
+            justify-items: center;
+            align-items: center;
+
+            .card-mid {
+                height: 100%;
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+
+                .card-scroll {
+                    top: 0;
+                    position: absolute;
+                    height: 100%;
+                    width: 300%;
+                    display: flex;
+                    transition: 300ms;
+                }
+            }
+
+            .card-form {
+                padding: 0 5px;
+                height: 100%;
+                width: 100%;
+                display: grid;
+                grid-template-rows: 1fr 4fr;
+                justify-items: center;
+                align-items: center;
+
+                .form-title {
+                    font-weight: 600;
+                    font-size: 16px;
+                }
+
+                .form-body {
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-around;
+                    width: 100%;
+                    height: 100%;
+
+                    .form-item {
+                        font-weight: 600;
+                        display: grid;
+                        justify-items: end;
+                        align-items: center;
+                        grid-template-columns: auto auto;
+                    }
+
+                    .tips {
+                        color: rgb(141, 141, 141);
+                        font-size: 12px;
+                        font-weight: 500;
+                    }
+
+                    .select {
+                        margin-left: 15px;
+                        width: 200px;
+                    }
+
+                    .form-input {
+                        display: flex;
+                        align-items: baseline;
+                        justify-content: flex-end;
+                        width: 150px;
+
+                        .input {
+                            border-radius: 5px;
+                            padding: 2px;
+                            background: @theme-gradient;
+                            margin-right: 5px;
+                        }
+
+                        input {
+                            color: #888;
+                            text-align: center;
+                            width: 80px;
+                            height: 25px;
+                            border-radius: 3px;
+                            border: none;
+                            outline: none;
+                        }
+
+                        input:focus {
+                            border: none;
+                        }
+                    }
+                }
+            }
+
+            .card-button {
+                cursor: pointer;
+                //background-color: rgba(217, 217, 242, 1);
+                border-radius: 50%;
+                height: 100%;
+                width: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                color: rgba(102, 102, 102, 1);
+            }
+        }
+    }
+}
+
 @keyframes outline-keys {
     0% {
         transform: scale(1);
@@ -440,4 +557,15 @@
         transform-origin: 0% 0%;
         opacity: 1;
     }
+}
+
+/* chrome */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+
+/* 火狐浏览器 */
+input[type="number"] {
+    -moz-appearance: textfield;
 }

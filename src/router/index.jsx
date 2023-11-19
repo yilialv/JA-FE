@@ -1,5 +1,5 @@
 import { useRoutes } from 'react-router-dom'
-import {React} from 'react'
+import { React } from 'react'
 
 
 
@@ -12,27 +12,28 @@ import MockInterview from '@/pages/mockInterview/App';
 import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
+import MockInterviewConfig from '../pages/mockInterview/mockInterviewConfig';
 
 const router = () => {
   const element = useRoutes([
     {
-      path:'/',
+      path: '/',
       element: <Home />
     },
     {
-      path:'/mockInterviewDetail',
+      path: '/mockInterviewDetail',
       element: <MockInterviewDetail />
     },
     {
-      path:'/mockInterviewHall',
+      path: '/mockInterviewHall',
       element: <MockInterviewHall />
     },
     {
-      path:'/mockInterview',
+      path: '/mockInterview',
       element: <MockInterview />,
     },
     {
-      path:'/interview',
+      path: '/interview',
       element: <Interview />
     },
     {
@@ -44,13 +45,17 @@ const router = () => {
       element: <RecordUpload />
     },
     {
-      path:'/user/interviewDetail/:id',
+      path: '/user/interviewDetail/:id',
       element: <InterviewDetail />
+    },
+    {
+      path: '/mockInterviewConfig',
+      element: <MockInterviewConfig />
     }
-  ])
+  ]);
 
-  return element
-}
+  return element;
+};
 
 
 

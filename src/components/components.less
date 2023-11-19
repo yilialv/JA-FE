@@ -1,11 +1,14 @@
-.record-card  {
+@theme-gradient: linear-gradient(90deg, rgba(120, 103, 215, 1) 0%, rgba(238, 111, 132, 1) 100%);
+
+
+.record-card {
     width: 240px;
     margin: 20px;
     position: relative;
 
-    .bookmark{
-        top:-4px;
-        left:80%;
+    .bookmark {
+        top: -4px;
+        left: 80%;
         position: absolute;
         width: 35px;
     }
@@ -17,12 +20,14 @@
         .interview-title {
             display: flex;
             align-items: center;
+
             .title-text {
                 font-family: Roboto;
                 font-size: 23px;
                 font-weight: 700;
                 line-height: 24px;
             }
+
             .ant-tag {
                 height: 18px;
                 border-radius: 10px;
@@ -32,6 +37,7 @@
                 font-weight: 500;
                 line-height: 16px;
             }
+
             .anticon {
                 font-weight: 900;
                 font-size: large;
@@ -39,6 +45,7 @@
                 border-radius: 50%;
                 transition: transform 0.3s ease-in-out;
             }
+
             .setting-icon-container {
                 margin-left: auto;
                 display: flex;
@@ -46,6 +53,7 @@
                 justify-content: flex-end;
                 align-items: center;
             }
+
             .setting-icon {
                 margin-left: 2px;
                 display: flex;
@@ -53,38 +61,45 @@
                 align-items: center;
                 opacity: 0.8;
             }
+
             .setting-icon:hover {
                 transform: scale(1.1);
                 opacity: 1;
             }
         }
+
         .interview-info {
             display: flex;
             justify-content: space-between;
             margin: 10px 0;
-            
+
             .info {
                 font-size: 14px;
             }
         }
+
         .interview-footer {
             margin-top: 10px;
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             .edit-btn {
                 margin-left: 24px;
                 color: #3F9D13;
                 border-color: #3F9D13;
             }
+
             .edit-btn:hover {
                 background-color: rgba(100, 237, 172, 0.3);
             }
+
             .mock-btn {
                 margin-right: 12px;
                 padding-left: 6px;
                 padding-right: 4px;
             }
+
             .footer-left {
                 display: flex;
                 flex-direction: row;
@@ -99,17 +114,111 @@
                     font-size: 14px;
                     font-style: normal;
                     font-weight: 500;
-                    line-height: 24px; /* 171.429% */
+                    line-height: 24px;
+                    /* 171.429% */
                 }
             }
+
             .interview-footer-user {
                 display: flex;
                 align-items: center;
+
                 .ant-avatar {
                     border: 1px solid #ccc;
                     margin-right: 2px;
                 }
             }
+        }
+    }
+}
+
+.switch-background {
+    width: 150px;
+    user-select: none;
+    cursor: pointer;
+    background: @theme-gradient;
+    display: grid;
+    padding: 2px;
+    border-radius: 30px;
+    font-weight: 600;
+
+    .switch {
+        border-radius: 30px;
+        background: #fff;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        text-align: center;
+
+        .switch-active {
+            margin: -2px;
+            transition: 300ms;
+            padding: 5px 0 5px 0;
+            background: @theme-gradient;
+            color: #fff;
+            border-radius: 20px;
+        }
+
+        .switch-inactive {
+            margin: -2px;
+            border-radius: 20px;
+            transition: 300ms;
+            padding: 5px 0 5px 0;
+            color: transparent;
+            background: @theme-gradient;
+            background-clip: text;
+            -webkit-background-clip: text;
+        }
+    }
+}
+
+.select-background{
+    user-select: none;
+    background: @theme-gradient;
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.checkbox-field {
+    width: 150px;
+    user-select: none;
+    cursor: pointer;
+    display: grid;
+    font-weight: 500;
+    box-shadow: 0 1px 0 0 #ccc ;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: end;
+
+    .checkbox-first{
+        grid-area: 1/1/2/2;
+    }
+    .checkbox-second{
+        grid-area: 1/2/2/3;
+    }
+
+    .check{
+        color: rgba(88, 68, 206, 1);
+        font-size: 20px;
+        transition:300ms;
+        transform: translate(20%,-5%);
+    }
+
+    .option{
+        display: flex;
+        align-items: center;
+    }
+
+    .box{
+        margin-left: 5px;
+        display: inline-block;
+        border-radius: 4px;
+        padding:2px;
+        background: @theme-gradient;
+        div{
+            width: 15px;
+            height: 15px;
+            border-radius: 2px;
+            background-color: #fff;
         }
     }
 }
