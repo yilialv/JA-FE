@@ -16,7 +16,7 @@ const NavigationMenu = () => {
   const showModal = () => {
     store.isLoginModalOpen = true;
   };
-  const [menuAcitveIndex] = useState(0)
+  const [menuAcitveIndex,setMenuAcitveIndex] = useState(0)
   let userinfo = {}
   if(localStorage.getItem("userinfo")){
     userinfo = JSON.parse(localStorage.getItem("userinfo"))
@@ -74,8 +74,9 @@ const NavigationMenu = () => {
     setOpen(flag);
   };
 
-  const NavigateTo = (item) => {
+  const NavigateTo = (item,index) => {
     const { key, link } = item;
+    setMenuAcitveIndex(index)
     if (store.currentMenu === key) {
       return;
     } else if (!store.isLogin) {
@@ -110,7 +111,7 @@ const NavigationMenu = () => {
                   <li key={index} className='pt-2 px-4 '>
                     <span
                       className={`text-black text-base xl:text-[18px] p-1 ${menuAcitveIndex == index ? 'border-b-[3px] border-solid border-[#5844CE]' : ''}  hover:border-b-[3px] hover:border-solid hover:border-[#5844CE]`}
-                      onClick={() => { NavigateTo(item); }}
+                      onClick={() => { NavigateTo(item,index); }}
                       key={key}
                     >
                       {label}

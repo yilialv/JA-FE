@@ -556,7 +556,7 @@ const Interview = observer(() => {
               >
 
                 <div className="maybe-need-question">
-                  {store.conversations.length > 0 && <p>可能需要回答的问题</p>}
+                  <p style={{minWidth:"100px"}}> {store.conversations.length > 0 && <p>可能需要回答的问题</p>}</p>
                   <div className="question-history">
                     {store.conversations
                       .toSpliced(0, store.conversations.length - 3)

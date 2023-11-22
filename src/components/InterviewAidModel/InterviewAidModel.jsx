@@ -131,13 +131,13 @@ function InterviewAidModel() {
           />
         </Form.Item>
         <Form.Item>
-          <Button
+          <button
             block
             type='primary'
             htmlType='submit'
-            className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE]'
+            className='login-input text-white rounded text-center  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] '
           >确 认
-          </Button>
+          </button>
           <p className="text-center text-[12px] text-[#666] mt-3">确认后将开启面试辅助功能</p>
         </Form.Item>
       </Form>
