@@ -18,10 +18,7 @@ import {
   message,
   Tooltip,
 } from "antd";
-import {
-  UserOutlined,
-  TableOutlined
-} from "@ant-design/icons";
+import { UserOutlined, TableOutlined } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { useEffect, useRef, useState } from "react";
 import store from "../../store";
@@ -29,11 +26,8 @@ import "./App.less";
 import iconSend from "../../imgs/send.png";
 import iconLeft from "../../imgs/left.png";
 
-
 const { Content } = Layout;
-const messageList = [
-
-]
+const messageList = [];
 /*
 1. 连接 ws_app.run_forever()
 2. 连接成功后发送数据 on_open()
@@ -47,7 +41,6 @@ const messageList = [
 */
 
 const Interview = observer(() => {
-
   const clear = useEffect(() => {
     store.formCompany = localStorage.getItem("company");
     store.formDirection = localStorage.getItem("direction");
@@ -59,7 +52,7 @@ const Interview = observer(() => {
     }, 1000);
 
     return () => {
-      setCount(0)
+      setCount(0);
       clearInterval(interval);
     };
   }, []);
@@ -71,7 +64,7 @@ const Interview = observer(() => {
   const autoScroll = useRef(null);
 
   const scrollToBottom = () => {
-    autoScroll.current.scrollIntoView({ behavior: 'instant' });
+    autoScroll.current.scrollIntoView({ behavior: "instant" });
   };
 
   const task_id = crypto.randomUUID().replace(/-/g, "");
@@ -86,38 +79,39 @@ const Interview = observer(() => {
   const startRecording = () => {
     connectWebSocket();
 
-    navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-      mediaRecorder.current = new MediaRecorder(stream);
-      recorder.current = new RecorderManager("/recorder_manager");
-      mediaStreamRef.current = stream;
+    navigator.mediaDevices
+      .getUserMedia({ audio: true })
+      .then((stream) => {
+        mediaRecorder.current = new MediaRecorder(stream);
+        recorder.current = new RecorderManager("/recorder_manager");
+        mediaStreamRef.current = stream;
 
-      mediaRecorder.current.start();
+        mediaRecorder.current.start();
 
-      recorder.current.start({
-        sampleRate: 16000,
-        frameSize: frameSize,
-      });
+        recorder.current.start({
+          sampleRate: 16000,
+          frameSize: frameSize,
+        });
 
-      // 接收音频数据帧
-      recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
-        if (ws.current.readyState === ws.current.OPEN) {
-
-          ws.current.send(new Int8Array(frameBuffer));
-          if (isLastFrame) {
-            console.log("接收最后一个音频帧");
+        // 接收音频数据帧
+        recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
+          if (ws.current.readyState === ws.current.OPEN) {
+            ws.current.send(new Int8Array(frameBuffer));
+            if (isLastFrame) {
+              console.log("接收最后一个音频帧");
+            }
           }
-        }
-      };
+        };
 
-      mediaRecorder.current.onstop = () => {
-        stopMediaStream();
-      };
+        mediaRecorder.current.onstop = () => {
+          stopMediaStream();
+        };
 
-      handleButton(false);
-      handleAudioState(true);
-    })
+        handleButton(false);
+        handleAudioState(true);
+      })
       .catch((error) => {
-        console.error('录音报错:', error);
+        console.error("录音报错:", error);
       });
   };
 
@@ -125,12 +119,12 @@ const Interview = observer(() => {
     recorder.current.stop();
     sendFinish();
     mediaRecorder.current.stop();
-    console.log('录音关闭');
+    console.log("录音关闭");
     handleButton(true);
     handleAudioState(false);
     ws.current?.close();
     wsServer.current?.close();
-    clear()
+    clear();
   };
 
   const stopMediaStream = () => {
@@ -210,7 +204,7 @@ const Interview = observer(() => {
     ws.current.onmessage = (message) => {
       try {
         const res = JSON.parse(message.data);
-        
+
         const { payload, header } = res;
         const { name, status, status_message } = header;
         const { result } = payload || {};
@@ -266,32 +260,37 @@ const Interview = observer(() => {
             // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
-              console.log('第一次', messageList)
-              messageList.push({ type: 1, message:store.conversations[store.conversations.length - 1]})
-              messageList.push({ type: 2, message: data, id: id })
+              console.log("第一次", messageList);
+              messageList.push({
+                type: 1,
+                message: store.conversations[store.conversations.length - 1],
+              });
+              messageList.push({ type: 2, message: data, id: id });
 
               store.setLastReply(data);
-              setInputValue('');
+              setInputValue("");
             } else {
               if (id !== store.id) {
-                console.log(1,'11')
+                console.log(1, "11");
                 store.setReply();
                 store.setId(id);
-                setInputValue('');
+                setInputValue("");
               }
               store.setLastReply(data);
               const index = messageList.findIndex((item) => item.id === id);
-             
-              if(index == -1){
-                messageList.push({ type: 1, message:store.conversations[store.conversations.length - 1]})
-                messageList.push({ type: 2, message: data, id: id })
-              }else{
-                messageList[index].message += data
+
+              if (index === -1) {
+                messageList.push({
+                  type: 1,
+                  message: store.conversations[store.conversations.length - 1],
+                });
+                messageList.push({ type: 2, message: data, id: id });
+              } else {
+                messageList[index].message += data;
               }
-            
             }
           } else {
-            messageList.pop()
+            // messageList.pop()
             message.warning("无效提问或问题长度低于8，请重新尝试～");
           }
         } else if (type === 99) {
@@ -300,7 +299,7 @@ const Interview = observer(() => {
           setReplyState(true);
         }
       } catch (error) {
-        console.log(error,'eror')
+        console.log(error, "eror");
         console.log("后端返回解析出错!");
       }
     };
@@ -321,23 +320,23 @@ const Interview = observer(() => {
   };
 
   const handleMessage = async (type, result) => {
-    console.log(111)
+    console.log(111);
     if (type !== "SentenceEnd") {
       return;
     }
-    console.log(222, result.length < MIN_WORDS,'22')
+    console.log(222, result.length < MIN_WORDS, "22");
     // 文字不能太短
     if (result.length < MIN_WORDS) {
       return;
     }
-    console.log(333,'22')
+    console.log(333, "22");
     store.addToConversation(result);
 
     // 只保留最近20条对话
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {
       store.removeFromConversation();
     }
-    console.log(444,'22')
+    console.log(444, "22");
 
     // 要发送的数据
     const req = {
@@ -347,9 +346,8 @@ const Interview = observer(() => {
         conversations: store.conversations,
       },
     };
-    console.log(111)
+    console.log(111);
     wsServer.current.send(JSON.stringify(req));
-
   };
 
   const [DrawerState, setDrawerState] = useState(true);
@@ -387,8 +385,6 @@ const Interview = observer(() => {
     setAudioState(flag);
   };
 
-
-
   const sendManually = () => {
     if (!inputValue) {
       message.warning("请输入问题");
@@ -402,7 +398,7 @@ const Interview = observer(() => {
         question: question,
       },
     };
-    
+
     wsServer.current.send(JSON.stringify(req));
     store.addToConversation(question);
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {
@@ -415,7 +411,7 @@ const Interview = observer(() => {
       {/* <TableOutlined
         className={`audio ${AudioState ? "audio-activated" : "audio-default"}`}
       /> */}
-        <TableOutlined className="text-[22px] text-slate-500"/>
+      <TableOutlined className="text-[22px] text-slate-500" />
       {/* <img style={{ width: '15px' }} src={iconLeft} alt="" /> */}
     </div>
   );
@@ -426,23 +422,26 @@ const Interview = observer(() => {
         <div className="container">
           <div className="container-header">
             <div className="header-left">
-
               <div className="time">
-
-                总计用时：{Math.floor(count / 3600).toString().padStart(2, "0")}:{Math.floor(count / 60).toString().padStart(2, "0")}:{(count % 60).toString().padStart(2, "0")}
+                总计用时：
+                {Math.floor(count / 3600)
+                  .toString()
+                  .padStart(2, "0")}
+                :
+                {Math.floor(count / 60)
+                  .toString()
+                  .padStart(2, "0")}
+                :{(count % 60).toString().padStart(2, "0")}
               </div>
-
             </div>
 
             <div className="states">
               {ReplyState ? (
                 <div className="state">
-
                   <span>等待面试官问题...</span>
                 </div>
               ) : (
                 <div className="state">
-
                   <span>生成中...</span>
                 </div>
               )}
@@ -450,36 +449,37 @@ const Interview = observer(() => {
             <div>
               {ButtonState ? (
                 <button
-                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded'
+                  className="login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded"
                   type="primary"
                   onClick={startRecording}
                 >
-
-                  <span >开始</span>
+                  <span>开始</span>
                 </button>
               ) : (
                 <button
-                  className='login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded'
+                  className="login-input  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] text-white font-bold text-[14px] px-[15px] py-[4px] rounded"
                   onClick={stopRecording}
                 >
-
                   结束
                 </button>
               )}
             </div>
-
           </div>
           <div className="container-body">
             <div
-              className={`body-left ${DrawerState ? "body-compressed" : "body-fill"
-                }`}
+              className={`body-left ${
+                DrawerState ? "body-compressed" : "body-fill"
+              }`}
             >
               <div className="answer-block" id="scrollBlock">
                 <div className="answer">
                   <div className="answer-header">
                     <div>
                       <Avatar
-                        style={{ backgroundColor: "#87d068", marginRight: "5px" }}
+                        style={{
+                          backgroundColor: "#87d068",
+                          marginRight: "5px",
+                        }}
                         icon={<UserOutlined />}
                       />
                     </div>
@@ -489,35 +489,38 @@ const Interview = observer(() => {
                         小助手会分析语音识别的内容，只回复面试官的提问
                       </div>
                     </div>
-
                   </div>
-
                 </div>
                 {messageList.map((item, key) => {
                   return (
                     <div key={key}>
                       {/* 面试官 */}
-                      {
-                        item.type == 1 && (
-                          <div className="request">
-                            <div className="request-header">
-                              <div>
-                                <img style={{ width: '35px', borderRadius: "50%", marginRight: '10px' }} src={store.formImg} alt="" />
+                      {item.type == 1 && (
+                        <div className="request">
+                          <div className="request-header">
+                            <div>
+                              <img
+                                style={{
+                                  width: "35px",
+                                  borderRadius: "50%",
+                                  marginRight: "10px",
+                                }}
+                                src={store.formImg}
+                                alt=""
+                              />
+                            </div>
+                            <div className="request-content">
+                              <div className="xzs">
+                                {store.formCompany}面试官
                               </div>
-                              <div className="request-content">
-                                <div className="xzs">{store.formCompany}面试官</div>
-                                <div className="text">
-                                  {item.message}
-                                </div>
-                              </div>
+                              <div className="text">{item.message}</div>
                             </div>
                           </div>
-                        )
-                      }
+                        </div>
+                      )}
 
-                      {
-                        item.type == 2 && <div className="answer" >
-
+                      {item.type == 2 && (
+                        <div className="answer">
                           <div className="answer-header">
                             <div>
                               <Avatar
@@ -532,13 +535,9 @@ const Interview = observer(() => {
                               <div className="xzs">AI助答</div>
                               <div className="text">{item.message}</div>
                             </div>
-
                           </div>
-
                         </div>
-
-                      }
-
+                      )}
                     </div>
                   );
                 })}
@@ -554,9 +553,13 @@ const Interview = observer(() => {
                 }}
                 className="question"
               >
-
                 <div className="maybe-need-question">
-                  <p style={{minWidth:"100px"}}> {store.conversations.length > 0 && <p>可能需要回答的问题</p>}</p>
+                  <p style={{ minWidth: "100px" }}>
+                    {" "}
+                    {store.conversations.length > 0 && (
+                      <p>可能需要回答的问题</p>
+                    )}
+                  </p>
                   <div className="question-history">
                     {store.conversations
                       .toSpliced(0, store.conversations.length - 3)
@@ -582,7 +585,7 @@ const Interview = observer(() => {
                     className="input"
                     value={inputValue}
                     onChange={handleInput}
-                    classNames='text-[14px]'
+                    classNames="text-[14px]"
                     onKeyDown={(e) => {
                       const { key } = e;
                       if (key === "Enter" && !ButtonState) {
@@ -595,11 +598,10 @@ const Interview = observer(() => {
                     title={ButtonState ? "请点击开始按钮" : "强制回答该问题"}
                   >
                     <Button
-
                       onClick={sendManually}
                       disabled={ButtonState}
                       type="default"
-                      className='login-input'
+                      className="login-input"
                     >
                       <img style={{ width: "20px" }} src={iconSend} />
                     </Button>
@@ -607,7 +609,6 @@ const Interview = observer(() => {
                 </Space.Compact>
               </div>
             </div>
-
           </div>
         </div>
       </div>
