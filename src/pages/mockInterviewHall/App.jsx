@@ -12,6 +12,7 @@ import store from "../../store";
 import { observer } from 'mobx-react';
 import { fetchCompanyList } from "../../router";
 import { getCardList } from "../../router";
+import CommpanyList from '../../components/companyList';
 
 const sort_type = [
   {
@@ -56,10 +57,6 @@ const round = [
 
 const MockInterviewHall = observer(() => {
 
-  useEffect(() => {
-    fetchCompanyList();
-  }, []);
-
   const [options, setOptions] = useState({
     company: '',
     direction: '',
@@ -101,31 +98,15 @@ const MockInterviewHall = observer(() => {
             <img src={iconBuilding} />
             公司
           </div>
-          <Select
-            className="select"
-            defaultValue=''
-            options={
-              store.companyList
-                .filter(item => item?.Name !== '默认Logo')
-                .map(item => {
-                  return {
-                    label: item?.Name,
-                    value: item?.Name,
-                  };
-                })
-                .reverse()
-                .concat({
-                  value: '',
-                  label: '不限'
-                })
-                .reverse()
-            }
+          <CommpanyList
+            className='select'
             onChange={(value) => {
               setOptions(options => ({
                 ...options,
-                company: value
+                direction: value
               }));
-            }} />
+            }}
+          />
         </div>
         <div className="hall-select">
           <div className="hall-label">

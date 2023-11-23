@@ -19,7 +19,8 @@ import {
 import { observer } from "mobx-react";
 import { getToken, getHotWordID } from "../../router";
 import GradientBackground from "../../background/gradientBackground";
-import LoadingAnimation from "../../components/loadingAnimation";
+import SwitchButton from "../../components/SwitchButton";
+import LoadingAnimation from "../../components/LoadingAnimation";
 import iconEvaluation from "../../imgs/icon-evaluation.svg";
 import iconRight from "../../imgs/icon-right.svg";
 import iconClock from "../../imgs/icon-clock.svg";
@@ -234,6 +235,8 @@ const MockInterview = observer(() => {
     await getToken().then((fetchedToken) => {
       const uri = URI + "?token=" + fetchedToken;
       ws.current = new WebSocket(uri);
+    }).catch((err)=>{
+      console.log('getTokenErr',err);
     });
 
     wsServer.current = new WebSocket(MOCK_SERVER_URL);
@@ -513,16 +516,7 @@ const MockInterview = observer(() => {
                         }
                       </div>
                       <div className="answer-switch">
-                        <div className="switch-background">
-                          <div className="switch" onClick={() => { setShowEvaluation(!showEvaluation); }}>
-                            <div className={`${showEvaluation ? "switch-active" : "switch-inactive"}`}>
-                              查看评价
-                            </div>
-                            <div className={`${!showEvaluation ? "switch-active" : "switch-inactive"}`}>
-                              直接跳转
-                            </div>
-                          </div>
-                        </div>
+                        <SwitchButton option1='查看评价' option2='直接跳转'/>
                       </div>
                     </div>
                 }
