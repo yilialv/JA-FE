@@ -1,6 +1,6 @@
 import "./gradientBackground.less";
 
-const gradientBackground = () => {
+const GradientBackground = () => {
   return (
     <div className="gradient-background">
       <div className="gradient-1"></div>
@@ -17,4 +17,4 @@ const gradientBackground = () => {
   );
 };
 
-export default gradientBackground;
+export default GradientBackground;

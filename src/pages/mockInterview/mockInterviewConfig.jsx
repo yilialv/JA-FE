@@ -2,17 +2,18 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Steps } from "antd";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
-import GradientBackground from "../../background/gradientBackground";
+import GradientBackground from "../../background/GradientBackground";
 import CheckBox from "../../components/CheckBox";
-import CompanyList from '../../components/CompanyList';
 import SwitchButton from "../../components/SwitchButton";
 import './mockinterview.less';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const MockInterviewConfig = () => {
 
-  const formCompany = useRef('');
-  const formDirection = useRef('');
-  const formStyle = useRef('');
+  const params = useLocation();
+  // const formCompany = useRef('');
+  // const formDirection = useRef('');
+  const formStyle = useRef('严肃');
   const formPersonalise = useRef(true);
   const formFollow = useRef(true);
   const formEvaluation = useRef(true);
@@ -22,27 +23,27 @@ const MockInterviewConfig = () => {
   const [scrollBox, setScrollBox] = useState(0);
 
   const formList = [
-    {
-      title: '岗位选择',
-      value: (
-        <>
-          <div className="form-item">
-            公司
-            <CompanyList className="select"
-              onChange={(value) => {
-                formCompany.current = value;
-              }} />
-          </div>
-          <div className="form-item">
-            岗位
-            <CompanyList className="select"
-              onChange={(value) => {
-                formDirection.current = value;
-              }} />
-          </div>
-        </>
-      )
-    },
+    // {
+    //   title: '岗位选择',
+    //   value: (
+    //     <>
+    //       <div className="form-item">
+    //         公司
+    //         <CompanyList className="select"
+    //           onChange={(value) => {
+    //             formCompany.current = value;
+    //           }} />
+    //       </div>
+    //       <div className="form-item">
+    //         岗位
+    //         <CompanyList className="select"
+    //           onChange={(value) => {
+    //             formDirection.current = value;
+    //           }} />
+    //       </div>
+    //     </>
+    //   )
+    // },
     {
       title: '面试详情设置',
       value: (
@@ -137,6 +138,24 @@ const MockInterviewConfig = () => {
     setScrollBox(-1 * offsetWidth * (configIndex));
   }, [configIndex]);
 
+  const navigate = useNavigate();
+
+  const startMockInterview = () => {
+    const { state: { id, company, direction, round } } = params;
+    const req = {
+      id: id,
+      company: company,
+      direction: direction,
+      round: round,
+      style: formStyle.current,
+      personalise: formPersonalise.current,
+      follow: formFollow.current,
+      evaluation: formEvaluation.current,
+      limit: formLimit.current
+    };
+    navigate('/mockInterview', { state: req });
+  };
+
   return (
     <div className="mock-interview-config">
       <GradientBackground />
@@ -157,11 +176,11 @@ const MockInterviewConfig = () => {
         </div>
         <div className="card-bottom">
           {
-            configIndex === 2
+            configIndex === CONFIG_MAX - 1
               ?
-              <div className="start-button">开始模拟面试</div>
+              <div className="start-button" onClick={startMockInterview}>开始模拟面试</div>
               :
-              <Steps progressDot current={configIndex} items={[{ title: '' }, { title: '' }, { title: '' }]} />
+              <Steps progressDot current={configIndex} items={[{ title: '' }, { title: '' }]} />
           }
         </div>
       </div>
