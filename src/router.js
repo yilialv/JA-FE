@@ -44,7 +44,9 @@ export function logout() {
   axios.post(`${BASE_URL}/api/wx/logout`).then((res) => {
     const { status } = res;
     if (status === 200) {
+      
       message.info('退出登录成功');
+      window.location.reload()
     }
   }).catch((err) => {
     console.log('err:', err);

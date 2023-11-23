@@ -31,7 +31,7 @@ const Login = () => {
             <Input placeholder="请输入验证码登录(4位)" className='login-input' />
           </Form.Item>
           <Form.Item>
-            <Button type='primary' htmlType="submit" className='login-input'>登录</Button>
+            <Button type='primary' htmlType="submit" className='login-button'>登录</Button>
           </Form.Item>
         </Form>
       </div>
