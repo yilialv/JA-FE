@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @theme-gradient: linear-gradient(90deg, rgba(120, 103, 215, 1) 0%, rgba(238, 111, 132, 1) 100%);
 @dialog-box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 @theme-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
@@ -250,4 +251,258 @@
             background-color: #fff;
         }
     }
+=======
+@theme-gradient: linear-gradient(90deg, rgba(120, 103, 215, 1) 0%, rgba(238, 111, 132, 1) 100%);
+@dialog-box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+@theme-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
+
+
+.record-card {
+    width: 240px;
+    margin: 20px;
+    position: relative;
+
+    .bookmark {
+        top: -4px;
+        left: 80%;
+        position: absolute;
+        width: 35px;
+    }
+
+    .ant-card-body {
+        padding: 12px;
+        color: #111;
+
+        .interview-title {
+            display: flex;
+            align-items: center;
+
+            .title-text {
+                font-family: Roboto;
+                font-size: 23px;
+                font-weight: 700;
+                line-height: 24px;
+            }
+
+            .ant-tag {
+                height: 18px;
+                border-radius: 10px;
+                margin-left: 8px;
+                color: #FFF;
+                font-size: 10px;
+                font-weight: 500;
+                line-height: 16px;
+            }
+
+            .anticon {
+                font-weight: 900;
+                font-size: large;
+                // padding: 6px;
+                border-radius: 50%;
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .setting-icon-container {
+                margin-left: auto;
+                display: flex;
+                flex-direction: row;
+                justify-content: flex-end;
+                align-items: center;
+            }
+
+            .setting-icon {
+                margin-left: 2px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                opacity: 0.8;
+            }
+
+            .setting-icon:hover {
+                transform: scale(1.1);
+                opacity: 1;
+            }
+        }
+
+        .interview-info {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+
+            .info {
+                font-size: 14px;
+            }
+        }
+
+        .interview-footer {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+
+            .edit-btn {
+                margin-left: 24px;
+                color: #3F9D13;
+                border-color: #3F9D13;
+            }
+
+            .edit-btn:hover {
+                background-color: rgba(100, 237, 172, 0.3);
+            }
+
+            .mock-btn {
+                margin-right: 12px;
+                padding-left: 6px;
+                padding-right: 4px;
+            }
+
+            .footer-left {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                .text-number {
+                    margin: 0 4px;
+                    padding-top: 3px;
+                    color: #000;
+                    font-family: Roboto;
+                    font-size: 14px;
+                    font-style: normal;
+                    font-weight: 500;
+                    line-height: 24px;
+                    /* 171.429% */
+                }
+            }
+
+            .interview-footer-user {
+                display: flex;
+                align-items: center;
+
+                .ant-avatar {
+                    border: 1px solid #ccc;
+                    margin-right: 2px;
+                }
+            }
+        }
+    }
+}
+
+.switch-background {
+    width: 150px;
+    user-select: none;
+    cursor: pointer;
+    background: @theme-gradient;
+    display: grid;
+    padding: 2px;
+    border-radius: 30px;
+    font-weight: 600;
+    text-align: center;
+
+    .switch {
+        border-radius: 30px;
+        background: #fff;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .switch-active {
+        margin: -2px;
+        transition: 300ms;
+        padding: 5px 0 5px 0;
+        background: @theme-gradient;
+        color: #fff;
+        border-radius: 20px;
+    }
+
+    .switch-inactive {
+        margin: -2px;
+        border-radius: 20px;
+        transition: 300ms;
+        padding: 5px 0 5px 0;
+        color: transparent;
+        background: @theme-gradient;
+        background-clip: text;
+        -webkit-background-clip: text;
+    }
+}
+
+.button-background {
+    user-select: none;
+    cursor: pointer;
+    background: @theme-gradient;
+    display: grid;
+    margin: 10px;
+    padding: 2px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: @dialog-box-shadow;
+
+    .button {
+        border-radius: 3px;
+        padding: 5px 10px;
+        color: #fff;
+    }
+
+    .button-reverse {
+        border-radius: 3px;
+        padding: 5px 10px;
+        background-color: #fff;
+    }
+}
+
+.select-background {
+    user-select: none;
+    background: @theme-gradient;
+    padding: 2px;
+    border-radius: 8px;
+}
+
+.checkbox-field {
+    width: 150px;
+    user-select: none;
+    cursor: pointer;
+    display: grid;
+    font-weight: 500;
+    box-shadow: 0 1px 0 0 #ccc;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    justify-items: end;
+
+    .checkbox-first {
+        grid-area: 1/1/2/2;
+    }
+
+    .checkbox-second {
+        grid-area: 1/2/2/3;
+    }
+
+    .check {
+        color: rgba(88, 68, 206, 1);
+        font-size: 20px;
+        transition: 300ms;
+        transform: translate(20%, -5%);
+    }
+
+    .option {
+        display: flex;
+        align-items: center;
+    }
+
+    .box {
+        margin-left: 5px;
+        display: inline-block;
+        border-radius: 4px;
+        padding: 2px;
+        background: @theme-gradient;
+
+        div {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            background-color: #fff;
+        }
+    }
+>>>>>>> aec45b516cb908fa0d4547f6fb172e0d3f5da5f3
 }

@@ -62,7 +62,4 @@ const router = () => {
   return element;
 };
 
-
-
-
-export default router
+export default router;
