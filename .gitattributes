@@ -1,1 +1,24 @@
-* text=auto
+* text=auto eol=lf
+
+#明确声明文件类型
+*.css text
+*.html text
+*.js text
+*.jsx text
+*.json text
+*.md text
+*.svg text
+*.txt text
+*.xml text
+*.yml text
+
+# 声明一些文件类型为二进制，以便Git不会尝试修改它们
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
