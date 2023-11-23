@@ -70,6 +70,7 @@ class Store {
       this.isLogin = false;
     }
     this.nickName = nickName;
+    this.avatar = params.avatar;
   }
 
   setUserInfo(token, nickName, avatar) {

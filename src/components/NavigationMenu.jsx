@@ -17,16 +17,15 @@ const NavigationMenu = () => {
     store.isLoginModalOpen = true;
   };
   const [menuAcitveIndex,setMenuAcitveIndex] = useState(0)
-  let userinfo = {}
-  if(localStorage.getItem("userinfo")){
-    userinfo = JSON.parse(localStorage.getItem("userinfo"))
-  }
+
+
   const location = useLocation();
 
   useEffect(() => {
     const { pathname } = location;
     store.currentMenu = pathname;
   }, [location]);
+  
 
   const menuItems = [
     {
@@ -122,9 +121,12 @@ const NavigationMenu = () => {
             }
           </ul>
           <div className='flex items-center'>
-            {
-              userinfo.avatar || store.avatar ? <img src={userinfo.avatar || store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
-            }
+             <Dropdown menu={{ items }} placement="bottom">
+               {
+                 store.avatar ? <img src={store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
+              }
+            </Dropdown>
+          
            
             <GlobalOutlined className="text-[25px] ml-2" />
             {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}

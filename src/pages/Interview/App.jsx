@@ -24,6 +24,7 @@ import { useEffect, useRef, useState } from "react";
 import store from "../../store";
 import "./App.less";
 import iconSend from "../../imgs/send.png";
+import jp from "../../imgs/jp.png";
 import iconLeft from "../../imgs/left.png";
 
 const { Content } = Layout;
@@ -39,7 +40,7 @@ const messageList = [];
 
 库的报错 on_error()
 */
-
+let interval = null
 const Interview = observer(() => {
   const clear = useEffect(() => {
     store.formCompany = localStorage.getItem("company");
@@ -47,13 +48,11 @@ const Interview = observer(() => {
     store.formRound = localStorage.getItem("round");
     store.formImg = localStorage.getItem("img");
 
-    const interval = setInterval(() => {
-      setCount((counts) => counts + 1);
-    }, 1000);
+  
 
     return () => {
       setCount(0);
-      clearInterval(interval);
+     
     };
   }, []);
 
@@ -78,7 +77,9 @@ const Interview = observer(() => {
 
   const startRecording = () => {
     connectWebSocket();
-
+    interval = setInterval(() => {
+      setCount((counts) => counts + 1);
+    }, 1000);
     navigator.mediaDevices
       .getUserMedia({ audio: true })
       .then((stream) => {
@@ -116,6 +117,8 @@ const Interview = observer(() => {
   };
 
   const stopRecording = () => {
+    clearInterval(interval)
+    setCount(0);
     recorder.current.stop();
     sendFinish();
     mediaRecorder.current.stop();
@@ -408,11 +411,7 @@ const Interview = observer(() => {
 
   const prefix = (
     <div className="audio-display">
-      {/* <TableOutlined
-        className={`audio ${AudioState ? "audio-activated" : "audio-default"}`}
-      /> */}
-      <TableOutlined className="text-[22px] text-slate-500" />
-      {/* <img style={{ width: '15px' }} src={iconLeft} alt="" /> */}
+     <img src={jp} style={{height:"25px"}} alt="" />
     </div>
   );
 
