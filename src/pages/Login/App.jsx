@@ -10,7 +10,7 @@ const API_BASE_URL = 'https://job581.cn/api';
 const getQrCodeTicket = async (randomNumber) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/wx/login_qrcode_ticket`, {
-      "scene_id":randomNumber
+      "scene_id": randomNumber
     });
     return response.data;
   } catch (error) {
@@ -24,9 +24,9 @@ const getQrCodeTicket = async (randomNumber) => {
 const checkLoginStatus = async (randomNumber) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/wx/check_scan_result`, {
-      "scene_id":randomNumber
+      "scene_id": randomNumber
     });
-    return response.data != null; 
+    return response.data != null;
   } catch (error) {
     console.error('Error checking login status:', error);
     // 根据你的错误处理策略进行处理
@@ -75,12 +75,12 @@ const Login = () => {
   return (
     <Modal title="登录" open={store.isLoginModalOpen} onCancel={handleCancel} footer={null}>
       <div className='login'>
-      <div className="login-send">
+        <div className="login-send">
           <div className="login-text ">微信扫码</div>
           <div className="login-text emphasize">关注公众号</div>
           <div className="login-text ">自动登录</div>
-      </div>
-      {ticket && <img src={`https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}`} className='login-img' alt='QR Code' />}
+        </div>
+        {ticket && <img src={`https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}`} className='login-img' alt='QR Code' />}
       </div>
     </Modal>
   );

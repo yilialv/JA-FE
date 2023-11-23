@@ -1,4 +1,6 @@
 @theme-gradient: linear-gradient(90deg, rgba(120, 103, 215, 1) 0%, rgba(238, 111, 132, 1) 100%);
+@dialog-box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
+@theme-box-shadow: 0 4px 4px 0 rgba(0, 0, 0, 0.25);
 
 
 .record-card {
@@ -141,37 +143,62 @@
     padding: 2px;
     border-radius: 30px;
     font-weight: 600;
+    text-align: center;
 
     .switch {
         border-radius: 30px;
         background: #fff;
         display: grid;
         grid-template-columns: 1fr 1fr;
-        text-align: center;
+    }
 
-        .switch-active {
-            margin: -2px;
-            transition: 300ms;
-            padding: 5px 0 5px 0;
-            background: @theme-gradient;
-            color: #fff;
-            border-radius: 20px;
-        }
+    .switch-active {
+        margin: -2px;
+        transition: 300ms;
+        padding: 5px 0 5px 0;
+        background: @theme-gradient;
+        color: #fff;
+        border-radius: 20px;
+    }
 
-        .switch-inactive {
-            margin: -2px;
-            border-radius: 20px;
-            transition: 300ms;
-            padding: 5px 0 5px 0;
-            color: transparent;
-            background: @theme-gradient;
-            background-clip: text;
-            -webkit-background-clip: text;
-        }
+    .switch-inactive {
+        margin: -2px;
+        border-radius: 20px;
+        transition: 300ms;
+        padding: 5px 0 5px 0;
+        color: transparent;
+        background: @theme-gradient;
+        background-clip: text;
+        -webkit-background-clip: text;
     }
 }
 
-.select-background{
+.button-background {
+    user-select: none;
+    cursor: pointer;
+    background: @theme-gradient;
+    display: grid;
+    margin: 10px;
+    padding: 2px;
+    border-radius: 5px;
+    font-weight: 600;
+    text-align: center;
+    box-shadow: @dialog-box-shadow;
+
+    .button {
+        border-radius: 3px;
+        padding: 5px 10px;
+        color: #fff;
+    }
+
+    .button-reverse {
+        border-radius: 3px;
+        padding: 5px 10px;
+        background-color: #fff;
+    }
+}
+
+.select-background {
     user-select: none;
     background: @theme-gradient;
     padding: 2px;
@@ -184,40 +211,42 @@
     cursor: pointer;
     display: grid;
     font-weight: 500;
-    box-shadow: 0 1px 0 0 #ccc ;
+    box-shadow: 0 1px 0 0 #ccc;
     grid-template-columns: 1fr 1fr;
     align-items: center;
     justify-items: end;
 
-    .checkbox-first{
+    .checkbox-first {
         grid-area: 1/1/2/2;
     }
-    .checkbox-second{
+
+    .checkbox-second {
         grid-area: 1/2/2/3;
     }
 
-    .check{
+    .check {
         color: rgba(88, 68, 206, 1);
         font-size: 20px;
-        transition:300ms;
-        transform: translate(20%,-5%);
+        transition: 300ms;
+        transform: translate(20%, -5%);
     }
 
-    .option{
+    .option {
         display: flex;
         align-items: center;
     }
 
-    .box{
+    .box {
         margin-left: 5px;
         display: inline-block;
         border-radius: 4px;
-        padding:2px;
+        padding: 2px;
         background: @theme-gradient;
-        div{
-            width: 15px;
-            height: 15px;
-            border-radius: 2px;
+
+        div {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
             background-color: #fff;
         }
     }

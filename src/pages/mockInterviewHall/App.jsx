@@ -8,11 +8,10 @@ import iconOrder from '../../imgs/icon-order.svg';
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../constant";
-import store from "../../store";
 import { observer } from 'mobx-react';
-import { fetchCompanyList } from "../../router";
 import { getCardList } from "../../router";
 import CommpanyList from '../../components/companyList';
+import { useNavigate } from 'react-router-dom';
 
 const sort_type = [
   {
@@ -71,8 +70,22 @@ const MockInterviewHall = observer(() => {
   useEffect(() => {
     getCardList(options).then(res => {
       setCardList(res);
+      console.log(res);
     });
   }, [options]);
+
+  const navigate = useNavigate();
+
+  const navigateToMockInterview = (item) => {
+    const { id, company, direction, round } = item;
+    const req = {
+      id: id,
+      company: company,
+      direction: direction,
+      round: round
+    };
+    navigate('/mockInterviewConfig', { state: req });
+  };
 
   return (
     <div className="mock-interview-hall">
@@ -146,7 +159,7 @@ const MockInterviewHall = observer(() => {
         {
           cardList.map((item) => {
             return (
-              <RecordCard key={item?.id} data={item} />
+              <RecordCard key={item?.id} data={item} onClick={() => { navigateToMockInterview(item); }} />
             );
           })
         }

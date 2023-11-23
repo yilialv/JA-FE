@@ -13,6 +13,7 @@ import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
 import MockInterviewConfig from '../pages/mockInterview/mockInterviewConfig';
+import MockInterviewResult from '../pages/mockInterview/mockInterviewResult';
 
 const router = () => {
   const element = useRoutes([
@@ -51,13 +52,14 @@ const router = () => {
     {
       path: '/mockInterviewConfig',
       element: <MockInterviewConfig />
+    },
+    {
+      path: '/mockInterviewResult',
+      element: <MockInterviewResult />
     }
   ]);
 
   return element;
 };
 
-
-
-
-export default router
+export default router;
