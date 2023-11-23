@@ -79,7 +79,7 @@ const MockInterviewResult = () => {
         </div>
       </div>
     </div >
-  )
+  );
 };
 
 export default MockInterviewResult;
