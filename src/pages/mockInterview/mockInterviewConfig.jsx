@@ -2,7 +2,7 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { Steps } from "antd";
 import { useEffect } from "react";
 import { useRef, useState } from "react";
-import GradientBackground from "../../background/GradientBackground";
+import GradientBackground from "../../background/gradientBackground";
 import CheckBox from "../../components/CheckBox";
 import SwitchButton from "../../components/SwitchButton";
 import "./mockInterview.less";
