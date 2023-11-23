@@ -10,7 +10,7 @@ import axios from "axios";
 import { BASE_URL } from "../../constant";
 import { observer } from 'mobx-react';
 import { getCardList } from "../../router";
-import CommpanyList from '../../components/companyList';
+import CommpanyList from '../../components/CompanyList';
 import { useNavigate } from 'react-router-dom';
 
 const sort_type = [

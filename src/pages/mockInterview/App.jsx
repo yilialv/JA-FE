@@ -17,9 +17,9 @@ import {
 } from "@ant-design/icons";
 import { observer } from "mobx-react";
 import { getToken, getHotWordID } from "../../router";
-import GradientBackground from "../../background/GradientBackground";
+import GradientBackground from "../../background/gradientBackground";
 import SwitchButton from "../../components/SwitchButton";
-import LoadingAnimation from "../../components/LoadingAnimation";
+import LoadingAnimation from "../../components/loadingAnimation";
 import iconEvaluation from "../../imgs/icon-evaluation.svg";
 import iconRight from "../../imgs/icon-right.svg";
 import iconClock from "../../imgs/icon-clock.svg";

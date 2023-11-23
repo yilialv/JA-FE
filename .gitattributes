@@ -11,6 +11,7 @@
 *.txt text
 *.xml text
 *.yml text
+*.less text
 
 # 声明一些文件类型为二进制，以便Git不会尝试修改它们
 *.png binary

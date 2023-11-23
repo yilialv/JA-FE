@@ -1,4 +1,4 @@
-import GradientBackground from "../../background/GradientBackground";
+import GradientBackground from "../../background/gradientBackground";
 import IconCongratulation from '../../imgs/icon-congratulation.svg';
 import './mockInterview.less';
 import ClickButton from "../../components/ClickButton";
