@@ -5,15 +5,14 @@ import { useRef, useState } from "react";
 import GradientBackground from "../../background/GradientBackground";
 import CheckBox from "../../components/CheckBox";
 import SwitchButton from "../../components/SwitchButton";
-import './mockinterview.less';
-import { useNavigate, useLocation } from 'react-router-dom';
+import "./mockInterview.less";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const MockInterviewConfig = () => {
-
   const params = useLocation();
   // const formCompany = useRef('');
   // const formDirection = useRef('');
-  const formStyle = useRef('严肃');
+  const formStyle = useRef("严肃");
   const formPersonalise = useRef(true);
   const formFollow = useRef(true);
   const formEvaluation = useRef(true);
@@ -45,20 +44,24 @@ const MockInterviewConfig = () => {
     //   )
     // },
     {
-      title: '面试详情设置',
+      title: "面试详情设置",
       value: (
         <>
           <div className="form-item">
             面试风格
-            <CheckBox option1='严肃' option2='轻松'
+            <CheckBox
+              option1="严肃"
+              option2="轻松"
               updateState={(value) => {
-                formStyle.current = value ? '严肃' : '轻松';
+                formStyle.current = value ? "严肃" : "轻松";
               }}
             />
           </div>
           <div className="form-item">
             是否追问
-            <CheckBox option1='是' option2='否'
+            <CheckBox
+              option1="是"
+              option2="否"
               updateState={(value) => {
                 formFollow.current = value;
               }}
@@ -66,17 +69,19 @@ const MockInterviewConfig = () => {
           </div>
           <div className="form-item">
             是否提问个人项目
-            <CheckBox option1='是' option2='否'
+            <CheckBox
+              option1="是"
+              option2="否"
               updateState={(value) => {
                 formPersonalise.current = value;
               }}
             />
           </div>
         </>
-      )
+      ),
     },
     {
-      title: '面试模式选择',
+      title: "面试模式选择",
       value: (
         <>
           <div className="form-item tips">
@@ -86,34 +91,38 @@ const MockInterviewConfig = () => {
             时间容忍度
             <div className="form-input">
               <div className="input">
-                <input type='number' placeholder="2" onChange={(value) => { formLimit.current = value; }} />
+                <input
+                  type="number"
+                  placeholder="2"
+                  onChange={(value) => {
+                    formLimit.current = value;
+                  }}
+                />
               </div>
               min
             </div>
           </div>
           <div className="form-item">
             回答评价
-            <SwitchButton option1='开' option2='关'
+            <SwitchButton
+              option1="开"
+              option2="关"
               updateState={(value) => {
                 formEvaluation.current = value;
               }}
             />
           </div>
         </>
-      )
-    }
+      ),
+    },
   ];
 
   const optionList = formList.map((item) => {
     const { title, value } = item;
     return (
-      <div className='card-form' key={title}>
-        <div className="form-title">
-          {title}
-        </div>
-        <div className="form-body">
-          {value}
-        </div>
+      <div className="card-form" key={title}>
+        <div className="form-title">{title}</div>
+        <div className="form-body">{value}</div>
       </div>
     );
   });
@@ -125,8 +134,7 @@ const MockInterviewConfig = () => {
   const handleConfigIndex = (val) => {
     if (configIndex === 0 && val === -1) {
       return;
-    }
-    else if (configIndex === CONFIG_MAX - 1 && val === 1) {
+    } else if (configIndex === CONFIG_MAX - 1 && val === 1) {
       return;
     }
     let temp = configIndex + val;
@@ -134,14 +142,18 @@ const MockInterviewConfig = () => {
   };
 
   useEffect(() => {
-    const { current: { offsetWidth } } = recordsContainerRef;
-    setScrollBox(-1 * offsetWidth * (configIndex));
+    const {
+      current: { offsetWidth },
+    } = recordsContainerRef;
+    setScrollBox(-1 * offsetWidth * configIndex);
   }, [configIndex]);
 
   const navigate = useNavigate();
 
   const startMockInterview = () => {
-    const { state: { id, company, direction, round } } = params;
+    const {
+      state: { id, company, direction, round },
+    } = params;
     const req = {
       id: id,
       company: company,
@@ -151,9 +163,9 @@ const MockInterviewConfig = () => {
       personalise: formPersonalise.current,
       follow: formFollow.current,
       evaluation: formEvaluation.current,
-      limit: formLimit.current
+      limit: formLimit.current,
     };
-    navigate('/mockInterview', { state: req });
+    navigate("/mockInterview", { state: req });
   };
 
   return (
@@ -162,26 +174,40 @@ const MockInterviewConfig = () => {
       <div className="mock-interview-card">
         <div className="card-title">模拟面试</div>
         <div className="card-body">
-          <div className="card-button" onClick={() => { handleConfigIndex(-1); }}>
+          <div
+            className="card-button"
+            onClick={() => {
+              handleConfigIndex(-1);
+            }}
+          >
             <LeftOutlined />
           </div>
           <div className="card-mid" ref={recordsContainerRef}>
-            <div className="card-scroll" style={{ left: scrollBox + 'px' }}>
+            <div className="card-scroll" style={{ left: scrollBox + "px" }}>
               {optionList}
             </div>
           </div>
-          <div className="card-button" onClick={() => { handleConfigIndex(1); }}>
+          <div
+            className="card-button"
+            onClick={() => {
+              handleConfigIndex(1);
+            }}
+          >
             <RightOutlined />
           </div>
         </div>
         <div className="card-bottom">
-          {
-            configIndex === CONFIG_MAX - 1
-              ?
-              <div className="start-button" onClick={startMockInterview}>开始模拟面试</div>
-              :
-              <Steps progressDot current={configIndex} items={[{ title: '' }, { title: '' }]} />
-          }
+          {configIndex === CONFIG_MAX - 1 ? (
+            <div className="start-button" onClick={startMockInterview}>
+              开始模拟面试
+            </div>
+          ) : (
+            <Steps
+              progressDot
+              current={configIndex}
+              items={[{ title: "" }, { title: "" }]}
+            />
+          )}
         </div>
       </div>
     </div>
