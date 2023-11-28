@@ -1,4 +1,4 @@
-import { EXPIRES } from './constant';
+
 
 export function setCookie(name, value, days) {
   const expires = new Date();

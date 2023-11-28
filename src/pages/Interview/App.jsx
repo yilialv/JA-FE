@@ -401,7 +401,6 @@ const Interview = observer(() => {
         question: question,
       },
     };
-
     wsServer.current.send(JSON.stringify(req));
     store.addToConversation(question);
     while (store.conversations.length > MAX_CONVERSATION_COUNT) {

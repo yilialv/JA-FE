@@ -1,63 +1,68 @@
-import { useRoutes } from 'react-router-dom'
-import {React} from 'react'
+import { useRoutes } from "react-router-dom";
+import { React } from "react";
 
+import Home from "@/pages/Home/App";
+import Interview from "@/pages/Interview/App";
+import User from "@/pages/User/App";
+import MockInterviewHall from "@/pages/mockInterviewHall/App";
+import MockInterview from "@/pages/mockInterview/App";
+import MockInterviewDetail from "@/pages/mockInterview/MockInterviewDetail";
+import RecordUpload from "@/pages/User/RecordUpload";
+import InterviewDetail from "@/pages/User/components/InterviewDetail";
 
-
-import Home from '@/pages/Home/App';
-import Interview from '@/pages/Interview/App';
-import User from '@/pages/User/App';
-import MockInterviewHall from '@/pages/mockInterviewHall/App';
-import MockInterview from '@/pages/mockInterview/App';
-import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
-import RecordUpload from '@/pages/User/RecordUpload';
-import InterviewDetail from '@/pages/User/components/InterviewDetail';
-
-import InterviewAid from '@/pages/interviewAid/app';
+import InterviewAid from "@/pages/interviewAid/app";
+import MockInterviewConfig from "../pages/mockInterview/mockInterviewConfig";
+import MockInterviewResult from "../pages/mockInterview/mockInterviewResult";
 
 const router = () => {
   const element = useRoutes([
     {
-      path:'/',
-      element: <Home />
+      path: "/",
+      element: <Home />,
     },
     {
-      path:'/interviewAid',
-      element: <InterviewAid />
+      path: "/interviewAid",
+      element: <InterviewAid />,
     },
     {
-      path:'/mockInterviewDetail',
-      element: <MockInterviewDetail />
+      path: "/mockInterviewDetail",
+      element: <MockInterviewDetail />,
     },
     {
-      path:'/mockInterviewHall',
-      element: <MockInterviewHall />
+      path: "/mockInterviewHall",
+      element: <MockInterviewHall />,
     },
     {
-      path:'/mockInterview',
+      path: "/mockInterview",
       element: <MockInterview />,
     },
     {
-      path:'/interview',
-      element: <Interview />
+      path: "/interview",
+      element: <Interview />,
     },
     {
-      path: '/user',
-      element: <User />
+      path: "/user",
+      element: <User />,
     },
     {
-      path: '/experience/upload',
-      element: <RecordUpload />
+      path: "/experience/upload",
+      element: <RecordUpload />,
     },
     {
-      path:'/user/interviewDetail/:id',
-      element: <InterviewDetail />
-    }
-  ])
+      path: "/user/interviewDetail/:id",
+      element: <InterviewDetail />,
+    },
+    {
+      path: "/mockInterviewConfig",
+      element: <MockInterviewConfig />,
+    },
+    {
+      path: "/mockInterviewResult",
+      element: <MockInterviewResult />,
+    },
+  ]);
 
-  return element
-}
+  return element;
+};
 
-
-
-
-export default router
+export default router;

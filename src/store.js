@@ -1,6 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { getCookie, setCookie, deleteCookie } from "./utils";
-import { EXPIRES } from "./constant";
+import { getCookie, deleteCookie } from "./utils";
 import {pinyin} from "pinyin-pro"
 
 class Store {
@@ -108,7 +107,7 @@ class Store {
       return []
     }
 
-    const formatComanyMap= {
+    const formatComanyMap = {
 
     }
     const formatComanyList = []
