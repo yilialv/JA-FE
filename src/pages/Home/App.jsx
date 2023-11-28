@@ -1,34 +1,34 @@
 import { Input, Layout, message } from 'antd';
+import Login from '../Login/App';
 import { ShareCard, CommentCard } from './Card';
 import { observer } from 'mobx-react';
 import React, { useState, useRef } from 'react';
-import AssistantModal from '../AssistantModal/App';
 import FooterInfo from '../../components/FooterInfo';
-import { useEffect } from 'react';
+import { useEffect, } from 'react';
 import axios from 'axios';
 import { BASE_URL } from '../../constant';
 import Slider from "react-slick";
 import Marquee from "react-fast-marquee";
+import {useNavigate} from "react-router-dom";
+import store from '../../store';
+import CustomInput from "../../components/Input/Input";
+
+const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item + 1}.jpeg`));
 
 
 
-const imgs = new Array().fill(11).map(item => require(`../../imgs/cm-${item + 1}.jpeg`))
-console.log(imgs, 'imgs')
-
-
-
-import cm_img_1 from "../../imgs/cm-1.jpeg"
-import cm_img_2 from "../../imgs/cm-2.jpeg"
-import cm_img_3 from "../../imgs/cm-3.jpeg"
-import cm_img_4 from "../../imgs/cm-4.jpeg"
-import cm_img_5 from "../../imgs/cm-5.jpeg"
-import cm_img_6 from "../../imgs/cm-6.jpeg"
-import cm_img_7 from "../../imgs/cm-7.jpeg"
-import cm_img_8 from "../../imgs/cm-8.jpeg"
-import cm_img_9 from "../../imgs/cm-9.jpeg"
-import cm_img_10 from "../../imgs/cm-10.jpeg"
-import cm_img_11 from "../../imgs/cm-11.jpeg"
-import cm_img_12 from "../../imgs/cm-12.jpeg"
+import cm_img_1 from "../../imgs/cm-1.jpeg";
+import cm_img_2 from "../../imgs/cm-2.jpeg";
+import cm_img_3 from "../../imgs/cm-3.jpeg";
+import cm_img_4 from "../../imgs/cm-4.jpeg";
+import cm_img_5 from "../../imgs/cm-5.jpeg";
+import cm_img_6 from "../../imgs/cm-6.jpeg";
+import cm_img_7 from "../../imgs/cm-7.jpeg";
+import cm_img_8 from "../../imgs/cm-8.jpeg";
+import cm_img_9 from "../../imgs/cm-9.jpeg";
+import cm_img_10 from "../../imgs/cm-10.jpeg";
+import cm_img_11 from "../../imgs/cm-11.jpeg";
+import cm_img_12 from "../../imgs/cm-12.jpeg";
 
 
 
@@ -71,6 +71,7 @@ const settings = {
 
 const Home = () => {
   const [cardList, setCardList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getCardList();
@@ -89,7 +90,6 @@ const Home = () => {
         setCardList(mock_interview_cards);
       }
     }).catch((err) => {
-      console.log('error:', err);
       message.error('获取卡片列表失败');
     });
   }
@@ -97,23 +97,33 @@ const Home = () => {
   const like = (item) => {
     axios.post(`${BASE_URL}/api/experience/set_favorite`, { experience_id: item.id }).then((res) => {
       if (res.code !== 200) {
-        getCardList()
+        getCardList();
       }
     }).catch((err) => {
 
     });
-  }
+  };
+  const inputValueChange = (value) => {
+    console.log(value,'value');
+  };
+  const toInterviewAid = () => {
+    if (!store.isLogin) {
+      store.isLoginModalOpen = true;
+      return;
+    }
+    navigate('/interviewaid');
+  };
 
   return (
     <>
+      <Login />
       <Content className='content bg-slate-100 pt-24'>
-        <AssistantModal />
         <p className='font-bold text-[50px] tracking-widest'>AI面试小助手，助力收割大厂offer</p>
         <p className='text-sm mt-8'>为你彻底解决背八股文的烦恼！</p>
         <p className='text-sm mb-8'>已经成功帮助 <span className='text-lg text-amber-500'>123456</span> 人拿到心仪offer！</p>
 
         <div className='btn-container'>
-          <button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded-lg text-white py-2 px-12 tracking-widest text-base'>点击体验面试辅助</button>
+          <button type='primary' onClick={toInterviewAid} className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded-lg text-white py-2 px-12 tracking-widest text-base'>点击体验面试辅助</button>
         </div>
         <div className="bg-white w-2/3 h-[25rem] mt-8 mb-8 rounded">
         </div>
@@ -122,6 +132,7 @@ const Home = () => {
           <h3 className='text-[40px] font-bold text-center pb-1'>来自网页体验的面经分享</h3>
           <p className='text-[24px] text-center'>各个大厂面试经验等你来发现</p>
           <div className='flex justify-center w-full h-[45px] mt-8'>
+            <CustomInput  dataList={store.getFormatCompanyList()}/>
             <input type="text" placeholder='输入部门岗位或者方向进行搜索' className='w-[300px] indent-3 rounded-l' />
             <button className='bg-blue-500 text-white px-5 rounded-r'>
               搜索
@@ -137,7 +148,7 @@ const Home = () => {
             </div>
 
             <div className='w-full'>
-              <button type='primary' className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
+              <button type='primary' onClick={toInterviewAid} className='block mx-auto  bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white py-2 px-6 tracking-widest text-[15px]'>点击进入面经大厅</button>
             </div>
           </div>
         </div>
@@ -149,17 +160,15 @@ const Home = () => {
             {
               [1, 2, 3].map((time, timeIndex) => {
                 return (
-                  <Marquee className="flex mb-3" pauseOnHover={true} speed={[30, 25, 20][time - 1]}>
+                  <Marquee className="flex mb-3" pauseOnHover={true} key={time} speed={[30, 25, 20][time - 1]}>
                     <div
                       className='flex py-1'
                       onMouseOut={e => {
                         const currentMarquee = document.querySelector("#marquee" + time);
-                        console.log(currentMarquee, 'currnet');
                         currentMarquee?.start();
                       }}
                       onMouseOver={(e) => {
                         const currentMarquee = document.querySelector("#marquee" + time);
-                        console.log(e, 'currnet');
                         currentMarquee?.stop();
                       }}>
                       {

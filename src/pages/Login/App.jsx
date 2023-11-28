@@ -1,20 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { Input, Button, Modal, Form } from 'antd';
-import axios from 'axios';
-import { observer } from 'mobx-react';
-import store from '../../store';
+import React, { useEffect, useState } from "react";
+import { Input, Button, Modal, Form } from "antd";
+import axios from "axios";
+import { observer } from "mobx-react";
+import store from "../../store";
 
-const API_BASE_URL = 'https://job581.cn/api';
+const API_BASE_URL = "https://job581.cn/api";
 
 // 获取二维码的 ticket
 const getQrCodeTicket = async (randomNumber) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/wx/login_qrcode_ticket`, {
-      "scene_id": randomNumber
-    });
+    const response = await axios.post(
+      `${API_BASE_URL}/wx/login_qrcode_ticket`,
+      {
+        scene_id: randomNumber,
+      }
+    );
     return response.data;
   } catch (error) {
-    console.error('Error fetching QR code ticket:', error);
+    console.error("Error fetching QR code ticket:", error);
     // 根据你的错误处理策略进行处理，可能是返回默认值或抛出异常
     throw error;
   }
@@ -24,11 +27,11 @@ const getQrCodeTicket = async (randomNumber) => {
 const checkLoginStatus = async (randomNumber) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/wx/check_scan_result`, {
-      "scene_id": randomNumber
+      scene_id: randomNumber,
     });
     return response.data != null;
   } catch (error) {
-    console.error('Error checking login status:', error);
+    console.error("Error checking login status:", error);
     // 根据你的错误处理策略进行处理
     throw error;
   }
@@ -42,7 +45,7 @@ const generateRandomInt32 = () => {
 };
 
 const Login = () => {
-  const [ticket, setTicket] = useState('');
+  const [ticket, setTicket] = useState("");
   const [randomNumber, setRandomNumber] = useState(null);
   useEffect(() => {
     if (store.isLoginModalOpen) {
@@ -57,7 +60,7 @@ const Login = () => {
           if (status) {
             clearInterval(intervalId);
             store.isLoginModalOpen = false;
-            window.location.href = '/'; // 重定向到首页
+            window.location.href = "/"; // 重定向到首页
           }
         });
       }, 1000);
@@ -73,14 +76,25 @@ const Login = () => {
   };
 
   return (
-    <Modal title="登录" open={store.isLoginModalOpen} onCancel={handleCancel} footer={null}>
-      <div className='login'>
+    <Modal
+      title="登录"
+      open={store.isLoginModalOpen}
+      onCancel={handleCancel}
+      footer={null}
+    >
+      <div className="login">
         <div className="login-send">
           <div className="login-text ">微信扫码</div>
           <div className="login-text emphasize">关注公众号</div>
           <div className="login-text ">自动登录</div>
         </div>
-        {ticket && <img src={`https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}`} className='login-img' alt='QR Code' />}
+        {ticket && (
+          <img
+            src={`https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=${ticket}`}
+            className="login-img"
+            alt="QR Code"
+          />
+        )}
       </div>
     </Modal>
   );

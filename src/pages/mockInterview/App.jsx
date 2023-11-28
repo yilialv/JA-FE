@@ -560,4 +560,3 @@ const MockInterview = observer(() => {
 });
 
 export default MockInterview;
-
