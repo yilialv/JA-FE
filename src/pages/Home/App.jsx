@@ -9,7 +9,7 @@ import axios from 'axios';
 import { BASE_URL } from '../../constant';
 import Slider from "react-slick";
 import Marquee from "react-fast-marquee";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import store from '../../store';
 import CustomInput from "../../components/Input/Input";
 
@@ -94,6 +94,18 @@ const Home = () => {
     });
   }
 
+  const navigateToMockInterview = (item) => {
+    console.log(item)
+    const { id, company, direction, round } = item;
+    const req = {
+      id: id,
+      company: company,
+      direction: direction,
+      round: round
+    };
+    navigate('/mockInterviewConfig', { state: req });
+  };
+
   const like = (item) => {
     axios.post(`${BASE_URL}/api/experience/set_favorite`, { experience_id: item.id }).then((res) => {
       if (res.code !== 200) {
@@ -104,7 +116,7 @@ const Home = () => {
     });
   };
   const inputValueChange = (value) => {
-    console.log(value,'value');
+    console.log(value, 'value');
   };
   const toInterviewAid = () => {
     if (!store.isLogin) {
@@ -132,7 +144,7 @@ const Home = () => {
           <h3 className='text-[40px] font-bold text-center pb-1'>来自网页体验的面经分享</h3>
           <p className='text-[24px] text-center'>各个大厂面试经验等你来发现</p>
           <div className='flex justify-center w-full h-[45px] mt-8'>
-            <CustomInput  dataList={store.getFormatCompanyList()}/>
+            <CustomInput dataList={store.getFormatCompanyList()} />
             <input type="text" placeholder='输入部门岗位或者方向进行搜索' className='w-[300px] indent-3 rounded-l' />
             <button className='bg-blue-500 text-white px-5 rounded-r'>
               搜索
@@ -142,7 +154,7 @@ const Home = () => {
             <div className='w-[1200px]'>
               <Slider className='my-8' {...settings}>
                 {
-                  cardList.map(item => <ShareCard key={item.id} like={like} dataSource={item} />)
+                  cardList.map(item => <ShareCard onClick={() => { navigateToMockInterview(item); }} key={item.id} like={like} dataSource={item} />)
                 }
               </Slider>
             </div>
