@@ -130,55 +130,7 @@ const NavigationMenu = () => {
           </div>
         </div>
       </div>
-      {/* <div className='mobile-menu'>
-        {
-          store.isLogin
-            ?
-            < Dropdown
-              className='mobile-menu-logined'
-              menu={{
-                items,
-                onClick: () => { setOpen(false); }
-              }}
-              onOpenChange={handleOpenChange}
-              open={open}
-              dropdownRender={(menu) => (
-                <div className='mobile-menu-list'>
-                  {
-                    menuItems.map((item) => {
-                      const { key, link, label } = item;
-                      return <React.Fragment key={key}>
-                        <div
-                          className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
-                          onClick={() => { NavigateTo(item), setOpen(false); }}
-                          key={key}>
-                          {label}
-                        </div>
-                      </React.Fragment>;
-                    })
-                  }
-                  <Divider
-                    style={{
-                      margin: 0,
-                    }}
-                  />
-                  {React.cloneElement(menu, {
-                    style: {
-                      borderRadius: 0,
-                      boxShadow: 'none'
-                    }
-                  })}
-                </div>
-              )}
-              overlayStyle={{ textAlign: 'center' }}
-              placement="bottomRight"
-            >
-              <Button className='mobile-menu' onClick={() => { setOpen(true); }}><BarsOutlined /></Button>
-            </Dropdown >
-            :
-            <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
-        }
-      </div> */}
+    
     </Header >
   );
 };

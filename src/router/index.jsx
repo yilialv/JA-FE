@@ -11,6 +11,7 @@ import MockInterview from '@/pages/mockInterview/App';
 import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
+import UserCenter from '../pages/UserCenter';
 
 import InterviewAid from '@/pages/interviewAid/app';
 
@@ -51,6 +52,10 @@ const router = () => {
     {
       path:'/user/interviewDetail/:id',
       element: <InterviewDetail />
+    },
+    {
+      path:"/user-center",
+      element: <UserCenter />
     }
   ])
 
