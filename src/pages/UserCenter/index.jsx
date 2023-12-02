@@ -5,7 +5,14 @@ import axios from 'axios'
 import {message} from 'antd'
 function UserCenter() {
   const {userData, setUserData} = useState({})
-
+  const userModelList = [
+    {name:"个人主页"},
+    {name:"我的面经"},
+    {name:"面经收藏"},
+    {name:"辅助记录"},
+    {name:"模拟记录"},
+    {name:"题目收藏"},
+  ]
   useEffect(() => {
     axios.get(`${BASE_URL}/api/user/data`).then((res) => {
       console.log(res,'res')
@@ -44,6 +51,13 @@ function UserCenter() {
           <p>获得一百次点赞</p>
           <p>获得一百次收藏</p>
         </div>
+      </div>
+      <div className='btn-group'>
+        {
+          userModelList.map(item => {
+            return <button></button>
+          })
+        }
       </div>
     </div>
   )
