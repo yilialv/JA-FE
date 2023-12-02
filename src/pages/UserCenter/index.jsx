@@ -37,7 +37,7 @@ function UserCenter() {
       </div>
       <div className='user-info w-[1200px] mx-auto'>
         <div>
-          <img src="../../imgs/cm-2.jpeg" alt="" />
+          <img src="https://www.job581.cn/img/user_icon.jpg" alt="" />
           一起冲鸭
         </div>
         <div>

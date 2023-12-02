@@ -1,3 +1,6 @@
+.user-center {
+  background-color: #ecedfb;
+}
 .user-center .header {
   background: linear-gradient(90deg, rgba(234, 72, 106, 0.81) 0%, rgba(88, 68, 206, 0.6) 100%);
 }
@@ -35,14 +38,22 @@
 .user-center .user-info > div:nth-child(1) {
   display: flex;
   align-items: center;
+  position: relative;
+  text-indent: 100px;
+  font-size: 20px;
 }
 .user-center .user-info > div:nth-child(1) img {
   width: 100px;
   height: 100px;
   border-radius: 99px;
-  background-color: red;
+  top: -30px;
+  position: absolute;
 }
 .user-center .user-info > div:nth-child(2) {
-  display: flex;
-  align-items: flex-start;
+  font-size: 14px;
+  padding: 15px ;
+  color: #333333;
+}
+.user-center .user-info > div:nth-child(2) p {
+  padding: 4px 0;
 }
