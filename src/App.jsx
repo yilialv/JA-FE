@@ -1,7 +1,7 @@
 import './App.less';
 import { Layout } from 'antd';
 import NavigationMenu from './components/NavigationMenu';
-import router from "@/router/index"
+import router from "@/router/index";
 import { useEffect } from 'react';
 import { observer } from 'mobx-react';
 import { getHomeData } from './router';
