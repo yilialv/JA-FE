@@ -98,7 +98,6 @@ const MockInterview = observer(() => {
   const mockLastEvaluationData = useRef('');
   const mockLastType = useRef(0); //question:1,answer:0,evaluation:2,finish:4
   const mockQuestionIndex = useRef(0);
-  const connectFlag = useRef(true); //防止重复连接
   const request = useRef(''); //语音识别缓存
   const nextRequest = useRef(''); //语音识别
   const setNextRequest = (val) => {
@@ -122,6 +121,13 @@ const MockInterview = observer(() => {
       recorder.current = new RecorderManager("/recorder_manager");
       mediaStreamRef.current = stream;
 
+      mediaRecorder.current.start();
+
+      recorder.current.start({
+        sampleRate: 16000,
+        frameSize: frameSize,
+      });
+
       // 接收音频数据帧
       recorder.current.onFrameRecorded = ({ isLastFrame, frameBuffer }) => {
         if (ws.current.readyState === ws.current.OPEN) {
@@ -143,17 +149,14 @@ const MockInterview = observer(() => {
 
   const startRecording = () => {
     console.log("开始录音");
-    mediaRecorder.current.start();
-    recorder.current.start({
-      sampleRate: 16000,
-      frameSize: frameSize,
-    });
+    if (ws?.current?.readyState !== WebSocket.OPEN) {
+      connectWebsocket();
+    }
+    initRecording();
   };
 
   const stopRecording = () => {
-    //recorder.current.stop();
-    //sendFinish();
-    mediaRecorder.current.stop();
+    recorder.current.stop();
     console.log('录音关闭');
     sendAnswer(request.current);
   };
@@ -264,11 +267,6 @@ const MockInterview = observer(() => {
   };
 
   const connectWebsocket = async () => {
-    if (!connectFlag.current) {
-      return;
-    }
-    connectFlag.current = false;
-
     //语音识别
     await getToken().then((fetchedToken) => {
       const uri = URI + "?token=" + fetchedToken;
@@ -289,15 +287,17 @@ const MockInterview = observer(() => {
         const res = JSON.parse(message.data);
         const { payload, header } = res;
         const { name, status, status_message } = header;
-        const { result } = payload;
-        if (name === "TranscriptionResultChanged" || name === "SentenceEnd") {
-          if (status === 20000000) {
+        const { result } = payload || {};
+        console.log('11111', res);
+        if (status === 20000000) {
+          if (name === 'TranscriptionResultChanged') {
             setNextRequest(result);
+          } else if (name === 'SentenceEnd') {
             setRequest();
-            console.log(request.current);
-          } else {
-            throw Error(status_message);
           }
+          console.log('=====', request.current);
+        } else {
+          throw Error(status_message);
         }
       } catch (err) {
         console.error(err);
@@ -380,7 +380,6 @@ const MockInterview = observer(() => {
     wsServer.current.onerror = (error) => {
       console.log("error:", error);
     };
-    initRecording();
   };
 
   useEffect(() => {
@@ -442,6 +441,8 @@ const MockInterview = observer(() => {
     mockLastEvaluationData.current = '';
     requestQuestion();
     setNextQuestionFlag(() => false);
+    request.current = '';
+    nextRequest.current = '';
   };
 
   const finishInterview = () => {
