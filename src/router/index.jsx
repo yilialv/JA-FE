@@ -1,5 +1,5 @@
-import { useRoutes } from 'react-router-dom'
-import {React} from 'react'
+import { useRoutes } from "react-router-dom";
+import { React } from "react";
 
 
 
@@ -18,36 +18,36 @@ import InterviewAid from '@/pages/interviewAid/app';
 const router = () => {
   const element = useRoutes([
     {
-      path:'/',
-      element: <Home />
+      path: "/",
+      element: <Home />,
     },
     {
-      path:'/interviewAid',
-      element: <InterviewAid />
+      path: "/interviewAid",
+      element: <InterviewAid />,
     },
     {
-      path:'/mockInterviewDetail',
-      element: <MockInterviewDetail />
+      path: "/mockInterviewDetail",
+      element: <MockInterviewDetail />,
     },
     {
-      path:'/mockInterviewHall',
-      element: <MockInterviewHall />
+      path: "/mockInterviewHall",
+      element: <MockInterviewHall />,
     },
     {
-      path:'/mockInterview',
+      path: "/mockInterview",
       element: <MockInterview />,
     },
     {
-      path:'/interview',
-      element: <Interview />
+      path: "/interview",
+      element: <Interview />,
     },
     {
-      path: '/user',
-      element: <User />
+      path: "/user",
+      element: <User />,
     },
     {
-      path: '/experience/upload',
-      element: <RecordUpload />
+      path: "/experience/upload",
+      element: <RecordUpload />,
     },
     {
       path:'/user/interviewDetail/:id',
@@ -65,4 +65,4 @@ const router = () => {
 
 
 
-export default router
+export default router;

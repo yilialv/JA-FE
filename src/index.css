@@ -42,3 +42,10 @@
 .card-item:hover{
   background: linear-gradient(203deg, rgba(234, 72, 106, 0.81) 0%, rgba(88, 68, 206, 0.60) 12.8%, white 30.05%);
 }
+
+.interviewAid{
+  background:url("./imgs/bg.svg") center/cover no-repeat;
+}
+.ant-btn-primary{
+  background-color: #1677ff !important;
+}

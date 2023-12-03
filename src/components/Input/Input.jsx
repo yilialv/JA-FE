@@ -8,12 +8,9 @@ import { useEffect } from 'react';
 
 
 const Input = (props) => {  
-  console.log(props,'xx')
-
   useEffect(() => {
     if(props.dataList[0]){
-
-      setInputValue(props.dataList[0].children[0].Name)
+      setInputValue(props.value || props.dataList[0].children[0].Name)
     }
   },[props.dataList])
   const selectModel = useRef(null);
@@ -33,7 +30,7 @@ const Input = (props) => {
   
   const setValue = (value) => {
     setInputValue(value.Name);
-    box.current.style.display = 'none';
+    selectModel.current.style.display = 'none';
     props.callback && props.callback(value);
    
   };
@@ -60,7 +57,7 @@ const Input = (props) => {
                     {
                       item.children.map((c,ci) => {
                         return (
-                          <li key={ci} onClick={( ) => {setInputValue(c.Name);}}>
+                          <li key={ci} onClick={( ) => {setValue(c)}}>
                             {c.Name}
                           </li>
                         );

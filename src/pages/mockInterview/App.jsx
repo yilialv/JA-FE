@@ -4,7 +4,6 @@ import {
   MOCK_SERVER_URL,
   URI,
 } from "../../constant";
-
 import {
   Avatar,
   message,
@@ -19,6 +18,7 @@ import {
 import { observer } from "mobx-react";
 import { getToken, getHotWordID } from "../../router";
 import GradientBackground from "../../background/gradientBackground";
+import SwitchButton from "../../components/SwitchButton";
 import LoadingAnimation from "../../components/loadingAnimation";
 import iconEvaluation from "../../imgs/icon-evaluation.svg";
 import iconRight from "../../imgs/icon-right.svg";
@@ -27,12 +27,52 @@ import iconMic from "../../imgs/icon-mic.svg";
 import iconMicReverse from "../../imgs/icon-mic-reverse.svg";
 import './mockInterview.less';
 import { useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const MockInterview = observer(() => {
+
+  const navigate = useNavigate();
 
   const wsServer = useRef(null); // 和后端的连接
 
   const ws = useRef(null); // 和百度的连接
+
+  const params = useLocation();
+
+  const { state: { personalise, evaluation, style, limit, company, direction, following, id, round } } = params;
+
+  const settingPersonalise = personalise;
+
+  const settingEvaluation = evaluation;
+
+  const settingStyle = style;
+
+  const settingTempo = limit;
+
+  const settingCompany = company;
+
+  const settingDirection = direction;
+
+  const settingFollowing = following;
+
+  const settingId = id;
+
+  const settingRound = round;
+
+  const [showEvaluation, setShowEvaluation] = useState(true);
+
+  const followingQuestionFlag = useRef(0);
+
+  const [count, setCount] = useState(0);
+
+  const [evaluationWindow, setEvaluationWindow] = useState(false);
+
+  const [openFeedbackWindow, setFeedbackWindow] = useState(false);
+
+  const [micActive, setMicActive] = useState(false);
+
+  const [nextQuestionFlag, setNextQuestionFlag] = useState(false);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -58,7 +98,6 @@ const MockInterview = observer(() => {
   const mockLastEvaluationData = useRef('');
   const mockLastType = useRef(0); //question:1,answer:0,evaluation:2,finish:4
   const mockQuestionIndex = useRef(0);
-  const conclusionCount = useRef(0);
   const connectFlag = useRef(true); //防止重复连接
   const request = useRef(''); //语音识别缓存
   const nextRequest = useRef(''); //语音识别
@@ -234,6 +273,8 @@ const MockInterview = observer(() => {
     await getToken().then((fetchedToken) => {
       const uri = URI + "?token=" + fetchedToken;
       ws.current = new WebSocket(uri);
+    }).catch((err) => {
+      console.log('getTokenErr', err);
     });
 
     wsServer.current = new WebSocket(MOCK_SERVER_URL);
@@ -278,7 +319,7 @@ const MockInterview = observer(() => {
       const req = {
         type: 1,
         data: {
-          experience_id: 112
+          experience_id: settingId
         },
       };
       const body = JSON.stringify(req);
@@ -312,10 +353,7 @@ const MockInterview = observer(() => {
           appendMockLastEvaluation(data);
         }
         else if (type === 4) {
-          conclusionCount.current++;
-          setMockNewReply('conclusion', type);
-          addMockReplies(type);
-          appendMockLastContent(data);
+          finishInterview();
         } else if (type === 99) {
           message.error(data);
         } else if (type === 9) {
@@ -342,7 +380,6 @@ const MockInterview = observer(() => {
     wsServer.current.onerror = (error) => {
       console.log("error:", error);
     };
-
     initRecording();
   };
 
@@ -350,9 +387,7 @@ const MockInterview = observer(() => {
     connectWebsocket();
   }, []);
 
-  const followingQuestionFlag = useRef(0);
-
-  const requestQuestion = (isFollowing) => {
+  const requestQuestion = () => {
     const following = {
       type: 4,
       data: {
@@ -368,7 +403,7 @@ const MockInterview = observer(() => {
         personalise: settingPersonalise //是否开启个性化提问
       }
     };
-    wsServer.current.send(JSON.stringify((isFollowing && followingQuestionFlag.current) ? following : req));
+    wsServer.current.send(JSON.stringify((settingFollowing && followingQuestionFlag.current) ? following : req));
     followingQuestionFlag.current = 0;
   };
 
@@ -387,7 +422,7 @@ const MockInterview = observer(() => {
         answer: answer,
         question_id: mockID.current,
         evaluation: settingEvaluation,
-        toleration: settingTempo, // 时间容忍度-高-中-低 
+        toleration: '高', // 时间容忍度-高-中-低 
       },
     };
     wsServer.current.send(JSON.stringify(req));
@@ -409,25 +444,16 @@ const MockInterview = observer(() => {
     setNextQuestionFlag(() => false);
   };
 
-  const [settingPersonalise, setSettingPersonalise] = useState(false);
-
-  const [settingEvaluation, setSettingEvaluation] = useState(true);
-
-  const [settingStyle, setInterviewStyle] = useState('');
-
-  const [settingTempo, setInterviewTempo] = useState('');
-
-  const [showEvaluation, setShowEvaluation] = useState(true);
-
-  const [count, setCount] = useState(0);
-
-  const [evaluationWindow, setEvaluationWindow] = useState(false);
-
-  const [openFeedbackWindow, setFeedbackWindow] = useState(false);
-
-  const [micActive, setMicActive] = useState(false);
-
-  const [nextQuestionFlag, setNextQuestionFlag] = useState(false);
+  const finishInterview = () => {
+    const req = {
+      time: count,
+      style: settingStyle,
+      exp: 2,
+      company: settingCompany,
+      direction: settingDirection
+    };
+    navigate('/mockInterviewResult', { state: req });
+  };
 
   const feedbackWindow = (
     <div className="feedback-window">
@@ -455,8 +481,8 @@ const MockInterview = observer(() => {
               <div className="header-title"><CloseOutlined className="menu-item" /></div>
               <div className="header-info">
                 <Avatar size={'large'} style={{ marginRight: '10px' }} />
-                腾讯（北京）
-                <div className="info-tab" style={{ backgroundColor: 'rgba(88, 68, 206, 1)' }}>产品研发岗</div>
+                {settingCompany}
+                <div className="info-tab" style={{ backgroundColor: 'rgba(88, 68, 206, 1)' }}>{settingDirection}</div>
                 <div className="info-tab" style={{ backgroundColor: '#EE6F84' }}>三面</div>
               </div>
               <div className="header-menu">
@@ -513,16 +539,7 @@ const MockInterview = observer(() => {
                         }
                       </div>
                       <div className="answer-switch">
-                        <div className="switch-background">
-                          <div className="switch" onClick={() => { setShowEvaluation(!showEvaluation); }}>
-                            <div className={`${showEvaluation ? "switch-active" : "switch-inactive"}`}>
-                              查看评价
-                            </div>
-                            <div className={`${!showEvaluation ? "switch-active" : "switch-inactive"}`}>
-                              直接跳转
-                            </div>
-                          </div>
-                        </div>
+                        <SwitchButton option1='查看评价' option2='直接跳转' updateState={() => { }} />
                       </div>
                     </div>
                 }

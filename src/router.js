@@ -9,9 +9,10 @@ export function getHomeData() {
   axios.get(`${BASE_URL}/api/page/index`).then((res) => {
     const { status } = res;
     if (status === 200) {
-      const { nick_name } = res.data.data;
+      const { nick_name ,avatar} = res.data.data;
       const params = {
         nickName: nick_name,
+        avatar
       };
       store.setHomeInfo(params);
     }
@@ -28,7 +29,7 @@ export function login(params) {
       message.info('登录成功');
 
       const { jwt_token, nick_name, avatar } = res.data.data;
-      localStorage.setItem('userinfo', JSON.stringify({avatar, nick_name, jwt_token}))
+
       store.setUserInfo(jwt_token, nick_name, avatar);
     }
   }).catch((err) => {
@@ -43,7 +44,9 @@ export function logout() {
   axios.post(`${BASE_URL}/api/wx/logout`).then((res) => {
     const { status } = res;
     if (status === 200) {
+      
       message.info('退出登录成功');
+      window.location.reload()
     }
   }).catch((err) => {
     console.log('err:', err);

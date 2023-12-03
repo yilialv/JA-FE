@@ -109,6 +109,7 @@ const RecordCard = (props) => {
       className="record-card"
       hoverable
       cover={logo && <img src={logo} />}
+      onClick={props.onClick}
     >
       {!category && <img className="bookmark" src={bookmarkCopilot} />}
       <div className="interview-title">

@@ -1,0 +1,56 @@
+.auxiliaryRecord {
+  margin-left: -15px;
+  margin-right: -15px;
+
+  .ant-table-tbody tr:nth-child(odd) {
+    background-color: #fff !important;
+  }
+
+  .ant-table-tbody tr:nth-child(even) {
+    background-color: #f6f6fd !important;
+  }
+  .ant-select-selector {
+    border: none !important;
+    font-size: 14px;
+    width: 250px !important;
+    input{
+      text-indent: 50px !important;
+    }
+    .ant-select-selection-placeholder, .ant-select-selection-item{
+      margin-left: 50px;
+      font-size: 15px;
+    }
+  }
+  .form{
+    padding: 0 15px 20px 15px;
+    box-sizing: border-box;
+    display: flex;
+  }
+  .form-item{
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin-right: 20px;
+    position: relative;
+    & > span{
+      position: absolute;
+      z-index: 99;
+      left: 20px;
+      top: 11px;
+    }
+  }
+  .input-box{
+    width:  250px;
+    height: 40px;
+    & > div{
+      width: 220px;
+      left: 0px;
+    }
+    input{
+      width: 100%;
+      text-indent: 70px;
+      background-color: white;
+      border-radius: 9px !important;
+    }
+  }
+}

@@ -1,0 +1,64 @@
+.person-home-page .base-info {
+  display: flex;
+  padding: 20px 0;
+}
+.person-home-page .base-info > div {
+  background-color: white;
+  padding: 15px;
+  color: #333333;
+  margin-right: 15px;
+  width: 220px;
+  border-radius: 10px;
+}
+.person-home-page .base-info > div > input {
+  margin-top: 15px;
+  width: 140px;
+  border-radius: 3px;
+  padding: 2px 0;
+}
+.person-home-page .base-info > div input:disabled {
+  background-color: transparent;
+}
+.person-home-page .base-info > div input:focus {
+  border: none;
+  outline: none;
+}
+.person-home-page .project-box-view ul {
+  background-color: white;
+  padding: 15px;
+  font-size: 15px;
+}
+.person-home-page .project-box-view ul li {
+  text-indent: 10px;
+  position: relative;
+  padding: 2px 0;
+}
+.person-home-page .project-box-view ul li::before {
+  content: '';
+  display: block;
+  position: absolute;
+  border-radius: 50%;
+  left: -5px;
+  top: 12px;
+  width: 6px;
+  height: 6px;
+  opacity: 1;
+  background: linear-gradient(90deg, #dc4874 0%, #5744ce 100%);
+}
+.person-home-page .project-box-edit {
+  color: #333333;
+}
+.person-home-page .project-box-edit .project-info {
+  display: flex;
+}
+.person-home-page .project-box-edit .project-info > div {
+  width: 300px;
+  margin-right: 30px;
+}
+.person-home-page .project-box-edit textarea {
+  width: 100%;
+}
+.person-home-page .project-box-edit textarea:focus {
+  outline: none;
+  border: none;
+}

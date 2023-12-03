@@ -6,7 +6,7 @@ import { useLocation } from 'react-router-dom';
 function interviewAid(){
 
   return (
-    <div style={{ height: "calc(100vh - 80px)", backgroundColor: "pink",  display: "flex", justifyContent: "center", alignItems: "center"}}>
+    <div className="interviewAid" style={{ height: "calc(100vh - 80px)",  display: "flex", justifyContent: "center", alignItems: "center"}}>
       <InterviewAidModel />
     </div>
   )

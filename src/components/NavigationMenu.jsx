@@ -16,17 +16,16 @@ const NavigationMenu = () => {
   const showModal = () => {
     store.isLoginModalOpen = true;
   };
-  const [menuAcitveIndex] = useState(0)
-  let userinfo = {}
-  if(localStorage.getItem("userinfo")){
-    userinfo = JSON.parse(localStorage.getItem("userinfo"))
-  }
+  const [menuAcitveIndex,setMenuAcitveIndex] = useState(0)
+
+
   const location = useLocation();
 
   useEffect(() => {
     const { pathname } = location;
     store.currentMenu = pathname;
   }, [location]);
+  
 
   const menuItems = [
     {
@@ -74,8 +73,9 @@ const NavigationMenu = () => {
     setOpen(flag);
   };
 
-  const NavigateTo = (item) => {
+  const NavigateTo = (item,index) => {
     const { key, link } = item;
+    setMenuAcitveIndex(index)
     if (store.currentMenu === key) {
       return;
     } else if (!store.isLogin) {
@@ -110,7 +110,7 @@ const NavigationMenu = () => {
                   <li key={index} className='pt-2 px-4 '>
                     <span
                       className={`text-black text-base xl:text-[18px] p-1 ${menuAcitveIndex == index ? 'border-b-[3px] border-solid border-[#5844CE]' : ''}  hover:border-b-[3px] hover:border-solid hover:border-[#5844CE]`}
-                      onClick={() => { NavigateTo(item); }}
+                      onClick={() => { NavigateTo(item,index); }}
                       key={key}
                     >
                       {label}
@@ -121,9 +121,12 @@ const NavigationMenu = () => {
             }
           </ul>
           <div className='flex items-center'>
-            {
-              userinfo.avatar || store.avatar ? <img src={userinfo.avatar || store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
-            }
+             <Dropdown menu={{ items }} placement="bottom">
+               {
+                 store.avatar ? <img src={store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
+              }
+            </Dropdown>
+          
            
             <GlobalOutlined className="text-[25px] ml-2" />
             {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
