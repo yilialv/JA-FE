@@ -76,7 +76,6 @@ const MockInterview = observer(() => {
   const mockLastEvaluationData = useRef('');
   const mockLastType = useRef(0); //question:1,answer:0,evaluation:2,finish:4
   const mockQuestionIndex = useRef(0);
-  const connectFlag = useRef(true); //防止重复连接
   const request = useRef(''); //语音识别缓存
   const nextRequest = useRef(''); //语音识别
   const [progressBarWidth, setProgressBar] = useState(0);
@@ -263,52 +262,9 @@ const MockInterview = observer(() => {
     mockLastEvaluationData.current += content;
   };
 
-  const connectWebsocket = async () => {
-    //语音识别
-    await getToken().then((fetchedToken) => {
-      const uri = URI + "?token=" + fetchedToken;
-      ws.current = new WebSocket(uri);
-    }).catch((err) => {
-      console.log('getTokenErr', err);
-    });
+  const connectServerWebsocket = async () => {
 
     wsServer.current = new WebSocket(MOCK_SERVER_URL);
-
-    ws.current.onopen = () => {
-      sendStartParams();
-      console.log("语音识别WebSocket开始连接");
-    };
-
-    ws.current.onmessage = (message) => {
-      try {
-        const res = JSON.parse(message.data);
-        const { payload, header } = res;
-        const { name, status, status_message } = header;
-        const { result } = payload || {};
-        console.log('11111', res);
-        if (status === 20000000) {
-          if (name === 'TranscriptionResultChanged') {
-            setNextRequest(result);
-          } else if (name === 'SentenceEnd') {
-            setRequest();
-          }
-          console.log('=====', request.current);
-        } else {
-          throw Error(status_message);
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    ws.current.onerror = (error) => {
-      recorder.current.stop();
-      console.log("error:", error);
-    };
-
-    ws.current.onclose = (res) => {
-      console.log("语音识别WebSocket关闭连接：", res);
-    };
 
     //jobGPT后端
     wsServer.current.onopen = () => {
@@ -361,7 +317,6 @@ const MockInterview = observer(() => {
         }
         else if (type === 9) {
           if (mockLastType.current === 2) {
-            console.log('check');
             setNextQuestionFlag(true);
           }
         }
@@ -385,8 +340,54 @@ const MockInterview = observer(() => {
     };
   };
 
+  const connectWebsocket = async () => {
+    //语音识别
+    await getToken().then((fetchedToken) => {
+      const uri = URI + "?token=" + fetchedToken;
+      ws.current = new WebSocket(uri);
+    }).catch((err) => {
+      console.log('getTokenErr', err);
+    });
+
+    ws.current.onopen = () => {
+      sendStartParams();
+      console.log("语音识别WebSocket开始连接");
+    };
+
+    ws.current.onmessage = (message) => {
+      try {
+        const res = JSON.parse(message.data);
+        const { payload, header } = res;
+        const { name, status, status_message } = header;
+        const { result } = payload || {};
+        console.log('11111', res);
+        if (status === 20000000) {
+          if (name === 'TranscriptionResultChanged') {
+            setNextRequest(result);
+          } else if (name === 'SentenceEnd') {
+            setRequest();
+          }
+          console.log('=====', request.current);
+        } else {
+          throw Error(status_message);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    ws.current.onerror = (error) => {
+      recorder.current.stop();
+      console.log("error:", error);
+    };
+
+    ws.current.onclose = (res) => {
+      console.log("语音识别WebSocket关闭连接：", res);
+    };
+  };
+
   useEffect(() => {
-    connectWebsocket();
+    connectServerWebsocket();
   }, []);
 
   const requestQuestion = () => {
@@ -514,7 +515,7 @@ const MockInterview = observer(() => {
               </div>
               <div className={`contents-interview ${!evaluationWindow ? "contents-interview-hide" : ''}`}>
                 <div className="interview-question">
-                  {mockLastContent ? mockLastContent : <LoadingAnimation />}
+                  {mockLastContent ? mockLastContent : <LoadingAnimation message='面试官思考中'/>}
                 </div>
                 {
                   evaluationWindow
@@ -525,7 +526,7 @@ const MockInterview = observer(() => {
                         <span>智能评价</span>
                       </div>
                       <div className="evaluation-text">
-                        {mockLastEvaluation ? mockLastEvaluation : <LoadingAnimation />}
+                        {mockLastEvaluation ? mockLastEvaluation : <LoadingAnimation message='面试官思考中'/>}
                       </div>
                       <div className={`evaluation-bottom `}>
                         <button className={`${!nextQuestionFlag ? "button-disabled" : ''}`} onClick={() => { nextQuestion(); }}>

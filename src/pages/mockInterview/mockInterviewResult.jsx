@@ -42,7 +42,15 @@ const MockInterviewResult = () => {
           </div>
           <div className="info-config">
             <div className="info-time">
-              面试时长：{time}min
+              面试时长：
+              {Math.floor(time / 3600)
+                .toString()
+                .padStart(2, "0")}
+              :
+              {Math.floor(time / 60)
+                .toString()
+                .padStart(2, "0")}
+              :{(time % 60).toString().padStart(2, "0")}
             </div>
             <div className="">
               面试风格：{style}
