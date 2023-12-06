@@ -53,7 +53,7 @@ const NavigationMenu = () => {
   const items = [
     {
       // TODO 判断是否登录
-      label: (<div onClick={() => navigate('/user')}>个人中心</div>),
+      label: (<div onClick={() => navigate('/user-center')}>个人中心</div>),
       key: 'user'
     },
     {
