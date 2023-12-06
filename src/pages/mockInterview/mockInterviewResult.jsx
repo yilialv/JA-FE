@@ -4,12 +4,13 @@ import './mockInterview.less';
 import ClickButton from "../../components/ClickButton";
 import TestIcon from "../../imgs/cm-12.jpeg";
 import { Link, useLocation } from 'react-router-dom';
-
+import { getTimestampToDate } from '../../utils';
 
 const MockInterviewResult = () => {
   const params = useLocation();
-  console.log(params);
-  const { state: { company, time, style, exp, direction } } = params;
+  const { state: { company, time, style, exp, direction, logo, round } } = params;
+
+  const date = getTimestampToDate(new Date() / 1000);
 
   return (
     <div className="mock-interview-result">
@@ -24,7 +25,7 @@ const MockInterviewResult = () => {
         </div>
         <div className="result-info">
           <div className="icon-frame">
-            <img src={TestIcon} className="info-icon" />
+            <img src={logo} className="info-icon" />
           </div>
           <div className="info-interview">
             <div className="company">
@@ -35,7 +36,7 @@ const MockInterviewResult = () => {
                 {direction}
               </div>
               <div className="info-tab" style={{ backgroundColor: '#EE6F84' }}>
-                三面
+                {round}
               </div>
             </div>
           </div>
@@ -58,18 +59,16 @@ const MockInterviewResult = () => {
                 返回面试大厅
               </ClickButton>
             </Link>
-            <Link>
-              <ClickButton>
-                查看面试总结
-              </ClickButton>
-            </Link>
+            <ClickButton>
+              查看面试总结
+            </ClickButton>
           </div>
           <div>
             <div className="footer-info">
               <div className="info-text">
                 <div>一起冲鸭</div>
-                <div>Lv.1</div>
-                <div>完成于2023年9月10日</div>
+                <div>&emsp;</div>
+                <div>完成于{date}</div>
               </div>
               <div className="icon-frame">
                 <img src={TestIcon} className="info-icon" />

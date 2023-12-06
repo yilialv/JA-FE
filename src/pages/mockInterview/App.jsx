@@ -39,15 +39,7 @@ const MockInterview = observer(() => {
 
   const params = useLocation();
 
-  const { state: { personalise, evaluation, style, limit, company, direction, following, id, round } } = params;
-
-  const settingPersonalise = personalise;
-
-  const settingEvaluation = evaluation;
-
-  const settingStyle = style;
-
-  const settingTempo = limit;
+  const { state: { company, direction, following, id, round, logo, style } } = params;
 
   const settingCompany = company;
 
@@ -73,21 +65,7 @@ const MockInterview = observer(() => {
 
   const [nextQuestionFlag, setNextQuestionFlag] = useState(false);
 
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCount((counts) => counts + 1);
-    }, 60000);
-
-    return () => {
-      wsServer.current?.close();
-      ws.current?.close();
-      clearInterval(interval);
-      setMockLastContent('');
-      setMockLastEvaluation('');
-      //utils.initializeMockInterview();
-    };
-  }, []);
+  const totalQuestionIndex = useRef(1);
 
   const mockConversations = useRef([]);
   const mockID = useRef('');
@@ -101,6 +79,23 @@ const MockInterview = observer(() => {
   const connectFlag = useRef(true); //防止重复连接
   const request = useRef(''); //语音识别缓存
   const nextRequest = useRef(''); //语音识别
+  const [progressBarWidth, setProgressBar] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCount((counts) => counts + 1);
+    }, 1000);
+
+    return () => {
+      wsServer.current?.close();
+      ws.current?.close();
+      clearInterval(interval);
+      setMockLastContent('');
+      setMockLastEvaluation('');
+      //utils.initializeMockInterview();
+    };
+  }, []);
+
   const setNextRequest = (val) => {
     nextRequest.current = val;
   };
@@ -225,6 +220,7 @@ const MockInterview = observer(() => {
 
   const addMockIndex = () => {
     mockQuestionIndex.current++;
+    setProgressBar(mockQuestionIndex.current / totalQuestionIndex.current);
   };
 
   const addMockConversations = (val) => {
@@ -356,7 +352,13 @@ const MockInterview = observer(() => {
           finishInterview();
         } else if (type === 99) {
           message.error(data);
-        } else if (type === 9) {
+        } else if (type === 8) {
+          const info = JSON.parse(data);
+          const { total_questions, last_index, mock_record_id } = info;
+          totalQuestionIndex.current = total_questions;
+          mockQuestionIndex.current = last_index;
+        }
+        else if (type === 9) {
           if (mockLastType.current === 2) {
             console.log('check');
             setNextQuestionFlag(true);
@@ -399,8 +401,6 @@ const MockInterview = observer(() => {
       data: {
         question_index: mockQuestionIndex.current,
         interactions: mockConversations.current,
-        style: settingStyle, //风格-严肃/活泼（用户可以在中途更换风格或时间容忍度）
-        personalise: settingPersonalise //是否开启个性化提问
       }
     };
     wsServer.current.send(JSON.stringify((settingFollowing && followingQuestionFlag.current) ? following : req));
@@ -421,8 +421,7 @@ const MockInterview = observer(() => {
         interactions: mockConversations.current,
         answer: answer,
         question_id: mockID.current,
-        evaluation: settingEvaluation,
-        toleration: '高', // 时间容忍度-高-中-低 
+        evaluation: showEvaluation
       },
     };
     wsServer.current.send(JSON.stringify(req));
@@ -432,6 +431,10 @@ const MockInterview = observer(() => {
 
   const nextQuestion = () => {
     if (!nextQuestionFlag) {
+      return;
+    }
+    if (progressBarWidth === 1) {
+      finishInterview();
       return;
     }
     setEvaluationWindow(!evaluationWindow);
@@ -447,10 +450,12 @@ const MockInterview = observer(() => {
   const finishInterview = () => {
     const req = {
       time: count,
-      style: settingStyle,
       exp: 2,
       company: settingCompany,
-      direction: settingDirection
+      direction: settingDirection,
+      logo: logo,
+      style: style,
+      round: round
     };
     navigate('/mockInterviewResult', { state: req });
   };
@@ -480,10 +485,10 @@ const MockInterview = observer(() => {
             <div className="container-body-header">
               <div className="header-title"><CloseOutlined className="menu-item" /></div>
               <div className="header-info">
-                <Avatar size={'large'} style={{ marginRight: '10px' }} />
+                <Avatar size={'large'} style={{ marginRight: '10px' }} src={logo} />
                 {settingCompany}
                 <div className="info-tab" style={{ backgroundColor: 'rgba(88, 68, 206, 1)' }}>{settingDirection}</div>
-                <div className="info-tab" style={{ backgroundColor: '#EE6F84' }}>三面</div>
+                <div className="info-tab" style={{ backgroundColor: '#EE6F84' }}>{settingRound}</div>
               </div>
               <div className="header-menu">
                 <StarOutlined className="menu-item" />
@@ -496,7 +501,14 @@ const MockInterview = observer(() => {
             <div className="container-body-contents">
               <div className="interview-timer">
                 <img src={iconClock} />
-                {count}min
+                {Math.floor(count / 3600)
+                  .toString()
+                  .padStart(2, "0")}
+                :
+                {Math.floor(count / 60)
+                  .toString()
+                  .padStart(2, "0")}
+                :{(count % 60).toString().padStart(2, "0")}
               </div>
               <div className={`contents-interview ${!evaluationWindow ? "contents-interview-hide" : ''}`}>
                 <div className="interview-question">
@@ -515,7 +527,7 @@ const MockInterview = observer(() => {
                       </div>
                       <div className={`evaluation-bottom `}>
                         <button className={`${!nextQuestionFlag ? "button-disabled" : ''}`} onClick={() => { nextQuestion(); }}>
-                          下一题
+                          {progressBarWidth !== 1 ? '下一题' : '完成'}
                           <img src={iconRight} />
                         </button>
                       </div>
@@ -548,14 +560,14 @@ const MockInterview = observer(() => {
                 <div className="progress-title">面试进度</div>
                 <div className="progress-back">
                 </div>
-                <div className="progress-front">
+                <div className="progress-front" style={{ width: progressBarWidth * 100 + '%' }} >
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 });
 
