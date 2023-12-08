@@ -57,6 +57,7 @@
 }
 .person-home-page .project-box-edit textarea {
   width: 100%;
+  padding: 15px;
 }
 .person-home-page .project-box-edit textarea:focus {
   outline: none;

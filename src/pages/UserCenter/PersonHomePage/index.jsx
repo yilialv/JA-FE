@@ -46,7 +46,7 @@ const PersonHomePage = () => {
     //   )
     // },
     onOk(){
-      personHomeData.splice(modelConfig,1)
+      setPersonHomeData(personHomeData.splice(modelConfig.index,1))
       confirm()
       getData()
     },

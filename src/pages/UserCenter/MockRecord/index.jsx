@@ -126,7 +126,7 @@ const onSearch = (value) => {
       <div className="person-home-title mb-2 ml-2">
         模拟记录
       </div>
-      <div style={{"display" : dataList.length ? 'flex' : "none" }} className="form">
+      <div  className="form">
         <div className="form-item">
           <span>公司：</span>
           <CustomInput value={search.company} dataList={companyList} callback= {(value) => {

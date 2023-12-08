@@ -39,7 +39,7 @@ export const ShareCard = (props) => {
             </div>
           </div>
           <div className='text-neutral-600' style={{display:props.children ? 'none' : 'block'}}>
-            <span className='text-[#333] group-hover:text-white group-hover:block '><LoginOutlined /> 进入模拟面试</span>
+            <span className='text-[#333] group-hover:text-white group-hover:block relative top-[-10px]'><LoginOutlined /> 进入模拟面试</span>
           </div>
           <div style={{display:props.children ? 'block' : 'none'}}>
             {props.children}

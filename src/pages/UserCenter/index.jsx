@@ -9,7 +9,7 @@ import MyFace from "./MyFace"
 import CollectWrap from "./CollectionWrap"
 import AuxiliaryRecord from "./AuxiliaryRecord"
 import MockRecord from "./MockRecord"
-
+import store from "../../store"
 
 function UserCenter() {
   let [userData, setUserData] = useState({})
@@ -58,7 +58,9 @@ function UserCenter() {
       <div className='user-info w-[1200px] mx-auto'>
         <div>
           <img src={userData.avatar} alt="" />
-          一起冲鸭
+          {
+                store.nickName
+               }
         </div>
         <div>
           <p><LikeOutlined style={{"fontSize":"16px","marginRight":"6px"}} /> 获得{userData.usages}点赞</p>

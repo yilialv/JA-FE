@@ -127,6 +127,7 @@ const Interview = observer(() => {
     handleAudioState(false);
     ws.current?.close();
     wsServer.current?.close();
+    messageList = []
     clear();
   };
 
@@ -552,12 +553,12 @@ const Interview = observer(() => {
                 className="question"
               >
                 <div className="maybe-need-question">
-                  <p style={{ minWidth: "100px" }}>
+                  <div style={{ minWidth: "100px" }}>
                     {" "}
                     {store.conversations.length > 0 && (
-                      <p>可能需要回答的问题</p>
+                      <p style={{width:"100%", "wordSpacing":"none"}}>可能需要回答的问题</p>
                     )}
-                  </p>
+                  </div>
                   <div className="question-history">
                     {store.conversations
                       .toSpliced(0, store.conversations.length - 3)

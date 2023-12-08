@@ -96,7 +96,7 @@ const NavigationMenu = () => {
 
   }
   return (
-    <Header className='flex justify-between items-center bg-slate-100  h-[80px] sticky top-0'>
+    <Header className='flex justify-between items-center bg-slate-100  h-[80px]'>
       <Login callback={loginSuccess}/>
       <AssistantModal />
       <Link to="/"><div className='text-black font-bold text-[38px] sm:w-2/5 lg:w-1/3'>JobGPT</div></Link>
@@ -124,10 +124,15 @@ const NavigationMenu = () => {
              <Dropdown menu={{ items }} placement="bottom">
                {
                  store.avatar ? <img src={store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
-              }
+               }
+              
             </Dropdown>
+            <span style={{marginLeft:"10px"}}>
+               {
+                store.nickName
+               }
+            </span>
           
-           
             <GlobalOutlined className="text-[25px] ml-2" />
             {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
           </div>

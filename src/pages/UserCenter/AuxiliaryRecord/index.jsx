@@ -31,11 +31,12 @@ const AuxiliaryRecord = () => {
   useEffect(() => {
     getExperienceList()
 
-    axios.get(`${BASE_URL}/api/mock/get_company`, {
+    axios.get(`${BASE_URL}/api/copilot/get_company`, {
     }).then(res => {
       const {data, code} = res.data
       const farmatCompanyList = store.getFormatCompanyList(data.company_info)   
       setCompanyList(farmatCompanyList)
+      document.querySelector(".auxiliaryRecord .input-box > div ").setAttribute('style', `height:${farmatCompanyList.length * 40 + 'px'}`)
     })
 
 
@@ -89,13 +90,14 @@ const onSearch = (value) => {
       align: "center",
       render(value) {
         const colorMap = {
-          1: '#5592ff',
-          2: '#5743ce',
-          3: '#edbc42',
-          4: '#e9f3ff',
-          5: '#e34d6d',
+          一面: '#5592ff',
+          二面: '#5743ce',
+          三面: '#edbc42',
+          四面: '#66a9ff',
+          五面: '#e34d6d',
           hr: '#ea496a'
         }
+        console.log(value,'value==')
         return <button style={{ background: colorMap[value], padding: '3px 25px', borderRadius: '5px', color: 'white' }} >{value}</button>
       }
     },
@@ -129,7 +131,7 @@ const onSearch = (value) => {
       <div className="person-home-title mb-2 ml-2">
         辅助记录
       </div>
-      <div style={{"display" : dataList.length ? 'flex' : "none" }}  className="form">
+      <div   className="form">
         <div className="form-item">
           <span>公司：</span>
           <CustomInput value={search.company} dataList={companyList} callback= {(value) => {
