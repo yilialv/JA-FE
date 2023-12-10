@@ -14,6 +14,7 @@ import InterviewDetail from '@/pages/User/components/InterviewDetail';
 import UserCenter from '../pages/UserCenter';
 
 import InterviewAid from '@/pages/interviewAid/app';
+import AssistantInterview from "../pages/AssistantInterview/index"
 
 const router = () => {
   const element = useRoutes([
@@ -56,6 +57,10 @@ const router = () => {
     {
       path:"/user-center",
       element: <UserCenter />
+    },
+    {
+      path:"/assistant-interview",
+      element: <AssistantInterview />
     }
   ])
 

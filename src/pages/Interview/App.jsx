@@ -28,7 +28,7 @@ import jp from "../../imgs/jp.png";
 import iconLeft from "../../imgs/left.png";
 
 const { Content } = Layout;
-const messageList = [];
+let messageList = [];
 /*
 1. 连接 ws_app.run_forever()
 2. 连接成功后发送数据 on_open()

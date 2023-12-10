@@ -44,6 +44,11 @@ const NavigationMenu = () => {
       link: '/interview'
     },
     {
+      key: 'AssistantInterview',
+      label: '辅助面试',
+      link: '/assistant-interview'
+    },
+    {
       key: 'mockInterviewHall',
       label: '模拟面试大厅',
       link: '/mockInterviewHall'
