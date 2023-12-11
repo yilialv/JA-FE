@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import locale from 'antd/es/date-picker/locale/zh_CN';
 
 import 'dayjs/locale/zh-cn';
-import { Button, Modal, Form, Select, Radio, Input, DatePicker  } from "antd";
+import { Button, Modal, Form, Select, Radio, Input, DatePicker } from "antd";
 import store from "../../store";
 import "./index.less"
 import { ShareCard } from "./Card"
@@ -34,16 +34,25 @@ const AssistantInterview = () => {
       <div className="w-[1200px] mx-auto">
         <img src={img_bg} className="w-full" alt="" />
       </div>
-      <div className="w-[1200px] mx-auto py-8 pb-4  flex">
+      <div className="w-[1200px] mx-auto pt-5 pr-4 pb-4   flex justify-end">
+        <div className="flex items-center ml-4 relative">
+          <span>
+            <img src={img_filter} className="w-[15px]" alt="" />
+          </span>
+          <span className="font-bold ml-1">时间筛选</span>
+          <DatePicker className="absolute opacity-0" picker="month" locale={locale} />
+        </div>
+      </div>
+      <div className="w-[1200px] mx-auto  pb-4  flex">
         <div className="flex items-center">
           <span className="font-bold">公司：</span>
           <CustomInput value={search.company} dataList={store.getFormatCompanyList()} callback={(value) => { }} />
         </div>
-        <div className="flex items-center ml-5">
+        <div className="flex items-center ml-7">
           <span className="font-bold">岗位方向：</span>
 
           <Select
-           
+
             showSearch
             placeholder='请选择您的岗位方向'
             rules={[{ required: true }]}
@@ -74,27 +83,21 @@ const AssistantInterview = () => {
             ]}
           />
         </div>
-        <div className="flex items-center ml-5">
+        <div className="flex items-center ml-7">
           <span className="font-bold w-[80px] ">面试轮数：</span>
           <ul className="flex rounded-[10px] overflow-hidden border bg-white font-bold">
             {
-              [1, 2, 3, 4, 5, 'HR'].map((item,index) => <li key={index} onClick={() => setActiveIndex(index)} className={`px-3 cursor-pointer py-[8px] ${index == activeIndex ? 'liActve' : ''}`}>{item}</li>)
+              [1, 2, 3, 4, 5, 'HR'].map((item, index) => <li key={index} onClick={() => setActiveIndex(index)} className={`px-3 cursor-pointer py-[8px] ${index == activeIndex ? 'liActve' : ''}`}>{item}</li>)
             }
           </ul>
         </div>
-        <div className="flex items-center ml-4 relative">
-          <span>
-            <img src={img_filter} className="w-[15px]" alt="" />
-          </span>
-          <span className="font-bold ml-1">时间筛选</span>
-          <DatePicker className="absolute opacity-0" picker="month" locale={locale} />
-        </div>
+
       </div>
-      <div className="w-[1200px] mx-auto flex justify-end  pr-5">
-          <ul className="filter-ul border">
-            <li className="active">热度最高</li>
-            <li className="noActive">最新发布</li>
-          </ul>
+      <div className="w-[1200px] mx-auto flex justify-end  pr-3 pb-3">
+        <ul className="filter-ul border">
+          <li className="active">热度最高</li>
+          <li className="noActive">最新发布</li>
+        </ul>
       </div>
       <div className="w-[1200px] mx-auto py-3 flex flex-wrap">
         {
