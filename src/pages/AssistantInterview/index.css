@@ -23,7 +23,7 @@
 .assistant-interview .ant-select-selector {
   border-radius: 10px;
   background-color: #F5F6FD;
-  min-width: 200px;
+  min-width: 250px;
   border: 2px solid #5844CE !important;
   height: 40px !important;
 }
@@ -63,4 +63,42 @@
 }
 .assistant-interview .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
   color: #C7C7C7;
+}
+.assistant-interview .w-\[400px\] {
+  width: 32% !important;
+  margin-bottom: 20px;
+}
+.assistant-interview .px-2 {
+  padding-left: 0;
+  padding-right: 0;
+}
+.assistant-interview .border {
+  border: 2px solid #5844CE !important;
+}
+.assistant-interview .liActve {
+  background-color: #5844CE;
+  color: white;
+}
+.assistant-interview .filter-ul {
+  display: flex;
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid black;
+}
+.assistant-interview .filter-ul li {
+  padding: 5px 13px;
+  border-radius: 999px;
+  font-weight: bold;
+  font-size: 13px;
+}
+.assistant-interview .filter-ul .noActive {
+  background: linear-gradient(90deg, #7867D7 -17.14%, #EE6F84 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.assistant-interview .filter-ul .active {
+  background: linear-gradient(90deg, #7867D7 -17.14%, #EE6F84 100%);
+  color: white;
+  border-left-width: 0;
 }
