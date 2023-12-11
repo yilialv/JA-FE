@@ -29,7 +29,7 @@ export const ShareCard = (props) => {
 
 
   return (
-    <div className='px-2 w-[400px]  mx-1' onClick={props.onClick}>
+    <div className='w-[400px]  mx-1' onClick={props.onClick}>
       <div className='bg-white p-2 rounded-lg h-full card-item group'>
         <div className='flex items-center justify-between py-2'>
           <div className='flex items-center '>
