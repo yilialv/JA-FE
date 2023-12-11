@@ -101,9 +101,9 @@ class Store {
   setCompanyList(list) {
     this.companyList = list;
   }
-  getFormatCompanyList() {
-    
-    if(this.companyList.length == 0){
+  getFormatCompanyList(target) {
+    const companyList = target || this.companyList
+    if(companyList.length == 0){
       return []
     }
 
@@ -113,7 +113,7 @@ class Store {
     const formatComanyList = []
    
     // 遍历公司列表，将公司名称的首字母作为索引，将公司名称作为值
-    this.companyList.map(item => {
+    companyList.map(item => {
       const firstLetter = pinyin(item.Name.slice(0,1),{pattern: 'first', toneType: 'none'}).toLocaleUpperCase() 
       
       if(Reflect.has(formatComanyMap, firstLetter)){

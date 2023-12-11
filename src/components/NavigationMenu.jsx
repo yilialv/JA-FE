@@ -44,6 +44,11 @@ const NavigationMenu = () => {
       link: '/interview'
     },
     {
+      key: 'AssistantInterview',
+      label: '辅助面试',
+      link: '/assistant-interview'
+    },
+    {
       key: 'mockInterviewHall',
       label: '模拟面试大厅',
       link: '/mockInterviewHall'
@@ -53,7 +58,7 @@ const NavigationMenu = () => {
   const items = [
     {
       // TODO 判断是否登录
-      label: (<div onClick={() => navigate('/user')}>个人中心</div>),
+      label: (<div onClick={() => navigate('/user-center')}>个人中心</div>),
       key: 'user'
     },
     {
@@ -96,7 +101,7 @@ const NavigationMenu = () => {
 
   }
   return (
-    <Header className='flex justify-between items-center bg-slate-100  h-[80px] sticky top-0'>
+    <Header className='flex justify-between items-center bg-slate-100  h-[80px]'>
       <Login callback={loginSuccess}/>
       <AssistantModal />
       <Link to="/"><div className='text-black font-bold text-[38px] sm:w-2/5 lg:w-1/3'>JobGPT</div></Link>
@@ -124,64 +129,21 @@ const NavigationMenu = () => {
              <Dropdown menu={{ items }} placement="bottom">
                {
                  store.avatar ? <img src={store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
-              }
+               }
+              
             </Dropdown>
+            <span style={{marginLeft:"10px"}}>
+               {
+                store.nickName
+               }
+            </span>
           
-           
             <GlobalOutlined className="text-[25px] ml-2" />
             {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
           </div>
         </div>
       </div>
-      {/* <div className='mobile-menu'>
-        {
-          store.isLogin
-            ?
-            < Dropdown
-              className='mobile-menu-logined'
-              menu={{
-                items,
-                onClick: () => { setOpen(false); }
-              }}
-              onOpenChange={handleOpenChange}
-              open={open}
-              dropdownRender={(menu) => (
-                <div className='mobile-menu-list'>
-                  {
-                    menuItems.map((item) => {
-                      const { key, link, label } = item;
-                      return <React.Fragment key={key}>
-                        <div
-                          className={store.currentMenu === link ? 'menu-item-selected' : 'menu-item-default'}
-                          onClick={() => { NavigateTo(item), setOpen(false); }}
-                          key={key}>
-                          {label}
-                        </div>
-                      </React.Fragment>;
-                    })
-                  }
-                  <Divider
-                    style={{
-                      margin: 0,
-                    }}
-                  />
-                  {React.cloneElement(menu, {
-                    style: {
-                      borderRadius: 0,
-                      boxShadow: 'none'
-                    }
-                  })}
-                </div>
-              )}
-              overlayStyle={{ textAlign: 'center' }}
-              placement="bottomRight"
-            >
-              <Button className='mobile-menu' onClick={() => { setOpen(true); }}><BarsOutlined /></Button>
-            </Dropdown >
-            :
-            <Button type='primary' className='login-btn' onClick={showModal}>登录</Button>
-        }
-      </div> */}
+    
     </Header >
   );
 };

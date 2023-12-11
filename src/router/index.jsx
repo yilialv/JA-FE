@@ -1,18 +1,20 @@
 import { useRoutes } from "react-router-dom";
 import { React } from "react";
 
-import Home from "@/pages/Home/App";
-import Interview from "@/pages/Interview/App";
-import User from "@/pages/User/App";
-import MockInterviewHall from "@/pages/mockInterviewHall/App";
-import MockInterview from "@/pages/mockInterview/App";
-import MockInterviewDetail from "@/pages/mockInterview/MockInterviewDetail";
-import RecordUpload from "@/pages/User/RecordUpload";
-import InterviewDetail from "@/pages/User/components/InterviewDetail";
 
-import InterviewAid from "@/pages/interviewAid/app";
-import MockInterviewConfig from "../pages/mockInterview/mockInterviewConfig";
-import MockInterviewResult from "../pages/mockInterview/mockInterviewResult";
+
+import Home from '@/pages/Home/App';
+import Interview from '@/pages/Interview/App';
+import User from '@/pages/User/App';
+import MockInterviewHall from '@/pages/mockInterviewHall/App';
+import MockInterview from '@/pages/mockInterview/App';
+import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
+import RecordUpload from '@/pages/User/RecordUpload';
+import InterviewDetail from '@/pages/User/components/InterviewDetail';
+import UserCenter from '../pages/UserCenter';
+
+import InterviewAid from '@/pages/interviewAid/app';
+import AssistantInterview from "../pages/AssistantInterview/index"
 
 const router = () => {
   const element = useRoutes([
@@ -49,20 +51,23 @@ const router = () => {
       element: <RecordUpload />,
     },
     {
-      path: "/user/interviewDetail/:id",
-      element: <InterviewDetail />,
+      path:'/user/interviewDetail/:id',
+      element: <InterviewDetail />
     },
     {
-      path: "/mockInterviewConfig",
-      element: <MockInterviewConfig />,
+      path:"/user-center",
+      element: <UserCenter />
     },
     {
-      path: "/mockInterviewResult",
-      element: <MockInterviewResult />,
-    },
-  ]);
+      path:"/assistant-interview",
+      element: <AssistantInterview />
+    }
+  ])
 
-  return element;
-};
+  return element
+}
+
+
+
 
 export default router;

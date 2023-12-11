@@ -2,11 +2,6 @@ import { HeartOutlined, LoginOutlined, WarningOutlined, LikeOutlined } from "@an
 import heart_img from "../../imgs/icon_heart.png"
 
 
-
-
-
-
-
 const style = {
   轻松: {
     bg: "bg-yellow-500",
@@ -19,7 +14,11 @@ const style = {
   标准: {
     text: '标准',
     bg: "bg-[#5493FE]"
-  }
+  },
+  0: {
+    bg: "bg-yellow-500",
+    text: '轻松'
+  },
 }
 
 
@@ -39,12 +38,14 @@ export const ShareCard = (props) => {
               <p className='text-neutral-600 '>{item.direction}</p>
             </div>
           </div>
-          <div className='text-neutral-600'>
-            <span className='text-[#333] group-hover:text-white group-hover:block '><LoginOutlined /> 进入模拟面试</span>
-
+          <div className='text-neutral-600' style={{display:props.children ? 'none' : 'block'}}>
+            <span className='text-[#333] group-hover:text-white group-hover:block relative top-[-10px]'><LoginOutlined /> 进入模拟面试</span>
+          </div>
+          <div style={{display:props.children ? 'block' : 'none'}}>
+            {props.children}
           </div>
         </div>
-        <div className='mt-3 mb-2 flex justify-between'><p><span className='font-bold text-md'>面试风格</span> <span className={`${style[item.style].bg} rounded-lg text-white px-2 pt-[1px] pb-[2px]  text-[10px]`} >{style[item.style].text}</span></p><p className="text-neutral-600">{new Date(item.interview_date * 1000).toLocaleDateString().replaceAll("/", '-')}</p></div>
+        <div className='mt-3 mb-2 flex justify-between'><p><span className='font-bold text-md'>面试风格</span> <span className={`${style[(item.style || '轻松')].bg} rounded-lg text-white px-2 pt-[1px] pb-[2px]  text-[10px]`} >{style[(item.style || '轻松')].text}</span></p><p className="text-neutral-600">{new Date(item.interview_date * 1000).toLocaleDateString().replaceAll("/", '-')}</p></div>
         <p className='text-neutral-600 line-clamp-3 h-[60px]'>{item.brief}</p>
         <div className='flex justify-between mt-4 items-center' >
           <p className="flex items-center">

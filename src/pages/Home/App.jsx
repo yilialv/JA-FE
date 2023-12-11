@@ -145,8 +145,8 @@ const Home = () => {
           <p className='text-[24px] text-center'>各个大厂面试经验等你来发现</p>
           <div className='flex justify-center w-full h-[45px] mt-8'>
             <CustomInput dataList={store.getFormatCompanyList()} />
-            <input type="text" placeholder='输入部门岗位或者方向进行搜索' className='w-[300px] indent-3 rounded-l' />
-            <button className='bg-blue-500 text-white px-5 rounded-r'>
+            <input type="text" placeholder='输入部门岗位或者方向进行搜索' className='w-[300px] indent-3 rounded-l focus:bottom-0 outline-none' />
+            <button className='bg-blue-500 text-white px-5 rounded-r font-bold'>
               搜索
             </button>
           </div>
