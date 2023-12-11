@@ -77,14 +77,16 @@ const MockInterviewHall = observer(() => {
   const navigate = useNavigate();
 
   const navigateToMockInterview = (item) => {
-    const { id, company, direction, round } = item;
+    const { id, company, direction, round, logo, style } = item;
     const req = {
       id: id,
       company: company,
       direction: direction,
-      round: round
+      round: round,
+      logo: logo,
+      style: style
     };
-    navigate('/mockInterviewConfig', { state: req });
+    navigate('/mockInterview', { state: req });
   };
 
   return (
