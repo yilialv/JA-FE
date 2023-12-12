@@ -1,9 +1,11 @@
 .assistant-interview {
+  background-color: #EDEDFB !important;
   .input-box {
-    width: 250px;
+    width: 300px;
     height: 40px;
     border: 2px solid #5844CE;
     border-radius: 10px;
+  
     &>div {
       width: 220px;
       left: 0px;
@@ -11,11 +13,12 @@
 
     input {
       width: 100%;
-      text-indent: 70px;
+      text-indent: 10px;
       background-color: white;
       border-radius: 9px !important;
     }
-    .input-icon{
+
+    .input-icon {
       top: 12px !important;
     }
   }
@@ -28,17 +31,18 @@
     // border: none !important;
     border-radius: 10px;
     background-color: #F5F6FD;
-    min-width: 200px;
+    min-width: 300px;
     border: 2px solid #5844CE !important;
-   
+
     height: 40px !important;
-    span{
+
+    span {
       font-weight: bold;
     }
   }
 
   .ant-radio-group {
-   
+
     display: flex;
     border-radius: 10px;
     border: 2px solid #5844CE !important;
@@ -55,8 +59,8 @@
     text-align: center;
     font-weight: bold;
     color: #C7C7C7;
-    
-    font-size: 15px;  
+
+    font-size: 15px;
   }
 
   .ant-select-selector:after {
@@ -81,5 +85,47 @@
 
   .ant-radio-button-wrapper-checked:not(.ant-radio-button-wrapper-disabled):hover {
     color: #C7C7C7;
+  }
+
+  .w-\[400px\] {
+    width: 32% !important;
+    margin-bottom: 20px;
+  }
+
+ 
+
+  .border {
+    border: 2px solid #5844CE !important;
+  }
+
+  .liActve {
+    background-color: #5844CE;
+    color: white;
+
+  }
+
+  .filter-ul {
+    display: flex;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid black;
+    li {
+      padding: 5px 13px;
+      border-radius: 999px;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    .noActive{
+      background: linear-gradient(90deg, #7867D7 -17.14%, #EE6F84 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      
+    }
+    .active {
+      background: linear-gradient(90deg, #7867D7 -17.14%, #EE6F84 100%);
+      color: white;
+      border-left-width: 0;
+    }
   }
 }
