@@ -6,6 +6,7 @@ import store from "../../../store"
 import "./index.less"
 import { DatePicker, Input, message } from 'antd'
 import { Button, Modal, Space } from 'antd';
+import {PlusCircleFilled} from '@ant-design/icons'
 
 import img_edit from "../../../imgs/编辑.png"
 import img_base1 from "../../../imgs/bi-1.png"
@@ -119,8 +120,19 @@ const PersonHomePage = () => {
    getData()
   }, [])
 
-  
-
+  const add = () => {
+    setisProjectEdit(true)
+    personHomeData.push( {
+      "title": "",
+      "content": [
+         
+      ],
+      "start_time": null,
+      "end_time": null
+  })
+  setPersonHomeData(personHomeData)
+  }
+ 
   return (
     <div className="person-home-page">
       <div className="person-home-title">
@@ -196,9 +208,9 @@ const PersonHomePage = () => {
                     <p className="py-2">项目时间</p>
                     <div className="flex items-center w-[400px]">
 
-                      <DatePicker format="YYYY-MM-DD" onChange={(date,dateString) => {updateBaseInfo(personHomeData, index, 'start_time', dateString, false)}} placeholder="" defaultValue={dayjs(item.start_time, 'YYYY-MM-DD')} />
+                      <DatePicker format="YYYY-MM-DD" onChange={(date,dateString) => {updateBaseInfo(personHomeData, index, 'start_time', dateString, false)}} placeholder="" defaultValue={item.start_time ? dayjs(item.start_time, 'YYYY-MM-DD') : ''} />
                       &nbsp;至&nbsp;
-                      <DatePicker format="YYYY-MM-DD" onChange={(date,dateString) => {updateBaseInfo(personHomeData, index, 'end_time', dateString, false)}} placeholder="" defaultValue={dayjs(item.end_time, 'YYYY-MM-DD')} />
+                      <DatePicker format="YYYY-MM-DD" onChange={(date,dateString) => {updateBaseInfo(personHomeData, index, 'end_time', dateString, false)}} placeholder="" defaultValue={item.start_time ? dayjs(item.end_time, 'YYYY-MM-DD') : ''} />
                     </div>
                   </div>
                   <div>
@@ -216,6 +228,9 @@ const PersonHomePage = () => {
           })
         }
 
+      </div>
+      <div className="flex justify-center py-10">
+        <PlusCircleFilled style={{fontSize:45, color:'#5744ce'}} onClick={add}/>
       </div>
     </div>
   )

@@ -52,12 +52,14 @@ const Interview = observer(() => {
 
     return () => {
       setCount(0);
-     
+      messageList = []
+      store.conversations = []
     };
   }, []);
 
   useEffect(() => {
     scrollToBottom();
+  
   }, [store.lastReply]);
 
   const autoScroll = useRef(null);
@@ -556,7 +558,7 @@ const Interview = observer(() => {
                   <div style={{ minWidth: "100px" }}>
                     {" "}
                     {store.conversations.length > 0 && (
-                      <p style={{width:"100%", "wordSpacing":"none"}}>可能需要回答的问题</p>
+                      <p style={{'minWidth':'230px', "wordSpacing":"none"}}>可能需要回答的问题</p>
                     )}
                   </div>
                   <div className="question-history">

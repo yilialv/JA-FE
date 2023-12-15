@@ -16,6 +16,8 @@
   text-indent: 10px;
   background-color: white;
   border-radius: 9px !important;
+  text-align: left;
+  text-indent: 15px;
 }
 .assistant-interview .input-box .input-icon {
   top: 12px !important;

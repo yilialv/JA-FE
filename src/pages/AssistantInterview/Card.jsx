@@ -35,11 +35,13 @@ export const ShareCard = (props) => {
           <div className='flex items-center '>
             <img src={item.logo} className="w-[55px] h-[55px] rounded-[50%] mr-2" alt="" />
             <div>
-              <p className='font-bold text-[18px]'>{item.company}</p>
+              <p className='font-bold text-[18px]'>{item.company} <span className="inline-block w-[6px] h-[6px] ml-1 mr-2 rounded-3xl bg-[#5844CE]"></span>{item.round}</p>
               <p className='text-neutral-600 '>{item.direction}</p>
             </div>
           </div>
-        
+          <div className='text-neutral-600' style={{display:props.children ? 'none' : 'block'}}>
+            <span className='text-[#333] group-hover:text-white group-hover:block relative top-[-10px]'><LoginOutlined /> 进入模拟面试</span>
+          </div>
           <div style={{display:props.children ? 'block' : 'none'}}>
             {props.children}
           </div>
@@ -56,7 +58,7 @@ export const ShareCard = (props) => {
           <p className="flex">
             <span className='text-[#333] ml-2 flex'><img className="w-[15px] relative left-[-3px] top-[-2px]" src={person_img} alt="" /> {item.popularity_rating}</span>
             <span className='text-[#333] ml-2'>
-              {item.is_favorite ? <img src={heart_img} style={{ display: "inline", width: "16px", position: "relative", top: "-1px" }} /> : <HeartOutlined onClick={() => { props.like && props.like(item) }} />}
+              {item.is_favorite ? <img  onClick={() => { props.like && props.like(item) }} src={heart_img} style={{ display: "inline", width: "16px", position: "relative", top: "-1px" }} /> : <HeartOutlined onClick={() => { props.like && props.like(item) }} />}
               &nbsp;{item.favorites}
             </span>
             <span className='text-[#333] ml-2'><WarningOutlined /> </span>

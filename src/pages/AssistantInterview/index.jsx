@@ -37,6 +37,23 @@ const AssistantInterview = () => {
       setCardList(data.mock_interview_cards)
     })
   }
+  const like = (item) => {
+    console.log(item,'item==')
+    if(item.is_favorite){
+      axios.post(`${BASE_URL}/api/experience/cancel_favorite`, { experience_id: item.id }).then((res) => {
+        getList();
+      }).catch((err) => {
+
+      });
+    }else{
+      axios.post(`${BASE_URL}/api/experience/set_favorite`, { experience_id: item.id }).then((res) => {
+        getList();
+      }).catch((err) => {
+  
+      });
+    }
+   
+  };
   useEffect(() => {
     getList()
   },[filterActiveIndex, activeIndex,direction, company, time])
@@ -124,12 +141,15 @@ const AssistantInterview = () => {
           <li onClick={() => { setFilterActiveIndex(3) }} className={`${filterActiveIndex !== 0 ? 'active' : 'noActive'}`}>最新发布</li>
         </ul>
       </div>
-      <div className="w-[1200px] mx-auto py-3 flex flex-wrap">
+      <div style={{display: cardList.length ? 'flex' : 'none'}} className="w-[1200px] mx-auto py-3 flex flex-wrap">
         {
-          cardList.map(item => <ShareCard key={item.id} like={() => { }} dataSource={item} />
+          cardList.map(item => <ShareCard key={item.id} like={like} dataSource={item} />
 
           )
         }
+      </div>
+      <div style={{display: cardList.length ? 'none' : 'flex'}}  className="w-[1200px] mx-auto py-40  text-center text-2xl ">
+        暂无数据
       </div>
     </div>
   )

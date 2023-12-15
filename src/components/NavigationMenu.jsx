@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { UserOutlined, GlobalOutlined } from '@ant-design/icons';
+import { UserOutlined, GlobalOutlined,CaretRightOutlined } from '@ant-design/icons';
 import { Divider, Layout, Button, Avatar, Dropdown } from 'antd';
 import Login from '../pages/Login/App';
 import { observer } from 'mobx-react';
@@ -33,11 +33,7 @@ const NavigationMenu = () => {
       label: '首页',
       link: '/'
     },
-    {
-      key: 'resume',
-      label: '简历评估',
-      link: '/resume'
-    },
+  
     {
       key: 'interview',
       label: '面试助手',
@@ -45,7 +41,7 @@ const NavigationMenu = () => {
     },
     {
       key: 'AssistantInterview',
-      label: '辅助面试',
+      label: '模拟面试',
       link: '/assistant-interview'
     },
     {
@@ -126,18 +122,20 @@ const NavigationMenu = () => {
             }
           </ul>
           <div className='flex items-center'>
-             <Dropdown menu={{ items }} placement="bottom">
-               {
+          {
                  store.avatar ? <img src={store.avatar} className='w-[50px] rounded-3xl' alt="" /> :  <button onClick={showModal} className='text-[15px] bg-gradient-to-r from-[#ED4D65] to-[#5844CE] rounded text-white h-[40px] leading-[40px]  px-4 tracking-widest'>Login</button>
                }
-              
-            </Dropdown>
-            <span style={{marginLeft:"10px"}}>
+          
+            <span style={{marginLeft:"10px"}} className="font-bold">
                {
                 store.nickName
                }
             </span>
-          
+            <Dropdown menu={{ items }} placement="bottom">
+             
+            <CaretRightOutlined className='ml-1 hover:rotate-90'/>
+             </Dropdown>
+           
             <GlobalOutlined className="text-[25px] ml-2" />
             {/* <Button type='primary' className='bg-gradient-to-r from-[#ED4D65] to-[#5844CE] border-0' >Login</Button> */}
           </div>

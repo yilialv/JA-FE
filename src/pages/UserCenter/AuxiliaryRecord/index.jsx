@@ -152,24 +152,24 @@ const onSearch = (value) => {
             onSearch={onSearch}
             options={[
               {
-                value: '一轮',
-                label: '一轮',
+                value: '一面',
+                label: '一面',
               },
               {
-                value: '二轮',
-                label: '二轮',
+                value: '二面',
+                label: '二面',
               },
               {
-                value: '三轮',
-                label: '三轮',
+                value: '三面',
+                label: '三面',
               },
               {
-                value: '四轮',
-                label: '四轮',
+                value: '四面',
+                label: '四面',
               },
               {
-                value: '五轮',
-                label: '五轮',
+                value: '五面',
+                label: '五面',
               },
               {
                 value: 'HR',
