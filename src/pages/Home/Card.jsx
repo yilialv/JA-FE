@@ -24,11 +24,11 @@ const style = {
 
 export const ShareCard = (props) => {
 
-  const item = props.dataSource
+  const item = props.dataSource;
 
 
   return (
-    <div className='px-2 w-[400px] mx-2' onClick={props.onClick}>
+    <div className='px-2 w-[400px] mx-2' >
       <div className='bg-white p-2 rounded-lg h-full card-item group'>
         <div className='flex items-center justify-between py-2'>
           <div className='flex items-center '>
@@ -38,10 +38,10 @@ export const ShareCard = (props) => {
               <p className='text-neutral-600 '>{item.direction}</p>
             </div>
           </div>
-          <div className='text-neutral-600' style={{display:props.children ? 'none' : 'block'}}>
-            <span className='text-[#333] group-hover:text-white group-hover:block relative top-[-10px]'><LoginOutlined /> 进入模拟面试</span>
+          <div className='text-neutral-600 cursor-pointer' style={{ display: props.children ? 'none' : 'block' }} onClick={props.onClick}>
+            <span className='text-[#333] group-hover:text-white group-hover:block relative top-[-10px]' ><LoginOutlined /> 进入模拟面试</span>
           </div>
-          <div style={{display:props.children ? 'block' : 'none'}}>
+          <div style={{ display: props.children ? 'block' : 'none' }}>
             {props.children}
           </div>
         </div>

@@ -1,195 +1,130 @@
-import {
-  BASE_URL,
-  MOCK_SERVER_URL,
-} from "../../constant";
+import { CaretDownOutlined, CaretUpOutlined, HomeOutlined } from "@ant-design/icons";
+import GradientBackground from "../../background/gradientBackground";
+import iconEvaluation from "../../imgs/icon-evaluation.svg";
+import ClickButton from '../../components/ClickButton';
+import iconEmoji1 from "../../imgs/icon-emoji1.svg";
+import iconEmoji2 from "../../imgs/icon-emoji2.svg";
+import TestIcon from '../../imgs/cm-12.jpeg';
+import { useState } from "react";
+const MockInterviewDetail = () => {
 
-import {
-  Button,
-  Spin,
-  Input,
-  Avatar,
-  Checkbox,
-  Space,
-  Select,
-  message,
-} from "antd";
-import {
-  UserOutlined,
-  ClockCircleOutlined,
-  RightOutlined,
-  LeftOutlined,
-  QuestionCircleOutlined,
-} from "@ant-design/icons";
-import utils from "./mockUtils";
-import { observer } from "mobx-react";
-import iconSend from "../../imgs/icon-send.svg";
-import iconWaiting from "../../imgs/icon-waiting.svg";
-import '../Interview/App.less';
-import { useEffect, useState } from "react";
-import axios from "axios";
-
-const MockInterview = observer(() => {
-  const handleInput = (e) => {
-    const { target: { value } } = e;
-    setInputValue(value);
-  };
-
-  const [DrawerState, setDrawerState] = useState(true);
-
-  const [inputValue, setInputValue] = useState('');
-
-  const [settingPersonalise, setSettingPersonalise] = useState(false);
-
-  const [settingEvaluation, setSettingEvaluation] = useState(true);
-
-  const [settingFollowing, setSettingFollowing] = useState(true);
-
-  const handleDrawer = () => {
-    setDrawerState(!DrawerState);
-  };
-
-  useEffect(() => {
-    getDetail();
-  }, []);
-
-  //未完成
-
-  // function getDetail() {
-  //   const params = {
-  //     record_id: 2
-  //   };
-  //   axios.post(`${BASE_URL}/api/mock/get_detail`, params).then((res) => {
-  //     const { status, data: { data: { records } } } = res;
-  //     if (status === 200) {
-  //       console.log(records);
-  //       //type1:问题,type2:回答,type3:评价
-        
-  //     }
-  //   }).catch((err) => {
-  //     console.log('error:', err);
-  //     message.error('获取模拟面试详情失败');
-  //   });
-  // }
+  const [showEvaluation, setShowEvaluation] = useState(false);
 
   return (
-    <div className="interview-detail">
+    <div className="mock-interview-detail">
+      <GradientBackground />
       <div className="container">
-        <div className="container-header">
-          <div className="header-left">
-            <div className="return">
-              <LeftOutlined
-                onClick={() => {
-                  window.history.back();
-                }}
-              />
-            </div>
-            <div className="states">
-            </div>
-          </div>
-        </div>
         <div className="container-body">
-          <div
-            className={`body-left ${DrawerState ? "body-compressed" : "body-fill"}`}
-          >
-            <div className="answer-block" id="scrollBlock">
-              {utils.mockReplies.map((item, key) => {
-                const { content, evaluation } = item;
-                return (
-                  <div className="answer" key={key}>
-                    <div className="answer-header">
-                      <Avatar
-                        style={{ backgroundColor: "#87d068", marginRight: "5px" }}
-                        icon={<UserOutlined />}
-                      />
-                      <div>{'replies'}</div>
-                    </div>
-                    <div className="text">
-                      {content}
-                    </div>
-                    {!!evaluation && (
-                      <>
-                        <div className="answer-divider"></div>
-                        <div className="answer-comment">
-                          {evaluation}
-                        </div>
-                      </>
-                    )
-                    }
-                  </div>
-                );
-              })}
-              {!!utils.mockLastContent && (
-                <div className="answer animation">
-                  <div className="answer-header">
-                    <Avatar
-                      style={{
-                        backgroundColor: "#87d068",
-                        marginRight: "5px"
-                      }}
-                      icon={<UserOutlined />}
-                    />
-                    <div>{'用户名'}</div>
-                  </div>
-                  <div className="text">
-                    {utils.mockLastContent}
-                  </div>
-                  {!!utils.mockLastEvaluation && (
-                    <>
-                      <div className="answer-divider"></div>
-                      <div className="answer-comment">
-                        {utils.mockLastEvaluation}
-                      </div>
-                    </>
-                  )
-                  }
-                </div>
-              )}
+          <div className="body-left">
+            <div className="container-body-header">
+              <div className="header-title">
+                <HomeOutlined className="menu-item" />
+                我的面试总结
+              </div>
             </div>
-          </div>
-          <div
-            className={`drawer-button ${DrawerState ? "drawer-button-opening" : "drawer-button-closed"}`}
-            onClick={handleDrawer}
-          >
-            {DrawerState ? <RightOutlined /> : <LeftOutlined />}
-          </div>
-          <div
-            className={`drawer ${DrawerState ? "drawer-opening" : "drawer-closed"}`}
-          >
-            <div className="drawer-info">
-              <Avatar
-                icon={<UserOutlined />}
-                size={96}
-                className='drawer-avatar'
-              >
-              </Avatar>
-              <div className='drawer-name'>
-                <div>百度</div>
-                <div>@前端开发</div>
-              </div>
-              <div className="drawer-setting">
-                <div className="setting-item">
-                  <p>筛选
-                  </p>
-                  <Select
-                    className="setting-select"
-                    defaultValue="全部"
-                    options={[
-                      { value: 'all', label: '全部' },
-                      { value: 'answer', label: '只显示回答' },
-                      { value: 'question', label: '只显示问题' }
-                    ]}
-                    onChange={() => { }}
-                  />
+            <div className="container-body-contents-detail">
+              <div className="conclusion">
+                <div className="conclusion-header">
+                  <div className="header-up">
+                    <div>
+                      <img src={iconEmoji1} />
+                      <div className="header-msg">
+                        <h1>太棒啦！</h1>
+                        <p>你的面试表现超过80%的面友！</p>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="header-userinfo">
+                        <div className="footer-info">
+                          <div className="info-text">
+                            <div>一起冲鸭</div>
+                          </div>
+                          <div className="icon-frame" style={{ width: '64px', height: '64px' }}>
+                            <img src={TestIcon} className="info-icon" />
+                          </div>
+                        </div>
+                        <div className="time">
+                          总用时：00:15:00
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="header-down">
+                    <div className="info-item" style={{ borderLeft: 0 }}>
+                      <p>公司</p>
+                      <p>腾讯</p>
+                    </div>
+                    <div className="info-item">
+                      <p>岗位</p>
+                      <p>产品研发岗</p>
+                    </div>
+                    <div className="info-item">
+                      <p>风格</p>
+                      <p>严肃</p>
+                    </div>
+                    <div className="info-item">
+                      <p>总问题</p>
+                      <p>8</p>
+                    </div>
+                    <div className="info-item">
+                      <p>个人项目</p>
+                      <p>2</p>
+                    </div>
+                    <div className="info-item">
+                      <p>追问</p>
+                      <p>1</p>
+                    </div>
+                  </div>
+                </div>
+                {
+                  showEvaluation
+                    ?
+                    <div className="conclusion-body">
+                      <div className="evaluation-title">
+                        <img src={iconEvaluation} />
+                        <span>智能评价</span>
+                      </div>
+                      <div className="evaluation-text">
+                      </div>
+                    </div>
+                    :
+                    <></>
+                }
+                <div className="conclusion-footer">
+                  <ClickButton reverse onClick={() => { setShowEvaluation(!showEvaluation); }}>
+                    {showEvaluation
+                      ?
+                      <>收起 < CaretUpOutlined /></>
+                      :
+                      <>总评 < CaretDownOutlined /></>
+                    }
+                  </ClickButton>
                 </div>
               </div>
-              <div className="drawer-check">
+              <div className="question-list">
+                <div className="question-item-background">
+                  <div className="question-item">
+                    <div className="question-title">
+                      <span>真题</span>
+                      <span>产品经理在调研时需要注意哪些问题？</span>
+                    </div>
+                    <div className="question-body">
+                      <div>
+                        我是回答
+                      </div>
+                      <ClickButton reverse className='question-button'>
+                        详情<CaretDownOutlined />
+                      </ClickButton>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
-});
+};
 
-export default MockInterview;
+export default MockInterviewDetail;
