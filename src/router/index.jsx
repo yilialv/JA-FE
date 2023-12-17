@@ -9,6 +9,7 @@ import User from '@/pages/User/App';
 import MockInterviewHall from '@/pages/mockInterviewHall/App';
 import MockInterview from '@/pages/mockInterview/App';
 import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
+import MockInterviewResult from '@/pages/mockInterview/MockInterviewResult';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
 import UserCenter from '../pages/UserCenter';
@@ -39,6 +40,10 @@ const router = () => {
       element: <MockInterview />,
     },
     {
+      path: "/mockInterviewResult",
+      element: <MockInterviewResult />,
+    },
+    {
       path: "/interview",
       element: <Interview />,
     },
@@ -51,15 +56,15 @@ const router = () => {
       element: <RecordUpload />,
     },
     {
-      path:'/user/interviewDetail/:id',
+      path: '/user/interviewDetail',
       element: <InterviewDetail />
     },
     {
-      path:"/user-center",
+      path: "/user-center",
       element: <UserCenter />
     },
     {
-      path:"/assistant-interview",
+      path: "/assistant-interview",
       element: <AssistantInterview />
     }
   ])

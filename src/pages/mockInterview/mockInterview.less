@@ -82,12 +82,12 @@
                         align-items: center;
                         font-weight: 600;
                         font-size: 18px;
-
                     }
 
                     .header-title {
                         margin-left: 15px;
                         font-size: 20px;
+                        font-weight: 600;
                     }
 
                     .header-menu {
@@ -122,6 +122,7 @@
                         font-weight: 600;
                         font-size: 16px;
                         user-select: none;
+
                         img {
                             height: 30px;
                         }
@@ -215,73 +216,7 @@
                             }
                         }
 
-                        .interview-evaluation {
-                            display: grid;
-                            height: 100%;
-                            grid-template-rows: 1fr 2fr 1fr;
 
-                            .evaluation-title {
-                                user-select: none;
-                                margin-top: 20px;
-                                margin-bottom: 20px;
-                                font-size: 20px;
-                                font-weight: 600;
-                                display: flex;
-                                align-items: center;
-
-                                img {
-                                    height: 30px;
-                                    margin-right: 5px;
-                                }
-
-                                span {
-                                    color: transparent;
-                                    background: @theme-gradient;
-                                    background-clip: text;
-                                    -webkit-background-clip: text;
-                                }
-                            }
-
-                            margin: 0 30px 0 30px;
-                            border-top: 1px solid #C4C4CF;
-
-                            .evaluation-text {
-                                font-size: 16px;
-                                display: flex;
-                                align-items: center;
-                                justify-content: center;
-                            }
-
-                            .evaluation-bottom {
-                                display: flex;
-                                justify-content: flex-end;
-                                margin-bottom: 20px;
-
-                                button {
-                                    height: 36px;
-                                    cursor: pointer;
-                                    padding: 10px;
-                                    display: flex;
-                                    font-weight: 600;
-                                    align-items: center;
-                                    background-color: #fff;
-                                    border: 0;
-                                    border-radius: 5px;
-                                    box-shadow: 0 4px 8px 0 #7867D7;
-
-                                    img {
-                                        margin-left: 5px;
-                                    }
-
-                                    transition: 300ms;
-                                }
-
-                                .button-disabled {
-                                    cursor: not-allowed;
-                                }
-                            }
-
-                        }
                     }
 
                     .contents-interview-hide {
@@ -317,6 +252,183 @@
                             border-radius: 12px;
                             background: linear-gradient(90deg, #EBE0E2 10.12%, #7969D8 88.04%);
 
+                        }
+                    }
+                }
+
+                .evaluation-title {
+                    user-select: none;
+                    margin-top: 20px;
+                    margin-bottom: 20px;
+                    font-size: 20px;
+                    font-weight: 600;
+                    display: flex;
+                    align-items: center;
+
+                    img {
+                        height: 30px;
+                        margin-right: 5px;
+                    }
+
+                    span {
+                        color: transparent;
+                        background: @theme-gradient;
+                        background-clip: text;
+                        -webkit-background-clip: text;
+                    }
+                }
+
+                .interview-evaluation {
+                    display: grid;
+                    height: 100%;
+                    grid-template-rows: 1fr 2fr 1fr;
+
+                    margin: 0 30px 0 30px;
+                    border-top: 1px solid #C4C4CF;
+
+                    .evaluation-text {
+                        font-size: 16px;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                    }
+
+                    .evaluation-bottom {
+                        display: flex;
+                        justify-content: flex-end;
+                        margin-bottom: 20px;
+
+                        button {
+                            height: 36px;
+                            cursor: pointer;
+                            padding: 10px;
+                            display: flex;
+                            font-weight: 600;
+                            align-items: center;
+                            background-color: #fff;
+                            border: 0;
+                            border-radius: 5px;
+                            box-shadow: 0 4px 8px 0 #7867D7;
+
+                            img {
+                                margin-left: 5px;
+                            }
+
+                            transition: 300ms;
+                        }
+
+                        .button-disabled {
+                            cursor: not-allowed;
+                        }
+                    }
+
+                }
+
+                .container-body-contents-detail {
+                    overflow-y: auto;
+                    padding: 20px 30px;
+
+                    .conclusion {
+                        padding: 0 20px;
+                        background-color: rgba(237, 237, 251, 1);
+                        border-radius: 10px;
+                        transition: 300ms;
+
+                        .conclusion-header {
+                            .header-up {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+
+                                div:first-child>img {
+                                    filter: drop-shadow(0 1px 2px #aaa);
+                                }
+
+                                >div {
+                                    display: flex;
+                                    align-items: center;
+                                }
+
+                                .header-msg {
+                                    h1 {
+                                        font-size: 24px;
+                                        font-weight: 600;
+                                    }
+
+                                    p {
+                                        color: #A29F9F;
+                                    }
+                                }
+                            }
+
+                            .header-down {
+                                display: grid;
+                                grid-template-columns: repeat(6, 1fr);
+                                justify-items: center;
+                                font-weight: 600;
+
+                                .info-item {
+                                    text-align: center;
+                                    width: 100%;
+                                    border-left: 1px solid rgba(190, 190, 190, 1);
+                                    margin-left: -1px;
+
+                                    p~p {
+                                        font-weight: 400;
+                                        font-size: 18px;
+                                    }
+                                }
+                            }
+                        }
+
+                        .conclusion-body {}
+
+                        .conclusion-footer {
+                            display: flex;
+                            justify-content: flex-end;
+                        }
+                    }
+
+                    .question-list {
+                        margin-top: 10px;
+                    }
+
+                    .question-item-background {
+                        background: @theme-gradient;
+                        padding: 2px;
+                        border-radius: 10px;
+
+                        .question-item {
+                            padding: 5px 20px;
+                            border-radius: 8px;
+                            background: #fff;
+
+                            .question-title {
+                                span~span {
+                                    font-weight: 600;
+                                    font-size: 18px;
+                                }
+
+                                span:first-child {
+                                    font-size: 16px;
+                                    font-weight: 500;
+                                    color: #fff;
+                                    border-radius: 20px;
+                                    padding: 1px 15px;
+                                    background-color: rgba(235, 111, 135, 1);
+                                    margin-right: 10px;
+                                }
+                            }
+
+                            .question-body{
+                                margin-top: 5px;
+                                width: 100%;
+                                display: grid;
+                                grid-template-columns: 6fr 1fr;
+                                .question-button{
+                                    margin-left: auto;
+                                }
+                            }
                         }
                     }
                 }
@@ -561,7 +673,7 @@
                 }
             }
 
-            .info-config{
+            .info-config {
                 font-weight: 600;
 
                 .info-time {
@@ -579,25 +691,25 @@
             align-items: center;
             justify-content: space-around;
 
-            .footer-button{
+            .footer-button {
                 display: flex;
-            }
-            
-            .footer-info{
-                font-weight: 600;
-                display: flex;
-                align-items: center;
-                text-align: right;
-
-                .info-text{
-                    margin-right: 10px;
-                }
             }
         }
     }
 }
 
-.icon-frame{
+.footer-info {
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    text-align: right;
+
+    .info-text {
+        margin-right: 10px;
+    }
+}
+
+.icon-frame {
     width: 96px;
     height: 96px;
     display: flex;
