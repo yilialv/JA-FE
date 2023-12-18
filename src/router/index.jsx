@@ -9,7 +9,7 @@ import User from '@/pages/User/App';
 import MockInterviewHall from '@/pages/mockInterviewHall/App';
 import MockInterview from '@/pages/mockInterview/App';
 import MockInterviewDetail from '@/pages/mockInterview/MockInterviewDetail';
-import MockInterviewResult from '@/pages/mockInterview/MockInterviewResult';
+import MockInterviewResult from '@/pages/mockInterview/mockInterviewResult';
 import RecordUpload from '@/pages/User/RecordUpload';
 import InterviewDetail from '@/pages/User/components/InterviewDetail';
 import UserCenter from '../pages/UserCenter';
