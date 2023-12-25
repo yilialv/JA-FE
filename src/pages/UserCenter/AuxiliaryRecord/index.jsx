@@ -90,11 +90,11 @@ const onSearch = (value) => {
       align: "center",
       render(value) {
         const colorMap = {
-          一面: '#5592ff',
-          二面: '#5743ce',
-          三面: '#edbc42',
-          四面: '#66a9ff',
-          五面: '#e34d6d',
+          1: '#5592ff',
+          2: '#5743ce',
+          3: '#edbc42',
+          4: '#e9f3ff',
+          5: '#e34d6d',
           hr: '#ea496a'
         }
         console.log(value,'value==')

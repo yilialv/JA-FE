@@ -1,4 +1,4 @@
-import img_bg from "../../imgs/bg.png"
+import img_bg from "../../imgs/bg.svg"
 import img_filter from "../../imgs/filter.svg"
 import CustomInput from "../../components/Input/Input";
 import { useEffect, useState } from "react";
