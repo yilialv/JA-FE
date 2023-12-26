@@ -10,6 +10,7 @@ import CollectWrap from "./CollectionWrap"
 import AuxiliaryRecord from "./AuxiliaryRecord"
 import MockRecord from "./MockRecord"
 import store from "../../store"
+import  person_img from "../../imgs/person.svg"
 
 function UserCenter() {
   let [userData, setUserData] = useState({})
@@ -63,8 +64,8 @@ function UserCenter() {
                }
         </div>
         <div>
-          <p><LikeOutlined style={{"fontSize":"16px","marginRight":"6px"}} /> 获得{userData.usages}点赞</p>
-          <p><HeartOutlined style={{"fontSize":"16px","marginRight":"8px"}} />获得{userData.favorites}收藏</p>
+          <p className='flex'><img className='w-[17px] mr-1' src={person_img} alt="" /> 获得{userData.usages}次查看</p>
+          <p><HeartOutlined style={{"fontSize":"16px","marginRight":"8px", 'marginTop':'2px'}} />获得{userData.favorites}次收藏</p>
         </div>
       </div>
       <div className='btn-group w-[1200px] mx-auto'>

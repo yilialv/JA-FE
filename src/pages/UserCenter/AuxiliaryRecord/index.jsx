@@ -90,11 +90,11 @@ const onSearch = (value) => {
       align: "center",
       render(value) {
         const colorMap = {
-          一面: '#5592ff',
-          二面: '#5743ce',
-          三面: '#edbc42',
-          四面: '#66a9ff',
-          五面: '#e34d6d',
+          1: '#5592ff',
+          2: '#5743ce',
+          3: '#edbc42',
+          4: '#e9f3ff',
+          5: '#e34d6d',
           hr: '#ea496a'
         }
         console.log(value,'value==')
@@ -152,24 +152,24 @@ const onSearch = (value) => {
             onSearch={onSearch}
             options={[
               {
-                value: '一轮',
-                label: '一轮',
+                value: '一面',
+                label: '一面',
               },
               {
-                value: '二轮',
-                label: '二轮',
+                value: '二面',
+                label: '二面',
               },
               {
-                value: '三轮',
-                label: '三轮',
+                value: '三面',
+                label: '三面',
               },
               {
-                value: '四轮',
-                label: '四轮',
+                value: '四面',
+                label: '四面',
               },
               {
-                value: '五轮',
-                label: '五轮',
+                value: '五面',
+                label: '五面',
               },
               {
                 value: 'HR',

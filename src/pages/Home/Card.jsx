@@ -34,7 +34,7 @@ export const ShareCard = (props) => {
           <div className='flex items-center '>
             <img src={item.logo} className="w-[55px] h-[55px] rounded-[50%] mr-2" alt="" />
             <div>
-              <p className='font-bold text-[18px]'>{item.company}</p>
+              <p className='font-bold text-[18px]'>{item.company} <span className="inline-block w-[6px] h-[6px] ml-1 mr-2 rounded-3xl bg-[#5844CE] relative top-[-2px]"></span>{item.round}</p>
               <p className='text-neutral-600 '>{item.direction}</p>
             </div>
           </div>
