@@ -26,6 +26,7 @@ import "./App.less";
 import iconSend from "../../imgs/send.png";
 import jp from "../../imgs/jp.png";
 import iconLeft from "../../imgs/left.png";
+import { useNavigate } from "react-router-dom";
 
 const { Content } = Layout;
 let messageList = [];
@@ -41,6 +42,7 @@ let messageList = [];
 库的报错 on_error()
 */
 let interval = null
+let record_id = null
 const Interview = observer(() => {
   const clear = useEffect(() => {
     store.formCompany = localStorage.getItem("company");
@@ -76,7 +78,7 @@ const Interview = observer(() => {
   const mediaStreamRef = useRef(null);
   const mediaRecorder = useRef(null);
   const frameSize = ((16000 * 2) / 1000) * 160; // 定义每帧大小
-
+  const navagete = useNavigate()
   const startRecording = () => {
     connectWebSocket();
     interval = setInterval(() => {
@@ -129,7 +131,11 @@ const Interview = observer(() => {
     handleAudioState(false);
     ws.current?.close();
     wsServer.current?.close();
+    sampleRate: 16000,
+  
     messageList = []
+    navagete(`/user/interviewDetail/${record_id}`);
+    
     clear();
   };
 
@@ -208,6 +214,7 @@ const Interview = observer(() => {
     };
 
     ws.current.onmessage = (message) => {
+      
       try {
         const res = JSON.parse(message.data);
 
@@ -257,16 +264,22 @@ const Interview = observer(() => {
     };
 
     wsServer.current.onmessage = (msg) => {
+     
+
       try {
         const result = JSON.parse(msg.data);
+        
         const { type, data, id } = result;
+        if(result.copilot_record_id){
+          record_id = result.copilot_record_id
+        }
         if (type === 0) {
           if (!data.startsWith("No")) {
             setReplyState(false);
             // 第一次拿到数据
             if (!store.id) {
               store.setId(id);
-              console.log("第一次", messageList);
+             
               messageList.push({
                 type: 1,
                 message: store.conversations[store.conversations.length - 1],
