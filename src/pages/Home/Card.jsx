@@ -46,7 +46,7 @@ export const ShareCard = (props) => {
           </div>
         </div>
         <div className='mt-3 mb-2 flex justify-between'><p><span className='font-bold text-md'>面试风格</span> <span className={`${style[(item.style || '轻松')].bg} rounded-lg text-white px-2 pt-[1px] pb-[2px]  text-[10px]`} >{style[(item.style || '轻松')].text}</span></p><p className="text-neutral-600">{new Date(item.interview_date * 1000).toLocaleDateString().replaceAll("/", '-')}</p></div>
-        <p className='text-neutral-600 line-clamp-3 h-[60px]'>{item.brief}</p>
+        <p className='text-neutral-600 line-clamp-3 h-[60px] mb-2'>{item.brief}</p>
         <div className='flex justify-between mt-4 items-center' >
           <p className="flex items-center">
             <img className="w-[30px] rounded-3xl mr-1" src={item.avatar} alt="" />

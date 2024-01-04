@@ -69,7 +69,7 @@ const router = () => {
       element: <InterviewDetailPage />
     },
     {
-      path:"/interiew-edit",
+      path:"/interiew-edit/:id",
       element: <InterviewEdit />
     }
   ])

@@ -59,9 +59,7 @@ const AssistantInterview = () => {
   },[filterActiveIndex, activeIndex,direction, company, time])
   return (
     <div className="assistant-interview">
-      <div className="w-[1200px] mx-auto">
-        <img src={img_bg} className="w-full" alt="" />
-      </div>
+     
       <div className="w-[1200px] mx-auto pt-5 pr-4 pb-4   flex justify-end">
         <div className="flex items-center ml-4 relative">
           {

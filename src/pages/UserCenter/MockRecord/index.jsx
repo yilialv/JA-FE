@@ -7,8 +7,10 @@ import "./index.less"
 import CustomInput from "../../../components/Input/Input";
 import store from "../../../store"
 import img_dele from "../../../imgs/delete.png"
-import { Select } from 'antd'
-import {InfoCircleOutlined} from "@ant-design/icons"
+import { Select, Modal } from 'antd'
+import {InfoCircleOutlined, ExclamationCircleFilled} from "@ant-design/icons"
+
+const { confirm } = Modal;
 
 
 const AuxiliaryRecord = () => {
@@ -109,11 +111,30 @@ const onSearch = (value) => {
       title: '操作',
       dataIndex: 'address',
       key: 'address',
-      render() {
+      render(row,record) {
+        const dele = (value) => {
+          confirm({
+            title: '确定删除?',
+            okText:"确认",
+            cancelText:"取消",
+            icon: <ExclamationCircleFilled />,
+            onOk() {
+              axios.post(`${BASE_URL}/api/mock/delete`, {
+                record_id:record.id
+              }).then(res => {
+                getExperienceList()
+              })
+            },
+            onCancel() {
+              console.log('Cancel');
+            },
+          });
+        
+        }
         return (
           <div style={{ display: "flex", 'alignItems': "center" }}>
             <button style={{ padding: '3px 10px', borderRadius: '5px', border: "1px solid #5743ce", color: "#5743ce" }}>查看详情</button>
-            <img style={{ "marginLeft": '30px', "width": "18px" }} src={img_dele} alt="" />
+            <img style={{ "marginLeft": '30px', "width": "18px" }} src={img_dele} onClick={() => dele(record)} alt="" />
           </div>
         )
       }

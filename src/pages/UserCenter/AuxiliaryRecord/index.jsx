@@ -1,4 +1,4 @@
-import { Table } from "antd";
+import { Table, Modal } from "antd";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { BASE_URL } from "../../../constant";
@@ -8,10 +8,14 @@ import CustomInput from "../../../components/Input/Input";
 import store from "../../../store"
 import img_dele from "../../../imgs/delete.png"
 import { Select } from 'antd'
-import {InfoCircleOutlined} from "@ant-design/icons"
+import { useNavigate } from "react-router-dom";
+import {InfoCircleOutlined, ExclamationCircleFilled} from "@ant-design/icons"
+
+const { confirm } = Modal;
 
 
 const AuxiliaryRecord = () => {
+  const navagete = useNavigate()
   const [dataList, setDataList] = useState([])
   const [paginationOption, setPaginationOption] = useState({
     current:1,
@@ -22,6 +26,7 @@ const AuxiliaryRecord = () => {
     company:'',
     round:''
   })
+
   const paginaChange = (value) => {
     paginationOption.current = value.current
     setPaginationOption(JSON.parse(JSON.stringify(paginationOption)))
@@ -90,14 +95,13 @@ const onSearch = (value) => {
       align: "center",
       render(value) {
         const colorMap = {
-          1: '#5592ff',
-          2: '#5743ce',
-          3: '#edbc42',
-          4: '#e9f3ff',
-          5: '#e34d6d',
-          hr: '#ea496a'
+          一面: '#5592ff',
+          二面: '#5743ce',
+          三面: '#edbc42',
+          四面: '#e9f3ff',
+          五面: '#e34d6d',
+          HR: '#ea496a'
         }
-        console.log(value,'value==')
         return <button style={{ background: colorMap[value], padding: '3px 25px', borderRadius: '5px', color: 'white' }} >{value}</button>
       }
     },
@@ -114,11 +118,35 @@ const onSearch = (value) => {
       title: '操作',
       dataIndex: 'address',
       key: 'address',
-      render() {
+      render(value, record) {
+        console.log(record,'value==')
+        const dele = (value) => {
+          confirm({
+            title: '确定删除?',
+            okText:"确认",
+            cancelText:"取消",
+            icon: <ExclamationCircleFilled />,
+            onOk() {
+              console.log(value,'value==')
+              axios.post(`${BASE_URL}/api/copilot/delete`, {
+                record_id:record.id
+              }).then(res => {
+                getExperienceList()
+              })
+            },
+            onCancel() {
+              console.log('Cancel');
+            },
+          });
+        
+        }
+        const toDetail = (record) => {
+          navagete(`/interiew-detail/${record.id}`)
+        }
         return (
           <div style={{ display: "flex", 'alignItems': "center" }}>
-            <button style={{ padding: '3px 10px', borderRadius: '5px', border: "1px solid #5743ce", color: "#5743ce" }}>查看详情</button>
-            <img style={{ "marginLeft": '30px', "width": "18px" }} src={img_dele} alt="" />
+            <button style={{ padding: '3px 10px', borderRadius: '5px', border: "1px solid #5743ce", color: "#5743ce" }} onClick={() => toDetail(record)}>查看详情</button>
+            <img style={{ "marginLeft": '30px', "width": "18px" }} src={img_dele} onClick={() => dele(record)} alt="" />
           </div>
         )
       }
