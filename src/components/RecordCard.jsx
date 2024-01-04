@@ -8,6 +8,8 @@ import avatarUrl from "../imgs/avatar.jpg";
 
 const { Meta } = Card;
 
+
+
 const renderRoundTag = (round) => {
 
   const chineseNumbers = ['零', '一', '二', '三', '四', '五', '六', '七', '八', '九'];
